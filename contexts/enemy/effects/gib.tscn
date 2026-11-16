@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://contexts/enemy/effects/gib.gd" id="1_gib"]
+
+[sub_resource type="SphereShape3D" id="gib_shape"]
+radius = 0.04
+
+[sub_resource type="StandardMaterial3D" id="gib_mat"]
+albedo_color = Color(0.65, 0.12, 0.12, 1)
+
+[sub_resource type="SphereMesh" id="gib_mesh"]
+material = SubResource("gib_mat")
+radius = 0.04
+height = 0.08
+radial_segments = 8
+rings = 4
+
+[node name="Gib" type="RigidBody3D"]
+collision_layer = 8
+collision_mask = 1
+mass = 0.3
+script = ExtResource("1_gib")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("gib_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("gib_mesh")

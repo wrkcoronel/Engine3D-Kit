@@ -1,0 +1,90 @@
+## ARMA (orquestrador): atira (raycast) e junta a pose final vinda das partes em components/:
+##   WallAvoid (parede), CoverPeek (cover), Aim (mira), Sway (balanco), Recoil (coice).
+extends Node3D
+
+@export var impact_scene: PackedScene
+@export var fire_rate := 0.15
+@export var range := 100.0
+## Dano por tiro nas partes do inimigo (ver contexts/enemy/enemy.gd).
+@export var damage := 10.0
+## Acima desse valor (0 a 1) de "arma levantada pela parede" ela nao atira.
+@export var block_fire_above := 0.5
+
+@export_group("Dispersao (balas tortas)")
+## Cone de dispersao, em graus, atirando da cintura.
+@export var spread_hip_deg := 3.0
+## Cone de dispersao, em graus, mirando (menor, mas nunca zero).
+@export var spread_aim_deg := 0.5
+
+@onready var wall: GunWallAvoid = $WallAvoid
+@onready var cover: GunCoverPeek = $CoverPeek
+@onready var aim: GunAim = $Aim
+@onready var sway: GunSway = $Sway
+@onready var recoil: GunRecoil = $Recoil
+@onready var sprint: GunSprint = $Sprint
+
+var _rest_pos: Vector3
+var _cooldown := 0.0
+var _body: CharacterBody3D
+var _head: HeadLean
+
+func _ready() -> void:
+	_rest_pos = position
+	_body = owner as CharacterBody3D
+	_head = _body.get_node("Head")
+
+func _process(delta: float) -> void:
+	_cooldown -= delta
+	var captured := Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	var wants_aim := captured and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
+	var cam := get_viewport().get_camera_3d()
+
+	# 1) atualiza cada parte
+	wall.update(delta, cam)
+	cover.update(delta, _body, _head, wants_aim, wall.check_distance)
+	# saindo pelo cover, a arma nao precisa levantar por causa da parede
+	sprint.update(delta, bool(_body.get("is_sprinting")))
+	# correndo, a pose de corrida manda (a de parede nao soma por cima)
+	var wall_eff := wall.amount * (1.0 - absf(cover.amount)) * (1.0 - sprint.amount)
+	aim.update(delta, cam, wants_aim and wall_eff < 0.3)
+	var steady := aim.steady()
+	sway.update(delta, _body, steady)
+	recoil.update(delta)
+
+	# 2) junta a pose final
+	position = _rest_pos.lerp(aim.aim_position, aim.amount) \
+		+ wall.pos(wall_eff) + sprint.pos(sprint.amount) + sway.pos + recoil.pos(steady)
+	rotation = wall.rot(wall_eff) + sprint.rot(sprint.amount) + sway.rot + recoil.rot(steady)
+
+	# 3) tiro (nao atira com a arma levantada pela parede nem correndo)
+	if _cooldown <= 0.0 and wall_eff < block_fire_above and sprint.amount < 0.5 and captured \
+			and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		_cooldown = fire_rate
+		shoot(cam)
+
+## Direcao do tiro: o centro da tela com um desvio aleatorio dentro de um cone.
+## O cone vai de spread_hip_deg (cintura) ate spread_aim_deg (mirando).
+func _spread_direction(cam: Camera3D) -> Vector3:
+	var spread := deg_to_rad(lerpf(spread_hip_deg, spread_aim_deg, aim.amount))
+	var angle := randf() * TAU
+	var radius := sqrt(randf()) * tan(spread) # sqrt = distribuicao uniforme no circulo
+	var basis := cam.global_basis
+	return (-basis.z + basis.x * cos(angle) * radius + basis.y * sin(angle) * radius).normalized()
+
+func shoot(cam: Camera3D) -> void:
+	recoil.fire()
+	var from := cam.global_position
+	var dir := _spread_direction(cam)
+	var to := from + dir * range
+	var query := PhysicsRayQueryParameters3D.create(from, to, 1) # layer 1 = mundo
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return
+	# acertou algo que reage a tiro (ex: parte do inimigo)? ele cuida do proprio efeito (sangue)
+	var target: Object = hit.collider
+	if target.has_method("take_hit"):
+		target.take_hit(hit, dir, damage)
+		return
+	var impact: Node3D = impact_scene.instantiate()
+	get_tree().current_scene.add_child(impact)
+	impact.global_position = hit.position

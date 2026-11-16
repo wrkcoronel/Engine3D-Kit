@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://contexts/player/player.gd" id="1_player"]
+[ext_resource type="Script" path="res://contexts/player/components/head_lean.gd" id="2_lean"]
+[ext_resource type="Script" path="res://contexts/player/components/mouse_look.gd" id="3_look"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/gun.tscn" id="4_gun"]
+
+[sub_resource type="CapsuleShape3D" id="player_shape"]
+radius = 0.4
+height = 1.8
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_player")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("player_shape")
+
+[node name="MouseLook" type="Node" parent="."]
+script = ExtResource("3_look")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+script = ExtResource("2_lean")
+
+[node name="Camera" type="Camera3D" parent="Head"]
+current = true
+
+[node name="Gun" parent="Head/Camera" instance=ExtResource("4_gun")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.25, -0.6)

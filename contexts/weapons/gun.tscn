@@ -1,0 +1,58 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://contexts/weapons/gun.gd" id="1_gun"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/effects/impact.tscn" id="2_impact"]
+[ext_resource type="Script" path="res://contexts/weapons/components/gun_wall_avoid.gd" id="3_wall"]
+[ext_resource type="Script" path="res://contexts/weapons/components/gun_cover_peek.gd" id="4_cover"]
+[ext_resource type="Script" path="res://contexts/weapons/components/gun_aim.gd" id="5_aim"]
+[ext_resource type="Script" path="res://contexts/weapons/components/gun_sway.gd" id="6_sway"]
+[ext_resource type="Script" path="res://contexts/weapons/components/gun_recoil.gd" id="7_recoil"]
+[ext_resource type="Script" path="res://contexts/weapons/components/gun_sprint.gd" id="8_sprint"]
+
+[sub_resource type="BoxMesh" id="gun_mesh"]
+size = Vector3(0.1, 0.15, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="gun_mat"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="front_sight_mesh"]
+size = Vector3(0.012, 0.05, 0.012)
+
+[sub_resource type="BoxMesh" id="rear_sight_mesh"]
+size = Vector3(0.05, 0.03, 0.02)
+
+[node name="Gun" type="Node3D"]
+script = ExtResource("1_gun")
+impact_scene = ExtResource("2_impact")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("gun_mesh")
+surface_material_override/0 = SubResource("gun_mat")
+
+[node name="FrontSight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -0.22)
+mesh = SubResource("front_sight_mesh")
+surface_material_override/0 = SubResource("gun_mat")
+
+[node name="RearSight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0.2)
+mesh = SubResource("rear_sight_mesh")
+surface_material_override/0 = SubResource("gun_mat")
+
+[node name="WallAvoid" type="Node" parent="."]
+script = ExtResource("3_wall")
+
+[node name="CoverPeek" type="Node" parent="."]
+script = ExtResource("4_cover")
+
+[node name="Aim" type="Node" parent="."]
+script = ExtResource("5_aim")
+
+[node name="Sway" type="Node" parent="."]
+script = ExtResource("6_sway")
+
+[node name="Recoil" type="Node" parent="."]
+script = ExtResource("7_recoil")
+
+[node name="Sprint" type="Node" parent="."]
+script = ExtResource("8_sprint")

@@ -1,0 +1,364 @@
+[gd_scene load_steps=43 format=3]
+
+[ext_resource type="Script" path="res://contexts/enemy/enemy.gd" id="1_enemy"]
+[ext_resource type="PackedScene" path="res://contexts/enemy/effects/blood.tscn" id="2_blood"]
+[ext_resource type="PackedScene" path="res://contexts/enemy/effects/blood_stain.tscn" id="3_stain"]
+[ext_resource type="PackedScene" path="res://contexts/enemy/effects/gib.tscn" id="4_gib"]
+
+[sub_resource type="SphereShape3D" id="head_shape"]
+radius = 0.15
+
+[sub_resource type="SphereMesh" id="head_mesh"]
+radius = 0.15
+height = 0.3
+
+[sub_resource type="BoxShape3D" id="neck_shape"]
+size = Vector3(0.1, 0.08, 0.1)
+
+[sub_resource type="BoxMesh" id="neck_mesh"]
+size = Vector3(0.1, 0.08, 0.1)
+
+[sub_resource type="BoxShape3D" id="chest_shape"]
+size = Vector3(0.5, 0.35, 0.3)
+
+[sub_resource type="BoxMesh" id="chest_mesh"]
+size = Vector3(0.5, 0.35, 0.3)
+
+[sub_resource type="BoxShape3D" id="abdomen_shape"]
+size = Vector3(0.4, 0.25, 0.26)
+
+[sub_resource type="BoxMesh" id="abdomen_mesh"]
+size = Vector3(0.4, 0.25, 0.26)
+
+[sub_resource type="BoxShape3D" id="pelvis_shape"]
+size = Vector3(0.45, 0.15, 0.28)
+
+[sub_resource type="BoxMesh" id="pelvis_mesh"]
+size = Vector3(0.45, 0.15, 0.28)
+
+[sub_resource type="BoxShape3D" id="shoulder_shape"]
+size = Vector3(0.16, 0.14, 0.16)
+
+[sub_resource type="BoxMesh" id="shoulder_mesh"]
+size = Vector3(0.16, 0.14, 0.16)
+
+[sub_resource type="BoxShape3D" id="uarm_shape"]
+size = Vector3(0.14, 0.25, 0.14)
+
+[sub_resource type="BoxMesh" id="uarm_mesh"]
+size = Vector3(0.14, 0.25, 0.14)
+
+[sub_resource type="BoxShape3D" id="elbow_shape"]
+size = Vector3(0.15, 0.09, 0.15)
+
+[sub_resource type="BoxMesh" id="elbow_mesh"]
+size = Vector3(0.15, 0.09, 0.15)
+
+[sub_resource type="BoxShape3D" id="farm_shape"]
+size = Vector3(0.12, 0.27, 0.12)
+
+[sub_resource type="BoxMesh" id="farm_mesh"]
+size = Vector3(0.12, 0.27, 0.12)
+
+[sub_resource type="BoxShape3D" id="wrist_shape"]
+size = Vector3(0.1, 0.07, 0.1)
+
+[sub_resource type="BoxMesh" id="wrist_mesh"]
+size = Vector3(0.1, 0.07, 0.1)
+
+[sub_resource type="BoxShape3D" id="hand_shape"]
+size = Vector3(0.1, 0.12, 0.1)
+
+[sub_resource type="BoxMesh" id="hand_mesh"]
+size = Vector3(0.1, 0.12, 0.1)
+
+[sub_resource type="BoxShape3D" id="hip_shape"]
+size = Vector3(0.24, 0.08, 0.24)
+
+[sub_resource type="BoxMesh" id="hip_mesh"]
+size = Vector3(0.24, 0.08, 0.24)
+
+[sub_resource type="BoxShape3D" id="thigh_shape"]
+size = Vector3(0.2, 0.27, 0.2)
+
+[sub_resource type="BoxMesh" id="thigh_mesh"]
+size = Vector3(0.2, 0.27, 0.2)
+
+[sub_resource type="BoxShape3D" id="knee_shape"]
+size = Vector3(0.22, 0.1, 0.22)
+
+[sub_resource type="BoxMesh" id="knee_mesh"]
+size = Vector3(0.22, 0.1, 0.22)
+
+[sub_resource type="BoxShape3D" id="shin_shape"]
+size = Vector3(0.17, 0.27, 0.17)
+
+[sub_resource type="BoxMesh" id="shin_mesh"]
+size = Vector3(0.17, 0.27, 0.17)
+
+[sub_resource type="BoxShape3D" id="ankle_shape"]
+size = Vector3(0.13, 0.08, 0.13)
+
+[sub_resource type="BoxMesh" id="ankle_mesh"]
+size = Vector3(0.13, 0.08, 0.13)
+
+[sub_resource type="BoxShape3D" id="foot_shape"]
+size = Vector3(0.18, 0.1, 0.28)
+
+[sub_resource type="BoxMesh" id="foot_mesh"]
+size = Vector3(0.18, 0.1, 0.28)
+
+[sub_resource type="StandardMaterial3D" id="skin_mat"]
+albedo_color = Color(0.85, 0.65, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="shirt_mat"]
+albedo_color = Color(0.35, 0.4, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="pants_mat"]
+albedo_color = Color(0.2, 0.25, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="boots_mat"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="joint_mat"]
+albedo_color = Color(0.6, 0.6, 0.65, 1)
+
+[node name="Enemy" type="RigidBody3D"]
+mass = 60.0
+freeze = true
+script = ExtResource("1_enemy")
+blood_scene = ExtResource("2_blood")
+stain_scene = ExtResource("3_stain")
+gib_scene = ExtResource("4_gib")
+
+[node name="Head" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.88, 0)
+shape = SubResource("head_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Head"]
+mesh = SubResource("head_mesh")
+surface_material_override/0 = SubResource("skin_mat")
+
+[node name="Neck" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.69, 0)
+shape = SubResource("neck_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Neck"]
+mesh = SubResource("neck_mesh")
+surface_material_override/0 = SubResource("skin_mat")
+
+[node name="Chest" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.475, 0)
+shape = SubResource("chest_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Chest"]
+mesh = SubResource("chest_mesh")
+surface_material_override/0 = SubResource("shirt_mat")
+
+[node name="Abdomen" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.175, 0)
+shape = SubResource("abdomen_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Abdomen"]
+mesh = SubResource("abdomen_mesh")
+surface_material_override/0 = SubResource("shirt_mat")
+
+[node name="Pelvis" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.975, 0)
+shape = SubResource("pelvis_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pelvis"]
+mesh = SubResource("pelvis_mesh")
+surface_material_override/0 = SubResource("pants_mat")
+
+[node name="ShoulderL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 1.58, 0)
+shape = SubResource("shoulder_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ShoulderL"]
+mesh = SubResource("shoulder_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="UpperArmL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 1.385, 0)
+shape = SubResource("uarm_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="UpperArmL"]
+mesh = SubResource("uarm_mesh")
+surface_material_override/0 = SubResource("shirt_mat")
+
+[node name="ElbowL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 1.215, 0)
+shape = SubResource("elbow_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ElbowL"]
+mesh = SubResource("elbow_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="ForearmL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 1.035, 0)
+shape = SubResource("farm_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ForearmL"]
+mesh = SubResource("farm_mesh")
+surface_material_override/0 = SubResource("shirt_mat")
+
+[node name="WristL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0.865, 0)
+shape = SubResource("wrist_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="WristL"]
+mesh = SubResource("wrist_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="HandL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0.77, 0)
+shape = SubResource("hand_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="HandL"]
+mesh = SubResource("hand_mesh")
+surface_material_override/0 = SubResource("skin_mat")
+
+[node name="ShoulderR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 1.58, 0)
+shape = SubResource("shoulder_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ShoulderR"]
+mesh = SubResource("shoulder_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="UpperArmR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 1.385, 0)
+shape = SubResource("uarm_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="UpperArmR"]
+mesh = SubResource("uarm_mesh")
+surface_material_override/0 = SubResource("shirt_mat")
+
+[node name="ElbowR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 1.215, 0)
+shape = SubResource("elbow_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ElbowR"]
+mesh = SubResource("elbow_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="ForearmR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 1.035, 0)
+shape = SubResource("farm_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ForearmR"]
+mesh = SubResource("farm_mesh")
+surface_material_override/0 = SubResource("shirt_mat")
+
+[node name="WristR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0.865, 0)
+shape = SubResource("wrist_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="WristR"]
+mesh = SubResource("wrist_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="HandR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0.77, 0)
+shape = SubResource("hand_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="HandR"]
+mesh = SubResource("hand_mesh")
+surface_material_override/0 = SubResource("skin_mat")
+
+[node name="HipL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.86, 0)
+shape = SubResource("hip_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="HipL"]
+mesh = SubResource("hip_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="ThighL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.685, 0)
+shape = SubResource("thigh_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ThighL"]
+mesh = SubResource("thigh_mesh")
+surface_material_override/0 = SubResource("pants_mat")
+
+[node name="KneeL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.5, 0)
+shape = SubResource("knee_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="KneeL"]
+mesh = SubResource("knee_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="ShinL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.315, 0)
+shape = SubResource("shin_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ShinL"]
+mesh = SubResource("shin_mesh")
+surface_material_override/0 = SubResource("pants_mat")
+
+[node name="AnkleL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.14, 0)
+shape = SubResource("ankle_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="AnkleL"]
+mesh = SubResource("ankle_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="FootL" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.05, 0.04)
+shape = SubResource("foot_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="FootL"]
+mesh = SubResource("foot_mesh")
+surface_material_override/0 = SubResource("boots_mat")
+
+[node name="HipR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.86, 0)
+shape = SubResource("hip_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="HipR"]
+mesh = SubResource("hip_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="ThighR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.685, 0)
+shape = SubResource("thigh_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ThighR"]
+mesh = SubResource("thigh_mesh")
+surface_material_override/0 = SubResource("pants_mat")
+
+[node name="KneeR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.5, 0)
+shape = SubResource("knee_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="KneeR"]
+mesh = SubResource("knee_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="ShinR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.315, 0)
+shape = SubResource("shin_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="ShinR"]
+mesh = SubResource("shin_mesh")
+surface_material_override/0 = SubResource("pants_mat")
+
+[node name="AnkleR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.14, 0)
+shape = SubResource("ankle_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="AnkleR"]
+mesh = SubResource("ankle_mesh")
+surface_material_override/0 = SubResource("joint_mat")
+
+[node name="FootR" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.05, 0.04)
+shape = SubResource("foot_shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="FootR"]
+mesh = SubResource("foot_mesh")
+surface_material_override/0 = SubResource("boots_mat")
