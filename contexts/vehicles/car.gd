@@ -134,12 +134,22 @@ func _physics_process(delta: float) -> void:
 	)
 	_vel = _grip.apply_handbrake_or_rest(_vel, throttle, handbraking, grounded, delta)
 
+	var fall_speed := -velocity.y
 	_move(slope_rotation, grounded, delta)
+	var just_landed := not grounded and is_on_floor()
+	if just_landed:
+		_on_landed(fall_speed)
 	_update_visuals(delta)
 
 	_tires.update(
 		grounded, throttle, handbraking, sideways_speed, forward_speed_before_turn, total_speed
 	)
+
+
+func _on_landed(fall_speed: float) -> void:
+	if _driver == null:
+		return
+	_cam.shake(CarCamera.shake_strength_for_fall(fall_speed))
 
 
 func _update_visuals(delta: float) -> void:
