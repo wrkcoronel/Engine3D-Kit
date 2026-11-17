@@ -1,7 +1,11 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://contexts/vehicles/car.gd" id="1_car"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/ui/speedometer.tscn" id="2_speedo"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/car_camera.gd" id="3_cam"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/car_tire_fx.gd" id="4_tires"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/car_tilt.gd" id="5_tilt"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/car_grip.gd" id="6_grip"]
 
 [sub_resource type="BoxShape3D" id="car_shape"]
 size = Vector3(2, 1, 4.2)
@@ -70,4 +74,14 @@ surface_material_override/0 = SubResource("wheel_mat")
 [node name="Speedometer" parent="." instance=ExtResource("2_speedo")]
 
 [node name="Camera" type="Camera3D" parent="."]
+script = ExtResource("3_cam")
 transform = Transform3D(1, 0, 0, 0, 0.98, 0.1987, 0, -0.1987, 0.98, 0, 3.0, 6.5)
+
+[node name="TireFx" type="Node" parent="."]
+script = ExtResource("4_tires")
+
+[node name="Tilt" type="Node" parent="."]
+script = ExtResource("5_tilt")
+
+[node name="Grip" type="Node" parent="."]
+script = ExtResource("6_grip")

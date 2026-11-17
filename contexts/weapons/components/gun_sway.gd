@@ -1,5 +1,3 @@
-## BALANCO: a arma atrasa quando voce vira o mouse (sway) e balanca ao andar (bob).
-## Resultado em pos e rot; quem aplica e o gun.gd.
 class_name GunSway
 extends Node
 
@@ -17,24 +15,28 @@ var _sway := Vector2.ZERO
 var _bob_t := 0.0
 var _bob_amp := 0.0
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		_mouse_delta += event.relative
 
-## steady: 1 = solto, menor = mais firme (vem do GunAim).
+func _input(event: InputEvent) -> void:
+	var motion := event as InputEventMouseMotion
+	if motion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		_mouse_delta += motion.relative
+
+
 func update(delta: float, body: CharacterBody3D, steady: float) -> void:
-	# sway do mouse
 	var target := (_mouse_delta * sway_amount).limit_length(sway_max) * steady
 	_mouse_delta = Vector2.ZERO
 	_sway = _sway.lerp(target, 1.0 - exp(-sway_smooth * delta))
 
-	# bob ao andar
 	var speed := 0.0
 	if body and body.is_on_floor():
 		speed = Vector2(body.velocity.x, body.velocity.z).length()
 	_bob_amp = lerpf(_bob_amp, clampf(speed / 6.0, 0.0, 1.0), 1.0 - exp(-8.0 * delta))
 	_bob_t += delta * bob_speed * _bob_amp
-	var bob := Vector3(cos(_bob_t) * bob_amount.x, absf(sin(_bob_t)) * bob_amount.y, 0.0) * _bob_amp * steady
+	var bob := (
+		Vector3(cos(_bob_t) * bob_amount.x, absf(sin(_bob_t)) * bob_amount.y, 0.0)
+		* _bob_amp
+		* steady
+	)
 
 	pos = bob + Vector3(-_sway.x * 0.5, _sway.y * 0.5, 0.0)
 	rot = Vector3(-_sway.y, -_sway.x, -_sway.x * 0.5)

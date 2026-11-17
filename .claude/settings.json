@@ -1,0 +1,39 @@
+{
+	"permissions": {
+		"deny": [
+			"Edit(/gdlintrc)",
+			"Write(/gdlintrc)",
+			"Edit(/project.godot)",
+			"Write(/project.godot)",
+			"Edit(/.claude/settings.json)",
+			"Write(/.claude/settings.json)",
+			"Edit(/.claude/hooks/**)",
+			"Write(/.claude/hooks/**)"
+		]
+	},
+	"hooks": {
+		"PostToolUse": [
+			{
+				"matcher": "Edit|Write|MultiEdit",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/check_edit.js\"",
+						"timeout": 30
+					}
+				]
+			}
+		],
+		"Stop": [
+			{
+				"hooks": [
+					{
+						"type": "command",
+						"command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/check_all.js\"",
+						"timeout": 240
+					}
+				]
+			}
+		]
+	}
+}
