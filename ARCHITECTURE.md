@@ -29,7 +29,12 @@ contexts/       um contexto por assunto
 shared/         usado por mais de um contexto
   physics/ray_util.gd   distancia de um raio ate o primeiro obstaculo
 
-tests/          testes que rodam sem abrir o jogo
+tests/          testes que rodam sem abrir o jogo, uma pasta por contexto
+  run_tests.gd        roda todos os testes rapidos
+  run_scenarios.gd    roda so os cenarios (pastas scenarios/), com --fixed-fps 60
+  support/            base dos testes (TestCase)
+  vehicles/           testes do carro; scenarios/ dirige o carro na rampa
+  shared/             teste do ray_util
 ```
 
 ## Regras
@@ -67,6 +72,7 @@ Fora da fisica, a cada frame: `CarTilt` inclina o visual, `CarCamera` segue o ca
 - `gdformat .` e `gdlint .` (regras em `gdlintrc`).
 - Godot carregando o projeto: `godot_console.exe --headless --path . --quit-after 60`.
 - Testes: `godot_console.exe --headless --path . --script res://tests/run_tests.gd`.
+- Cenarios do carro: `godot_console.exe --headless --path . --fixed-fps 60 --script res://tests/run_scenarios.gd`.
 - Dentro do Claude Code, os hooks de `.claude/` rodam isso sozinhos. O `CLAUDE.md` tem as regras
   que a IA segue.
 

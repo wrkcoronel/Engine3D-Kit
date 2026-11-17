@@ -2,6 +2,7 @@ class_name CarGrip
 extends Node
 
 const REST_SPEED := 0.15
+const BURNOUT_MAX_SPEED := 2.0
 
 @export var grip := 20.0
 @export var corner_scrub := 0.25
@@ -12,6 +13,12 @@ const REST_SPEED := 0.15
 @export var drift_full_speed := 12.0
 
 var current := 20.0
+
+
+static func is_burnout(throttle: float, handbraking: bool, grounded: bool, speed: float) -> bool:
+	if not handbraking or not grounded:
+		return false
+	return throttle > 0.0 and speed < BURNOUT_MAX_SPEED
 
 
 func drift_amount() -> float:
@@ -56,6 +63,8 @@ func apply_to_velocity(
 func apply_handbrake_or_rest(
 	velocity: Vector3, throttle: float, handbraking: bool, grounded: bool, delta: float
 ) -> Vector3:
+	if is_burnout(throttle, handbraking, grounded, velocity.length()):
+		return Vector3.ZERO
 	if handbraking and grounded:
 		return velocity.move_toward(Vector3.ZERO, handbrake_decel * delta)
 	if throttle == 0.0 and velocity.length() < REST_SPEED and grounded:

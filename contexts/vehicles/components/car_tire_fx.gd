@@ -18,14 +18,19 @@ var _skid_last: Array = [null, null]
 
 func setup(car: CharacterBody3D, visual: Node3D) -> void:
 	_car = car
-	for c in visual.get_children():
-		var mesh := c as MeshInstance3D
+	_hide_from_skid_marks(visual)
+	_smoke = [
+		_make_tire_smoke(visual, Vector3(-0.70, 0.05, 1.235)),
+		_make_tire_smoke(visual, Vector3(0.70, 0.05, 1.235)),
+	]
+
+
+func _hide_from_skid_marks(node: Node) -> void:
+	for child: Node in node.get_children():
+		var mesh := child as MeshInstance3D
 		if mesh:
 			mesh.layers = 2
-	_smoke = [
-		_make_tire_smoke(visual, Vector3(-1.05, 0.1, 1.3)),
-		_make_tire_smoke(visual, Vector3(1.05, 0.1, 1.3)),
-	]
+		_hide_from_skid_marks(child)
 
 
 func update(
@@ -37,18 +42,23 @@ func update(
 	total: float,
 ) -> void:
 	var smoke := 0.0
+	var burnout_smoke := 0.0
 	if grounded:
 		smoke = clampf((absf(lat) - smoke_slip_speed) / 8.0, 0.0, 1.0)
 		if handbraking and total > 5.0:
 			smoke = maxf(smoke, 0.7)
-		if throttle > 0.0 and fs0 > -0.5 and total < 8.0:
-			smoke = maxf(smoke, 0.6 * (1.0 - total / 8.0) + 0.2)
+		var accelerating_from_low_speed := throttle > 0.0 and fs0 > -0.5 and total < 8.0
+		var burnout := handbraking and accelerating_from_low_speed
+		if burnout:
+			burnout_smoke = 0.6 * (1.0 - total / 8.0) + 0.2
+			smoke = maxf(smoke, burnout_smoke)
 		var hard_braking := (throttle > 0.0 and fs0 < -20.0) or (throttle < 0.0 and fs0 > 20.0)
 		if hard_braking:
 			smoke = maxf(smoke, clampf((absf(fs0) - 20.0) / 60.0, 0.0, 0.5))
 	_update_skids(smoke)
 	var speed_k := clampf(total / smoke_full_speed, 0.0, 1.0)
 	smoke *= lerpf(0.3, 1.0, speed_k)
+	smoke = maxf(smoke, burnout_smoke)
 	for s in _smoke:
 		s.emitting = smoke > 0.06
 		s.color = Color(1.0, 1.0, 1.0, lerpf(0.3, 1.0, smoke))

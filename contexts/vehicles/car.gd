@@ -1,8 +1,10 @@
+class_name Car
 extends CharacterBody3D
 
 const GRAVITY_MULTIPLIER := 2.0
 const MIN_TRACTION := 0.35
 const DIRECTION_CHANGE_SPEED := 1.5
+const GROUND_STICK_SPEED := 1.0
 
 @export var max_speed := 138.9
 @export var reverse_max_speed := 12.0
@@ -10,7 +12,7 @@ const DIRECTION_CHANGE_SPEED := 1.5
 @export_range(0.0, 1.0) var accel_falloff := 1.0
 @export var braking := 45.0
 @export var friction := 6.0
-@export var wheelbase := 2.8
+@export var wheelbase := 2.47
 @export var max_steer_angle_deg := 32.0
 @export var max_lat_accel := 11.0
 @export var steer_response := 4.0
@@ -20,11 +22,13 @@ const DIRECTION_CHANGE_SPEED := 1.5
 @export_group("Derrapagem")
 @export var drift_steer_boost := 0.8
 
+var input := CarInput.new()
 var _driver: CharacterBody3D
 var _vel := Vector3.ZERO
 var _move_sign := 1.0
 var _handbraking := false
 var _steer_wheel := 0.0
+var _ground_probe := GroundProbe.new()
 
 @onready var _hud: Speedometer = $Speedometer
 @onready var _cam: CarCamera = $Camera
@@ -32,19 +36,22 @@ var _steer_wheel := 0.0
 @onready var _tires: CarTireFx = $TireFx
 @onready var _tilt: CarTilt = $Tilt
 @onready var _grip: CarGrip = $Grip
+@onready var _wheels: CarWheels = $Wheels
+@onready var _body_lean: CarBodyLean = $BodyLean
+@onready var _chassis: Node3D = $Visual/Model/Chassis
 
 
 func _ready() -> void:
 	floor_snap_length = 0.4
 	_tires.setup(self, _visual)
+	_wheels.setup($Visual/Model as Node3D)
+	_body_lean.setup(_chassis)
 	_hud.visible = false
 	_cam.snap()
 
 
 func _process(delta: float) -> void:
-	_tilt.update(delta, self, _visual)
 	if _driver:
-		_cam.follow(delta)
 		_hud.update_drive(
 			delta, _vel.length(), _move_sign, _handbraking, max_speed, reverse_max_speed
 		)
@@ -96,13 +103,10 @@ func _exit() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	var throttle := 0.0
-	var steer_input := 0.0
-	var handbraking := false
-	if _driver:
-		throttle = _axis(KEY_W, KEY_UP) - _axis(KEY_S, KEY_DOWN)
-		steer_input = _axis(KEY_A, KEY_LEFT) - _axis(KEY_D, KEY_RIGHT)
-		handbraking = Input.is_physical_key_pressed(KEY_SPACE)
+	_read_input()
+	var throttle := input.throttle
+	var steer_input := input.steering
+	var handbraking := input.handbraking
 	_handbraking = handbraking
 
 	var grounded := is_on_floor()
@@ -120,7 +124,7 @@ func _physics_process(delta: float) -> void:
 	var forward_speed := _vel.dot(forward)
 	var sideways_speed := _vel.dot(right)
 
-	var slope_rotation := Quaternion(Vector3.UP, get_floor_normal() if grounded else Vector3.UP)
+	var slope_rotation := Quaternion(Vector3.UP, _slope_normal(grounded))
 
 	forward_speed = _apply_throttle(forward_speed, throttle, traction, grounded, delta)
 	forward_speed = _apply_slope(forward_speed, forward, slope_rotation, throttle, grounded, delta)
@@ -134,11 +138,51 @@ func _physics_process(delta: float) -> void:
 	)
 	_vel = _grip.apply_handbrake_or_rest(_vel, throttle, handbraking, grounded, delta)
 
+	var fall_speed := -velocity.y
 	_move(slope_rotation, grounded, delta)
+	var just_landed := not grounded and is_on_floor()
+	if just_landed:
+		_on_landed(fall_speed)
+	_update_visuals(delta)
+	_update_wheels_and_body(delta, steering, throttle, handbraking)
 
 	_tires.update(
 		grounded, throttle, handbraking, sideways_speed, forward_speed_before_turn, total_speed
 	)
+
+
+func _on_landed(fall_speed: float) -> void:
+	_body_lean.land(fall_speed)
+	if _driver == null:
+		return
+	_cam.shake(CarCamera.shake_strength_for_fall(fall_speed))
+
+
+func _update_wheels_and_body(
+	delta: float, steering: float, throttle: float, handbraking: bool
+) -> void:
+	var grounded := is_on_floor()
+	var burning_out := CarGrip.is_burnout(throttle, handbraking, grounded, _vel.length())
+	var rear_wheels_locked := handbraking and not burning_out
+	var steer_angle := deg_to_rad(max_steer_angle_deg) * steering
+	var forward_speed := _vel.dot(-global_basis.z)
+	_wheels.update(delta, forward_speed, steer_angle, rear_wheels_locked, burning_out)
+	_body_lean.update(delta, _vel, global_basis, grounded, _chassis)
+
+
+func _update_visuals(delta: float) -> void:
+	_ground_probe.sample(get_world_3d().direct_space_state, global_transform, get_rid())
+	_tilt.update(delta, self, _visual, _ground_probe)
+	if _driver:
+		_cam.follow(delta)
+
+
+func _slope_normal(grounded: bool) -> Vector3:
+	if not grounded:
+		return Vector3.UP
+	if _ground_probe.found_ground:
+		return _ground_probe.surface_normal
+	return get_floor_normal()
 
 
 func _smooth_steering(steer_input: float, delta: float) -> float:
@@ -213,6 +257,10 @@ func _apply_slope(
 func _move(slope_rotation: Quaternion, grounded: bool, delta: float) -> void:
 	if grounded:
 		velocity = slope_rotation * _vel
+		var climbing := velocity.y > 0.0
+		if climbing:
+			var slope_normal := slope_rotation * Vector3.UP
+			velocity -= slope_normal * GROUND_STICK_SPEED
 	else:
 		var vertical_speed := velocity.y
 		velocity = _vel
@@ -226,5 +274,10 @@ func _move(slope_rotation: Quaternion, grounded: bool, delta: float) -> void:
 		_vel = horizontal_velocity
 
 
-func _axis(key: Key, alt: Key) -> float:
-	return 1.0 if Input.is_physical_key_pressed(key) or Input.is_physical_key_pressed(alt) else 0.0
+func _read_input() -> void:
+	if not input.from_keyboard:
+		return
+	if _driver:
+		input.read_keyboard()
+		return
+	input.clear()

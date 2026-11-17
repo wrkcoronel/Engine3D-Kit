@@ -68,3 +68,10 @@ jobs:
           godot --headless --path . --script res://tests/run_tests.gd | tee tests.log
           echo "### Testes" >> "$GITHUB_STEP_SUMMARY"
           tail -n 1 tests.log >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Cenarios
+        shell: bash
+        run: |
+          godot --headless --path . --fixed-fps 60 --script res://tests/run_scenarios.gd | tee scenarios.log
+          echo "### Cenarios" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 1 scenarios.log >> "$GITHUB_STEP_SUMMARY"

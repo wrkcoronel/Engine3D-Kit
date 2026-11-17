@@ -61,6 +61,20 @@ Rodar, nesta ordem, e deixar tudo limpo:
 3. `godot --headless --path . --quit-after 60`
 4. Testes: `godot --headless --path . --script res://tests/run_tests.gd`
    (codigo de saida 1 = algum teste falhou). Codigo novo com logica pura ganha teste em `tests/`.
+5. Se mexeu na fisica ou no visual do carro, os cenarios:
+   `godot --headless --path . --fixed-fps 60 --script res://tests/run_scenarios.gd`
+   (`--fixed-fps 60` faz a fisica rodar mais rapido que o tempo real; sem ele demora minutos).
+
+## Organizacao dos testes
+- Uma pasta por contexto, sem subpastas do codigo: o teste de
+  `contexts/vehicles/components/car_grip.gd` fica em `tests/vehicles/test_car_grip.gd`. Codigo de
+  `shared/` testa em `tests/shared/`. O nome e o do arquivo testado com `test_` na frente.
+- Cenarios (o jogo rodando com o carro sendo dirigido por codigo) ficam em `scenarios/` dentro da
+  pasta do contexto, como `tests/vehicles/scenarios/`. Eles nao rodam no `run_tests.gd`, so no
+  `run_scenarios.gd`.
+- Novo cenario do carro: um metodo `test_` usando `CarScenario`, que posiciona o carro, dirige
+  pelo `car.input` e mede rodas, trocas de chao e decolagem. Nao escrever script solto para testar.
+- `tests/support/` guarda o que e base dos testes (`TestCase`).
 Se criar `class_name` novo, rodar antes `godot --headless --path . --import`.
 
 Esses comandos precisam estar no PATH (no Windows, o Godot e `godot_console.exe`). Se algum nao
