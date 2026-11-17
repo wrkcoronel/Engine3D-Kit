@@ -4,9 +4,9 @@ extends Camera3D
 const SHAKE_MIN_FALL_SPEED := 3.0
 const SHAKE_FULL_FALL_SPEED := 18.0
 
-@export var cam_distance := 6.5
-@export var cam_height := 3.0
-@export var cam_look_height := 1.2
+@export var cam_distance := 4.8
+@export var cam_height := 2.1
+@export var cam_look_height := 1.0
 @export var cam_yaw_smooth := 3.0
 @export var cam_pos_smooth := 60.0
 @export var cam_mouse_sens := 0.003
