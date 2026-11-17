@@ -1,3 +1,4 @@
+class_name Car
 extends CharacterBody3D
 
 const GRAVITY_MULTIPLIER := 2.0
@@ -21,6 +22,7 @@ const GROUND_STICK_SPEED := 1.0
 @export_group("Derrapagem")
 @export var drift_steer_boost := 0.8
 
+var input := CarInput.new()
 var _driver: CharacterBody3D
 var _vel := Vector3.ZERO
 var _move_sign := 1.0
@@ -101,13 +103,10 @@ func _exit() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	var throttle := 0.0
-	var steer_input := 0.0
-	var handbraking := false
-	if _driver:
-		throttle = _axis(KEY_W, KEY_UP) - _axis(KEY_S, KEY_DOWN)
-		steer_input = _axis(KEY_A, KEY_LEFT) - _axis(KEY_D, KEY_RIGHT)
-		handbraking = Input.is_physical_key_pressed(KEY_SPACE)
+	_read_input()
+	var throttle := input.throttle
+	var steer_input := input.steering
+	var handbraking := input.handbraking
 	_handbraking = handbraking
 
 	var grounded := is_on_floor()
@@ -275,5 +274,10 @@ func _move(slope_rotation: Quaternion, grounded: bool, delta: float) -> void:
 		_vel = horizontal_velocity
 
 
-func _axis(key: Key, alt: Key) -> float:
-	return 1.0 if Input.is_physical_key_pressed(key) or Input.is_physical_key_pressed(alt) else 0.0
+func _read_input() -> void:
+	if not input.from_keyboard:
+		return
+	if _driver:
+		input.read_keyboard()
+		return
+	input.clear()
