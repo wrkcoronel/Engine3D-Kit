@@ -1,8 +1,7 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://app/arena.gd" id="1_arena"]
 [ext_resource type="PackedScene" path="res://contexts/player/player.tscn" id="2_player"]
-[ext_resource type="PackedScene" path="res://contexts/enemy/enemy.tscn" id="3_enemy"]
 
 [sub_resource type="BoxMesh" id="floor_mesh"]
 size = Vector3(40, 1, 40)
@@ -64,6 +63,3 @@ shape = SubResource("wall_shape")
 
 [node name="Player" parent="." instance=ExtResource("2_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4)
-
-[node name="Enemy" parent="." instance=ExtResource("3_enemy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
