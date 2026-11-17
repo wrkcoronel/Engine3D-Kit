@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: 4.8-dev7
+  GDTOOLKIT_VERSION: 4.5.0
+
+jobs:
+  qualidade:
+    name: qualidade
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Baixar o codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar gdtoolkit (gdformat e gdlint)
+        run: pip install "gdtoolkit==${GDTOOLKIT_VERSION}"
+
+      - name: Formatacao (gdformat)
+        run: gdformat --check .
+
+      - name: Lint (gdlint)
+        run: gdlint .
+
+      - name: Sem comentarios no codigo
+        run: node .github/scripts/check_no_comments.js
+
+      - name: Instalar Godot
+        run: |
+          curl -fsSL -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_VERSION}_linux.x86_64" /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
+          godot --version
+
+      - name: Importar o projeto
+        run: godot --headless --path . --import || true
+
+      - name: Carregar o projeto (avisos tratados como erro)
+        run: |
+          godot --headless --path . --quit-after 60 2>&1 | tee load.log
+          if grep -E "SCRIPT ERROR|Parse Error|Compile Error|^ERROR" load.log; then
+            echo "O Godot acusou erro ao carregar o projeto."
+            exit 1
+          fi
+
+      - name: Testes
+        run: godot --headless --path . --script res://tests/run_tests.gd

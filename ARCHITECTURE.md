@@ -70,5 +70,8 @@ Fora da fisica, a cada frame: `CarTilt` inclina o visual, `CarCamera` segue o ca
 - Dentro do Claude Code, os hooks de `.claude/` rodam isso sozinhos. O `CLAUDE.md` tem as regras
   que a IA segue.
 
+- No GitHub, `.github/workflows/ci.yml` roda tudo isso (mais a checagem de comentarios) em todo
+  pull request. O job se chama `qualidade` e pode ser exigido antes de aprovar.
+
 `gdlintrc`, os avisos em `project.godot` e `.claude/` definem o que conta como erro e sao
 protegidos: so o dono muda.
