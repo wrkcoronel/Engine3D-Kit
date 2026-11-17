@@ -14,6 +14,12 @@ func _run_all() -> void:
 
 	for file_name in _suite_files():
 		var script := load(TESTS_DIR + file_name) as GDScript
+		if script == null or not script.can_instantiate():
+			total_tests += 1
+			failed_tests.append(file_name)
+			print("FAIL  ", file_name)
+			print("        - o arquivo de teste nao compilou")
+			continue
 		for method in script.get_script_method_list():
 			var method_name: String = method.name
 			if not method_name.begins_with("test_"):
@@ -42,6 +48,10 @@ func _run_all() -> void:
 	print(
 		"%d testes, %d verificacoes, %d falharam" % [total_tests, total_checks, failed_tests.size()]
 	)
+	if total_tests == 0:
+		print("nenhum teste encontrado em %s" % TESTS_DIR)
+		quit(1)
+		return
 	quit(1 if not failed_tests.is_empty() else 0)
 
 
