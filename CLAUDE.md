@@ -29,6 +29,19 @@ brevidade. Isto vale para qualquer codigo que a IA escrever ou alterar.
 - Sempre tipar variaveis, parametros e retornos. `for x: Tipo in lista`.
 - Nao acessar propriedade de tipo generico: fazer cast antes (`var key := event as InputEventKey`).
 
+## Commits e pull requests
+- Titulo no formato `tipo(escopo): descricao`, em minusculo, no imperativo, sem ponto final, ate 72
+  caracteres. O titulo do pull request segue o mesmo formato (o CI reprova se nao seguir) e vira o
+  titulo do commit no Squash and merge.
+- Tipos: `feat`, `fix`, `refactor`, `test`, `docs`, `ci`, `chore`, `style`, `perf`, `revert`.
+- Escopos usuais: `car`, `player`, `gun`, `world`, `arena`, `tests`, `lint`, `ci`. Sem escopo, se a
+  mudanca nao for de um contexto so.
+- `!` antes dos dois pontos marca quebra de compatibilidade (`refactor(car)!: renomeia export`).
+- Uma mudanca por commit. O corpo, se houver, explica o PORQUE.
+- Exemplos: `refactor(car): divide o carro em componentes`, `fix(tests): falha sem testes`,
+  `ci: atualiza as acoes`, `docs: reescreve o ARCHITECTURE.md`.
+- Terminar com a linha `Co-Authored-By` quando a IA escreveu o commit.
+
 ## Arquivos protegidos (so o dono muda)
 - `gdlintrc`, os avisos em `[debug]` do `project.godot` e `.claude/settings.json` definem o que
   conta como erro. Nunca mudar esses valores para fazer lint, aviso ou teste passar.
@@ -43,10 +56,15 @@ brevidade. Isto vale para qualquer codigo que a IA escrever ou alterar.
 
 ## Antes de terminar qualquer mudanca
 Rodar, nesta ordem, e deixar tudo limpo:
-1. `C:\Users\pc\Desktop\env\Scripts\gdformat.exe .`
-2. `C:\Users\pc\Desktop\env\Scripts\gdlint.exe .`
-3. `"C:\Program Files\Godot\godot_console.exe" --headless --path . --quit-after 60`
-4. Testes: `"C:\Program Files\Godot\godot_console.exe" --headless --path . --script res://tests/run_tests.gd`
+1. `gdformat .`
+2. `gdlint .`
+3. `godot --headless --path . --quit-after 60`
+4. Testes: `godot --headless --path . --script res://tests/run_tests.gd`
    (codigo de saida 1 = algum teste falhou). Codigo novo com logica pura ganha teste em `tests/`.
-Se criar `class_name` novo, rodar antes `godot_console.exe --headless --path . --import`.
+Se criar `class_name` novo, rodar antes `godot --headless --path . --import`.
+
+Esses comandos precisam estar no PATH (no Windows, o Godot e `godot_console.exe`). Se algum nao
+estiver, definir a variavel de ambiente `GDLINT`, `GDFORMAT` ou `GODOT` com o caminho completo; os
+hooks usam essas variaveis primeiro. Nunca escrever caminho absoluto de maquina em arquivo
+versionado.
 Dizer o que NAO foi testado jogando.

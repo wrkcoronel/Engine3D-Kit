@@ -3,9 +3,9 @@ const path = require("path");
 const cp = require("child_process");
 
 const ROOT = process.env.CLAUDE_PROJECT_DIR || process.cwd();
-const GDLINT = process.env.GDLINT || "C:/Users/pc/Desktop/env/Scripts/gdlint.exe";
-const GDFORMAT = process.env.GDFORMAT || "C:/Users/pc/Desktop/env/Scripts/gdformat.exe";
-const GODOT = process.env.GODOT || "C:/Program Files/Godot/godot_console.exe";
+const GDLINT = process.env.GDLINT || "gdlint";
+const GDFORMAT = process.env.GDFORMAT || "gdformat";
+const GODOT = process.env.GODOT || (process.platform === "win32" ? "godot_console" : "godot");
 const STAMP = path.join(ROOT, ".claude", ".last_check");
 const WATCHED = ["app", "contexts", "shared", "tests"];
 const WATCHED_FILES = ["project.godot", "gdlintrc"];
@@ -31,6 +31,9 @@ function newestChange(dir) {
 
 function run(command, args) {
 	const result = cp.spawnSync(command, args, { cwd: ROOT, encoding: "utf8" });
+	if (result.error) {
+		return { status: 1, output: `nao foi possivel rodar "${command}": ${result.error.message}. Coloque no PATH ou defina GDLINT, GDFORMAT ou GODOT com o caminho completo.` };
+	}
 	return { status: result.status, output: `${result.stdout || ""}${result.stderr || ""}` };
 }
 

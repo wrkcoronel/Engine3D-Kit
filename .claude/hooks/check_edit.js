@@ -1,7 +1,7 @@
 const fs = require("fs");
 const cp = require("child_process");
 
-const GDLINT = process.env.GDLINT || "C:/Users/pc/Desktop/env/Scripts/gdlint.exe";
+const GDLINT = process.env.GDLINT || "gdlint";
 const MAX_LINES = 30;
 
 function readInput() {
@@ -43,7 +43,9 @@ for (const lineNumber of findCommentLines(fs.readFileSync(file, "utf8"))) {
 }
 
 const lint = cp.spawnSync(GDLINT, [file], { encoding: "utf8" });
-if (lint.status !== 0) {
+if (lint.error) {
+	problems.push(`nao foi possivel rodar "${GDLINT}": ${lint.error.message}. Coloque no PATH ou defina GDLINT com o caminho completo.`);
+} else if (lint.status !== 0) {
 	const output = `${lint.stdout || ""}${lint.stderr || ""}`.trim();
 	problems.push(...output.split("\n"));
 }
