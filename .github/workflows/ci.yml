@@ -13,14 +13,14 @@ env:
 jobs:
   qualidade:
     name: qualidade
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Baixar o codigo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Instalar Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -56,4 +56,8 @@ jobs:
           fi
 
       - name: Testes
-        run: godot --headless --path . --script res://tests/run_tests.gd
+        shell: bash
+        run: |
+          godot --headless --path . --script res://tests/run_tests.gd | tee tests.log
+          echo "### Testes" >> "$GITHUB_STEP_SUMMARY"
+          tail -n 1 tests.log >> "$GITHUB_STEP_SUMMARY"
