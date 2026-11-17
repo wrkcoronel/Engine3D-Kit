@@ -3,8 +3,6 @@
 		"deny": [
 			"Edit(/gdlintrc)",
 			"Write(/gdlintrc)",
-			"Edit(/project.godot)",
-			"Write(/project.godot)",
 			"Edit(/.claude/settings.json)",
 			"Write(/.claude/settings.json)",
 			"Edit(/.claude/hooks/**)",
