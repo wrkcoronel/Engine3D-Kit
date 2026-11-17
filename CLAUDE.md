@@ -43,10 +43,15 @@ brevidade. Isto vale para qualquer codigo que a IA escrever ou alterar.
 
 ## Antes de terminar qualquer mudanca
 Rodar, nesta ordem, e deixar tudo limpo:
-1. `C:\Users\pc\Desktop\env\Scripts\gdformat.exe .`
-2. `C:\Users\pc\Desktop\env\Scripts\gdlint.exe .`
-3. `"C:\Program Files\Godot\godot_console.exe" --headless --path . --quit-after 60`
-4. Testes: `"C:\Program Files\Godot\godot_console.exe" --headless --path . --script res://tests/run_tests.gd`
+1. `gdformat .`
+2. `gdlint .`
+3. `godot --headless --path . --quit-after 60`
+4. Testes: `godot --headless --path . --script res://tests/run_tests.gd`
    (codigo de saida 1 = algum teste falhou). Codigo novo com logica pura ganha teste em `tests/`.
-Se criar `class_name` novo, rodar antes `godot_console.exe --headless --path . --import`.
+Se criar `class_name` novo, rodar antes `godot --headless --path . --import`.
+
+Esses comandos precisam estar no PATH (no Windows, o Godot e `godot_console.exe`). Se algum nao
+estiver, definir a variavel de ambiente `GDLINT`, `GDFORMAT` ou `GODOT` com o caminho completo; os
+hooks usam essas variaveis primeiro. Nunca escrever caminho absoluto de maquina em arquivo
+versionado.
 Dizer o que NAO foi testado jogando.
