@@ -5,7 +5,6 @@ const RAMP_NEAR_START_Z := 2.0
 const RAMP_FAR_END_Z := -50.0
 const RAMP_LEFT_X := 5.0
 const RAMP_RIGHT_X := 35.0
-const WHEEL_RADIUS := 0.4
 const WHEEL_NAMES: Array[String] = ["WheelFL", "WheelFR", "WheelBL", "WheelBR"]
 
 var car: Car
@@ -36,7 +35,7 @@ func start(test: TestCase, position: Vector3, yaw_degrees: float) -> void:
 	car.rotation.y = deg_to_rad(yaw_degrees)
 	car.reset_physics_interpolation()
 	for wheel_name: String in WHEEL_NAMES:
-		_wheels.append(car.get_node("Visual/" + wheel_name) as Node3D)
+		_wheels.append(car.get_node("Visual/Model/" + wheel_name) as Node3D)
 
 
 func drive(ticks: int, controller: Callable) -> void:
@@ -70,7 +69,7 @@ func _measure_wheel_sink() -> void:
 		if hit.is_empty():
 			continue
 		var ground_height := (hit["position"] as Vector3).y
-		var wheel_bottom := wheel.global_position.y - WHEEL_RADIUS
+		var wheel_bottom := wheel.global_position.y - GroundProbe.WHEEL_RADIUS
 		worst_wheel_sink = minf(worst_wheel_sink, wheel_bottom - ground_height)
 
 

@@ -1,7 +1,7 @@
 class_name CarWheels
 extends Node
 
-const WHEEL_RADIUS := 0.4
+const WHEEL_RADIUS := GroundProbe.WHEEL_RADIUS
 const BURNOUT_SURFACE_SPEED := 18.0
 
 var _front_wheels: Array[Node3D] = []
@@ -17,9 +17,13 @@ static func rolled_angle_after(angle: float, surface_speed: float, delta: float)
 	return wrapf(new_angle, -PI, PI)
 
 
-func setup(visual: Node3D) -> void:
-	_front_wheels = [visual.get_node("WheelFL") as Node3D, visual.get_node("WheelFR") as Node3D]
-	_rear_wheels = [visual.get_node("WheelBL") as Node3D, visual.get_node("WheelBR") as Node3D]
+func setup(wheel_parent: Node3D) -> void:
+	_front_wheels = [
+		wheel_parent.get_node("WheelFL") as Node3D, wheel_parent.get_node("WheelFR") as Node3D
+	]
+	_rear_wheels = [
+		wheel_parent.get_node("WheelBL") as Node3D, wheel_parent.get_node("WheelBR") as Node3D
+	]
 	_rest_basis = _front_wheels[0].basis
 
 

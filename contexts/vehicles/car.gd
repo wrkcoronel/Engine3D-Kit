@@ -12,7 +12,7 @@ const GROUND_STICK_SPEED := 1.0
 @export_range(0.0, 1.0) var accel_falloff := 1.0
 @export var braking := 45.0
 @export var friction := 6.0
-@export var wheelbase := 2.8
+@export var wheelbase := 2.47
 @export var max_steer_angle_deg := 32.0
 @export var max_lat_accel := 11.0
 @export var steer_response := 4.0
@@ -38,13 +38,13 @@ var _ground_probe := GroundProbe.new()
 @onready var _grip: CarGrip = $Grip
 @onready var _wheels: CarWheels = $Wheels
 @onready var _body_lean: CarBodyLean = $BodyLean
-@onready var _chassis: Node3D = $Visual/Chassis
+@onready var _chassis: Node3D = $Visual/Model/Chassis
 
 
 func _ready() -> void:
 	floor_snap_length = 0.4
 	_tires.setup(self, _visual)
-	_wheels.setup(_visual)
+	_wheels.setup($Visual/Model as Node3D)
 	_body_lean.setup(_chassis)
 	_hud.visible = false
 	_cam.snap()

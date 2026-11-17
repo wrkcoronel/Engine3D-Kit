@@ -20,8 +20,8 @@ func setup(car: CharacterBody3D, visual: Node3D) -> void:
 	_car = car
 	_hide_from_skid_marks(visual)
 	_smoke = [
-		_make_tire_smoke(visual, Vector3(-1.05, 0.1, 1.3)),
-		_make_tire_smoke(visual, Vector3(1.05, 0.1, 1.3)),
+		_make_tire_smoke(visual, Vector3(-0.70, 0.05, 1.235)),
+		_make_tire_smoke(visual, Vector3(0.70, 0.05, 1.235)),
 	]
 
 

@@ -3,11 +3,11 @@ extends RefCounted
 
 const RAY_START_HEIGHT := 1.5
 const RAY_LENGTH := 3.0
-const WHEEL_RADIUS := 0.4
+const WHEEL_RADIUS := 0.29
 const MIN_FLOOR_NORMAL_HEIGHT := 0.1
 
-var half_width := 1.05
-var half_wheelbase := 1.3
+var half_width := 0.70
+var half_wheelbase := 1.235
 
 var found_ground := false
 var surface_normal := Vector3.UP
