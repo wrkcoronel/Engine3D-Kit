@@ -29,6 +29,19 @@ brevidade. Isto vale para qualquer codigo que a IA escrever ou alterar.
 - Sempre tipar variaveis, parametros e retornos. `for x: Tipo in lista`.
 - Nao acessar propriedade de tipo generico: fazer cast antes (`var key := event as InputEventKey`).
 
+## Commits e pull requests
+- Titulo no formato `tipo(escopo): descricao`, em minusculo, no imperativo, sem ponto final, ate 72
+  caracteres. O titulo do pull request segue o mesmo formato (o CI reprova se nao seguir) e vira o
+  titulo do commit no Squash and merge.
+- Tipos: `feat`, `fix`, `refactor`, `test`, `docs`, `ci`, `chore`, `style`, `perf`, `revert`.
+- Escopos usuais: `car`, `player`, `gun`, `world`, `arena`, `tests`, `lint`, `ci`. Sem escopo, se a
+  mudanca nao for de um contexto so.
+- `!` antes dos dois pontos marca quebra de compatibilidade (`refactor(car)!: renomeia export`).
+- Uma mudanca por commit. O corpo, se houver, explica o PORQUE.
+- Exemplos: `refactor(car): divide o carro em componentes`, `fix(tests): falha sem testes`,
+  `ci: atualiza as acoes`, `docs: reescreve o ARCHITECTURE.md`.
+- Terminar com a linha `Co-Authored-By` quando a IA escreveu o commit.
+
 ## Arquivos protegidos (so o dono muda)
 - `gdlintrc`, os avisos em `[debug]` do `project.godot` e `.claude/settings.json` definem o que
   conta como erro. Nunca mudar esses valores para fazer lint, aviso ou teste passar.

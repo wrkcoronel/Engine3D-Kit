@@ -1,0 +1,9 @@
+
+# tipo(escopo): descricao no imperativo, minusculo, sem ponto final (ate 72 caracteres)
+#
+# Tipos: feat, fix, refactor, test, docs, ci, chore, style, perf, revert
+# Escopos: car, player, gun, world, arena, tests, lint, ci
+# Quebra de compatibilidade: coloque ! antes dos dois pontos. Ex: refactor(car)!: renomeia export
+#
+# Corpo (opcional, depois de uma linha em branco): explique o PORQUE, nao o que o codigo faz.
+# Uma mudanca por commit. Linhas que comecam com # sao ignoradas pelo git.
