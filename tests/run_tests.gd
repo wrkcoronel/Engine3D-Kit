@@ -8,6 +8,7 @@ func _initialize() -> void:
 
 
 func _run_all() -> void:
+	await process_frame
 	var total_tests := 0
 	var total_checks := 0
 	var failed_tests: Array[String] = []
@@ -55,10 +56,23 @@ func _run_all() -> void:
 	quit(1 if not failed_tests.is_empty() else 0)
 
 
-func _suite_files() -> PackedStringArray:
-	var suites := PackedStringArray()
-	for file_name in DirAccess.get_files_at(TESTS_DIR):
-		var is_test_file := file_name.begins_with("test_") and file_name.ends_with(".gd")
-		if is_test_file and file_name != "test_case.gd":
-			suites.append(file_name)
+func _accepts_suite(relative_path: String) -> bool:
+	return not relative_path.contains("/scenarios/")
+
+
+func _suite_files() -> Array[String]:
+	var suites: Array[String] = []
+	_collect_suites("", suites)
 	return suites
+
+
+func _collect_suites(relative_folder: String, suites: Array[String]) -> void:
+	var folder := TESTS_DIR + relative_folder
+	for file_name: String in DirAccess.get_files_at(folder):
+		var is_test_file := file_name.begins_with("test_") and file_name.ends_with(".gd")
+		var is_base_class := file_name == "test_case.gd"
+		var relative_path := relative_folder + file_name
+		if is_test_file and not is_base_class and _accepts_suite(relative_path):
+			suites.append(relative_path)
+	for folder_name: String in DirAccess.get_directories_at(folder):
+		_collect_suites(relative_folder + folder_name + "/", suites)
