@@ -36,3 +36,11 @@ func _make_grip() -> CarGrip:
 	var grip := CarGrip.new()
 	spawn(grip)
 	return grip
+
+
+func test_is_burnout_only_with_handbrake_throttle_and_slow() -> void:
+	assert_true(CarGrip.is_burnout(1.0, true, true, 0.0), "parado, freio de mao e acelerador")
+	assert_true(not CarGrip.is_burnout(1.0, false, true, 0.0), "sem freio de mao nao e burnout")
+	assert_true(not CarGrip.is_burnout(0.0, true, true, 0.0), "sem acelerar nao e burnout")
+	assert_true(not CarGrip.is_burnout(1.0, true, true, 10.0), "em velocidade e drift, nao burnout")
+	assert_true(not CarGrip.is_burnout(1.0, true, false, 0.0), "no ar nao e burnout")

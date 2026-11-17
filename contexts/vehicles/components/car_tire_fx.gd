@@ -18,14 +18,19 @@ var _skid_last: Array = [null, null]
 
 func setup(car: CharacterBody3D, visual: Node3D) -> void:
 	_car = car
-	for c in visual.get_children():
-		var mesh := c as MeshInstance3D
-		if mesh:
-			mesh.layers = 2
+	_hide_from_skid_marks(visual)
 	_smoke = [
 		_make_tire_smoke(visual, Vector3(-1.05, 0.1, 1.3)),
 		_make_tire_smoke(visual, Vector3(1.05, 0.1, 1.3)),
 	]
+
+
+func _hide_from_skid_marks(node: Node) -> void:
+	for child: Node in node.get_children():
+		var mesh := child as MeshInstance3D
+		if mesh:
+			mesh.layers = 2
+		_hide_from_skid_marks(child)
 
 
 func update(

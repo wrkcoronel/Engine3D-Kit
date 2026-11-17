@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://contexts/vehicles/car.gd" id="1_car"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/ui/speedometer.tscn" id="2_speedo"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://contexts/vehicles/components/car_tire_fx.gd" id="4_tires"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/car_tilt.gd" id="5_tilt"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/car_grip.gd" id="6_grip"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/car_wheels.gd" id="7_wheels"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/car_body_lean.gd" id="8_lean"]
 
 [sub_resource type="BoxShape3D" id="car_shape"]
 size = Vector3(2, 1, 4.2)
@@ -30,6 +32,12 @@ height = 0.3
 [sub_resource type="StandardMaterial3D" id="wheel_mat"]
 albedo_color = Color(0.05, 0.05, 0.05, 1)
 
+[sub_resource type="BoxMesh" id="spoke_mesh"]
+size = Vector3(0.62, 0.34, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="spoke_mat"]
+albedo_color = Color(0.55, 0.55, 0.58, 1)
+
 [node name="Car" type="CharacterBody3D" groups=["vehicles"]]
 collision_layer = 1
 collision_mask = 1
@@ -41,13 +49,16 @@ shape = SubResource("car_shape")
 
 [node name="Visual" type="Node3D" parent="."]
 
-[node name="Body" type="MeshInstance3D" parent="Visual"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+[node name="Chassis" type="Node3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+
+[node name="Body" type="MeshInstance3D" parent="Visual/Chassis"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 mesh = SubResource("body_mesh")
 surface_material_override/0 = SubResource("body_mat")
 
-[node name="Cabin" type="MeshInstance3D" parent="Visual"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.3)
+[node name="Cabin" type="MeshInstance3D" parent="Visual/Chassis"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0.3)
 mesh = SubResource("cabin_mesh")
 surface_material_override/0 = SubResource("cabin_mat")
 
@@ -56,20 +67,36 @@ transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -1.05, 0.4, -1.3)
 mesh = SubResource("wheel_mesh")
 surface_material_override/0 = SubResource("wheel_mat")
 
+[node name="Spoke" type="MeshInstance3D" parent="Visual/WheelFL"]
+mesh = SubResource("spoke_mesh")
+surface_material_override/0 = SubResource("spoke_mat")
+
 [node name="WheelFR" type="MeshInstance3D" parent="Visual"]
 transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 1.05, 0.4, -1.3)
 mesh = SubResource("wheel_mesh")
 surface_material_override/0 = SubResource("wheel_mat")
+
+[node name="Spoke" type="MeshInstance3D" parent="Visual/WheelFR"]
+mesh = SubResource("spoke_mesh")
+surface_material_override/0 = SubResource("spoke_mat")
 
 [node name="WheelBL" type="MeshInstance3D" parent="Visual"]
 transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -1.05, 0.4, 1.3)
 mesh = SubResource("wheel_mesh")
 surface_material_override/0 = SubResource("wheel_mat")
 
+[node name="Spoke" type="MeshInstance3D" parent="Visual/WheelBL"]
+mesh = SubResource("spoke_mesh")
+surface_material_override/0 = SubResource("spoke_mat")
+
 [node name="WheelBR" type="MeshInstance3D" parent="Visual"]
 transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 1.05, 0.4, 1.3)
 mesh = SubResource("wheel_mesh")
 surface_material_override/0 = SubResource("wheel_mat")
+
+[node name="Spoke" type="MeshInstance3D" parent="Visual/WheelBR"]
+mesh = SubResource("spoke_mesh")
+surface_material_override/0 = SubResource("spoke_mat")
 
 [node name="Speedometer" parent="." instance=ExtResource("2_speedo")]
 
@@ -85,3 +112,9 @@ script = ExtResource("5_tilt")
 
 [node name="Grip" type="Node" parent="."]
 script = ExtResource("6_grip")
+
+[node name="Wheels" type="Node" parent="."]
+script = ExtResource("7_wheels")
+
+[node name="BodyLean" type="Node" parent="."]
+script = ExtResource("8_lean")

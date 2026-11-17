@@ -15,6 +15,12 @@ const BURNOUT_MAX_SPEED := 2.0
 var current := 20.0
 
 
+static func is_burnout(throttle: float, handbraking: bool, grounded: bool, speed: float) -> bool:
+	if not handbraking or not grounded:
+		return false
+	return throttle > 0.0 and speed < BURNOUT_MAX_SPEED
+
+
 func drift_amount() -> float:
 	return clampf(1.0 - current / grip, 0.0, 1.0)
 
@@ -57,10 +63,9 @@ func apply_to_velocity(
 func apply_handbrake_or_rest(
 	velocity: Vector3, throttle: float, handbraking: bool, grounded: bool, delta: float
 ) -> Vector3:
+	if is_burnout(throttle, handbraking, grounded, velocity.length()):
+		return Vector3.ZERO
 	if handbraking and grounded:
-		var burnout := throttle > 0.0 and velocity.length() < BURNOUT_MAX_SPEED
-		if burnout:
-			return Vector3.ZERO
 		return velocity.move_toward(Vector3.ZERO, handbrake_decel * delta)
 	if throttle == 0.0 and velocity.length() < REST_SPEED and grounded:
 		return Vector3.ZERO

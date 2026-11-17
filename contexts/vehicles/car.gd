@@ -34,11 +34,16 @@ var _ground_probe := GroundProbe.new()
 @onready var _tires: CarTireFx = $TireFx
 @onready var _tilt: CarTilt = $Tilt
 @onready var _grip: CarGrip = $Grip
+@onready var _wheels: CarWheels = $Wheels
+@onready var _body_lean: CarBodyLean = $BodyLean
+@onready var _chassis: Node3D = $Visual/Chassis
 
 
 func _ready() -> void:
 	floor_snap_length = 0.4
 	_tires.setup(self, _visual)
+	_wheels.setup(_visual)
+	_body_lean.setup(_chassis)
 	_hud.visible = false
 	_cam.snap()
 
@@ -140,6 +145,7 @@ func _physics_process(delta: float) -> void:
 	if just_landed:
 		_on_landed(fall_speed)
 	_update_visuals(delta)
+	_update_wheels_and_body(delta, steering, throttle, handbraking)
 
 	_tires.update(
 		grounded, throttle, handbraking, sideways_speed, forward_speed_before_turn, total_speed
@@ -147,9 +153,22 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_landed(fall_speed: float) -> void:
+	_body_lean.land(fall_speed)
 	if _driver == null:
 		return
 	_cam.shake(CarCamera.shake_strength_for_fall(fall_speed))
+
+
+func _update_wheels_and_body(
+	delta: float, steering: float, throttle: float, handbraking: bool
+) -> void:
+	var grounded := is_on_floor()
+	var burning_out := CarGrip.is_burnout(throttle, handbraking, grounded, _vel.length())
+	var rear_wheels_locked := handbraking and not burning_out
+	var steer_angle := deg_to_rad(max_steer_angle_deg) * steering
+	var forward_speed := _vel.dot(-global_basis.z)
+	_wheels.update(delta, forward_speed, steer_angle, rear_wheels_locked, burning_out)
+	_body_lean.update(delta, _vel, global_basis, grounded, _chassis)
 
 
 func _update_visuals(delta: float) -> void:
