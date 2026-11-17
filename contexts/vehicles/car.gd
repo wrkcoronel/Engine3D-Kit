@@ -3,6 +3,7 @@ extends CharacterBody3D
 const GRAVITY_MULTIPLIER := 2.0
 const MIN_TRACTION := 0.35
 const DIRECTION_CHANGE_SPEED := 1.5
+const GROUND_STICK_SPEED := 1.0
 
 @export var max_speed := 138.9
 @export var reverse_max_speed := 12.0
@@ -25,6 +26,7 @@ var _vel := Vector3.ZERO
 var _move_sign := 1.0
 var _handbraking := false
 var _steer_wheel := 0.0
+var _ground_probe := GroundProbe.new()
 
 @onready var _hud: Speedometer = $Speedometer
 @onready var _cam: CarCamera = $Camera
@@ -42,9 +44,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	_tilt.update(delta, self, _visual)
 	if _driver:
-		_cam.follow(delta)
 		_hud.update_drive(
 			delta, _vel.length(), _move_sign, _handbraking, max_speed, reverse_max_speed
 		)
@@ -120,7 +120,7 @@ func _physics_process(delta: float) -> void:
 	var forward_speed := _vel.dot(forward)
 	var sideways_speed := _vel.dot(right)
 
-	var slope_rotation := Quaternion(Vector3.UP, get_floor_normal() if grounded else Vector3.UP)
+	var slope_rotation := Quaternion(Vector3.UP, _slope_normal(grounded))
 
 	forward_speed = _apply_throttle(forward_speed, throttle, traction, grounded, delta)
 	forward_speed = _apply_slope(forward_speed, forward, slope_rotation, throttle, grounded, delta)
@@ -135,10 +135,26 @@ func _physics_process(delta: float) -> void:
 	_vel = _grip.apply_handbrake_or_rest(_vel, throttle, handbraking, grounded, delta)
 
 	_move(slope_rotation, grounded, delta)
+	_update_visuals(delta)
 
 	_tires.update(
 		grounded, throttle, handbraking, sideways_speed, forward_speed_before_turn, total_speed
 	)
+
+
+func _update_visuals(delta: float) -> void:
+	_ground_probe.sample(get_world_3d().direct_space_state, global_transform, get_rid())
+	_tilt.update(delta, self, _visual, _ground_probe)
+	if _driver:
+		_cam.follow(delta)
+
+
+func _slope_normal(grounded: bool) -> Vector3:
+	if not grounded:
+		return Vector3.UP
+	if _ground_probe.found_ground:
+		return _ground_probe.surface_normal
+	return get_floor_normal()
 
 
 func _smooth_steering(steer_input: float, delta: float) -> float:
@@ -213,6 +229,10 @@ func _apply_slope(
 func _move(slope_rotation: Quaternion, grounded: bool, delta: float) -> void:
 	if grounded:
 		velocity = slope_rotation * _vel
+		var climbing := velocity.y > 0.0
+		if climbing:
+			var slope_normal := slope_rotation * Vector3.UP
+			velocity -= slope_normal * GROUND_STICK_SPEED
 	else:
 		var vertical_speed := velocity.y
 		velocity = _vel
