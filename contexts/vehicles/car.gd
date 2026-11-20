@@ -5,20 +5,18 @@ const WHEEL_COUNT := 4
 const STOPPED_SPEED := 0.5
 const SPEED_FOR_HALF_STEER_ANGLE := 25.0
 const MAX_CONTACTS_REPORTED := 8
+const DRIVEN_WHEEL_COUNT := 2
 
-@export var max_speed := 138.9
-@export var reverse_max_speed := 12.0
-@export var acceleration := 11.0
+@export var max_speed := 58.0
 @export var braking := 12.0
 @export var max_steer_angle_deg := 32.0
 @export var steer_response := 4.0
 @export var steer_return := 7.0
-@export var air_drag := 0.4
+@export var air_drag := 0.5
 @export var enter_distance := 4.0
 
 var input := CarInput.new()
 var _driver: CharacterBody3D
-var _move_sign := 1.0
 var _steering := CarSteering.new()
 var _body_contacts: Array[CarBodyContact] = []
 var _upright_requested := false
@@ -33,6 +31,7 @@ var _telemetry := CarTelemetry.new()
 @onready var _wheels: CarWheels = $Wheels
 @onready var _suspension: CarSuspension = $Suspension
 @onready var _tires: CarTires = $Tires
+@onready var _engine: CarEngine = $Engine
 
 
 func _ready() -> void:
@@ -44,11 +43,13 @@ func _ready() -> void:
 	_cam.snap()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if _driver == null:
 		return
 	var speed := linear_velocity.length()
-	_hud.update_drive(delta, speed, _move_sign, input.handbraking, max_speed, reverse_max_speed)
+	var kmh := speed * CarTelemetryFrame.KMH_PER_METER_PER_SECOND
+	var rpm_fraction := _engine.rpm_fraction()
+	_hud.update_hud(kmh, rpm_fraction, _engine.gear_text(), input.handbraking)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -99,7 +100,7 @@ func telemetry_frame() -> CarTelemetryFrame:
 func _physics_process(delta: float) -> void:
 	input.update(_driver != null)
 	var forward_speed := linear_velocity.dot(-global_basis.z)
-	_update_move_sign(forward_speed)
+	_engine.update(input.throttle, forward_speed, delta)
 	var steer_angle := _steer_angle(forward_speed, delta)
 	var space_state := get_world_3d().direct_space_state
 	_suspension.sample(space_state, global_transform, get_rid(), delta)
@@ -119,11 +120,6 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	state.transform = CarUpright.upright_transform(state.transform)
 	state.linear_velocity = Vector3.ZERO
 	state.angular_velocity = Vector3.ZERO
-
-
-func _update_move_sign(forward_speed: float) -> void:
-	if absf(forward_speed) > STOPPED_SPEED:
-		_move_sign = signf(forward_speed)
 
 
 func _steer_angle(forward_speed: float, delta: float) -> float:
@@ -199,7 +195,7 @@ func _wheel_command(wheel_index: int, car_forward_speed: float) -> CarWheelComma
 	if _wants_brake(input.throttle, car_forward_speed):
 		command.brake_force = mass * braking / WHEEL_COUNT
 	if front:
-		command.drive_force = _drive_force_per_front_wheel(input.throttle, car_forward_speed)
+		command.drive_force = _engine.drive_force() / DRIVEN_WHEEL_COUNT
 	if not front and input.handbraking:
 		command.locked = true
 	return command
@@ -211,17 +207,6 @@ func _wants_brake(throttle: float, forward_speed: float) -> bool:
 	if throttle < 0.0:
 		return forward_speed > STOPPED_SPEED
 	return absf(forward_speed) < STOPPED_SPEED
-
-
-func _drive_force_per_front_wheel(throttle: float, forward_speed: float) -> float:
-	var full_force_per_wheel := mass * acceleration / 2.0
-	if throttle > 0.0 and forward_speed >= -STOPPED_SPEED:
-		var speed_fraction := clampf(forward_speed / max_speed, 0.0, 1.0)
-		return full_force_per_wheel * (1.0 - speed_fraction)
-	if throttle < 0.0 and forward_speed <= STOPPED_SPEED:
-		var reverse_fraction := clampf(-forward_speed / reverse_max_speed, 0.0, 1.0)
-		return -full_force_per_wheel * (1.0 - reverse_fraction)
-	return 0.0
 
 
 func _apply_air_drag() -> void:
