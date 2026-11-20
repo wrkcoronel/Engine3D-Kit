@@ -5,6 +5,7 @@ var from_keyboard := true
 var throttle := 0.0
 var steering := 0.0
 var handbraking := false
+var wants_upright := false
 
 
 func read_keyboard() -> void:
@@ -15,6 +16,7 @@ func read_keyboard() -> void:
 	throttle = forward - backward
 	steering = left - right
 	handbraking = Input.is_physical_key_pressed(KEY_SPACE)
+	wants_upright = Input.is_physical_key_pressed(KEY_R)
 
 
 func update(has_driver: bool) -> void:
@@ -30,6 +32,7 @@ func clear() -> void:
 	throttle = 0.0
 	steering = 0.0
 	handbraking = false
+	wants_upright = false
 
 
 func _key_amount(key: Key, alternative_key: Key) -> float:

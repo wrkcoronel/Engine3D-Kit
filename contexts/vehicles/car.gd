@@ -21,6 +21,7 @@ var _driver: CharacterBody3D
 var _move_sign := 1.0
 var _steering := CarSteering.new()
 var _body_contacts: Array[CarBodyContact] = []
+var _upright_requested := false
 var _was_on_ground := true
 var _front_wheels_spinning := false
 var _telemetry := CarTelemetry.new()
@@ -84,7 +85,7 @@ func _exit() -> void:
 	var player := _driver
 	_driver = null
 	_hud.visible = false
-	CarSeat.place_player_beside(player, global_transform)
+	CarSeat.place_player_beside(player, CarUpright.flat_transform(global_transform))
 
 
 func is_on_ground() -> bool:
@@ -104,6 +105,7 @@ func _physics_process(delta: float) -> void:
 	_suspension.sample(space_state, global_transform, get_rid(), delta)
 	_apply_wheel_forces(steer_angle, forward_speed, delta)
 	_apply_air_drag()
+	_request_upright()
 	_shake_camera_on_landing()
 	_update_visuals(delta, steer_angle, forward_speed)
 	_report_telemetry(delta)
@@ -111,6 +113,12 @@ func _physics_process(delta: float) -> void:
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	_body_contacts = CarBodyContact.list_from(state)
+	if not _upright_requested:
+		return
+	_upright_requested = false
+	state.transform = CarUpright.upright_transform(state.transform)
+	state.linear_velocity = Vector3.ZERO
+	state.angular_velocity = Vector3.ZERO
 
 
 func _update_move_sign(forward_speed: float) -> void:
@@ -219,6 +227,13 @@ func _drive_force_per_front_wheel(throttle: float, forward_speed: float) -> floa
 func _apply_air_drag() -> void:
 	var speed := linear_velocity.length()
 	apply_central_force(-linear_velocity * speed * air_drag)
+
+
+func _request_upright() -> void:
+	if not input.wants_upright:
+		return
+	if CarUpright.can_upright(global_basis, linear_velocity.length()):
+		_upright_requested = true
 
 
 func _shake_camera_on_landing() -> void:
