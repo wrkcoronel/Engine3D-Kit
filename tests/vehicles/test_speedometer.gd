@@ -6,25 +6,26 @@ const REDLINE_RPM := 6800.0
 func test_shows_speed_in_kmh() -> void:
 	var speedometer := _make_speedometer()
 	speedometer.update_hud(36.4, 2000.0, "2", false, false)
-	assert_eq(_label(speedometer, "Root/Speed").text, "36", "mostra a velocidade arredondada")
+	var readout := speedometer.get_node("Root/Readout") as SpeedReadout
+	assert_eq(readout.speed_kmh, 36, "mostra a velocidade arredondada")
 
 
 func test_shows_gear_and_mode() -> void:
 	var speedometer := _make_speedometer()
 	speedometer.update_hud(50.0, 3000.0, "3", false, true)
-	assert_eq(_label(speedometer, "Root/Gear").text, "3", "mostra a marcha")
 	assert_eq(_label(speedometer, "Root/Mode").text, "MANUAL", "mostra que o cambio e manual")
 	speedometer.update_hud(50.0, 3000.0, "3", false, false)
 	assert_eq(_label(speedometer, "Root/Mode").text, "AUTO", "mostra que o cambio e automatico")
 
 
-func test_gear_turns_red_near_redline() -> void:
+func test_gear_badge_follows_gear_and_mode() -> void:
 	var speedometer := _make_speedometer()
-	var gear := _label(speedometer, "Root/Gear")
+	var badge := speedometer.get_node("Root/Gear") as GearBadge
 	speedometer.update_hud(50.0, 3000.0, "3", false, true)
-	assert_eq(gear.modulate, Speedometer.GEAR_COLOR, "longe do corte a marcha fica branca")
-	speedometer.update_hud(50.0, REDLINE_RPM, "3", false, true)
-	assert_eq(gear.modulate, Speedometer.SHIFT_LIGHT_COLOR, "no corte a marcha acende: troque")
+	assert_eq(badge.gear_text, "3", "a caixa mostra a marcha")
+	assert_eq(badge.manual, true, "a caixa sabe que o cambio e manual")
+	speedometer.update_hud(50.0, 3000.0, "3", false, false)
+	assert_eq(badge.manual, false, "a caixa sabe que o cambio e automatico")
 
 
 func test_handbrake_light_turns_on_and_off() -> void:
@@ -37,14 +38,21 @@ func test_handbrake_light_turns_on_and_off() -> void:
 	assert_near(light.modulate.a, off_alpha, 0.001, "luz apagada sem o freio de mao")
 
 
-func test_dial_goes_one_number_past_redline() -> void:
-	assert_eq(TachometerDial.dial_max_for(REDLINE_RPM), 8000.0, "corte em 6800, mostrador ate 8")
+func test_bar_follows_the_engine_rpm_and_redline() -> void:
+	var speedometer := _make_speedometer()
+	speedometer.update_hud(120.0, 3500.0, "4", false, false)
+	var bar := speedometer.get_node("Root/Bar") as RpmBar
+	assert_eq(bar.target_rpm, 3500.0, "a barra mira no rpm do motor")
+	assert_eq(bar.redline_rpm, REDLINE_RPM, "a barra termina no corte do motor")
 
 
-func test_needle_angle_covers_three_quarters_of_a_turn() -> void:
-	var start := TachometerDial.angle_for(0.0)
-	var end := TachometerDial.angle_for(1.0)
-	assert_near(end - start, deg_to_rad(270.0), 0.0001, "o ponteiro anda 270 graus")
+func test_readout_pads_speed_with_dim_zeros() -> void:
+	assert_eq(SpeedReadout.padding_text(77), "0", "77 ganha um zero apagado")
+	assert_eq(SpeedReadout.shown_text(77), "77", "77 aparece aceso")
+	assert_eq(SpeedReadout.padding_text(0), "00", "zero ganha dois zeros apagados")
+	assert_eq(SpeedReadout.shown_text(0), "0", "o ultimo zero fica aceso")
+	assert_eq(SpeedReadout.padding_text(250), "", "tres digitos nao tem zero apagado")
+	assert_eq(SpeedReadout.shown_text(1500), "999", "o painel nao passa de 999")
 
 
 func _make_speedometer() -> Speedometer:

@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://contexts/vehicles/ui/speedometer.gd" id="1_speedo"]
-[ext_resource type="Script" path="res://contexts/vehicles/ui/tachometer_dial.gd" id="2_dial"]
+[ext_resource type="Script" path="res://contexts/vehicles/ui/rpm_bar.gd" id="2_bar"]
+[ext_resource type="Script" path="res://contexts/vehicles/ui/speed_readout.gd" id="3_readout"]
+[ext_resource type="Script" path="res://contexts/vehicles/ui/gear_badge.gd" id="4_gear"]
 
-; CONTA-GIROS no canto de baixo a direita: mostrador redondo (Dial), marcha no centro (fica vermelha
-; perto do corte), velocidade embaixo, AUTO/MANUAL e a luz do freio de mao.
 [node name="Speedometer" type="CanvasLayer"]
 layer = 10
 script = ExtResource("1_speedo")
@@ -16,106 +16,70 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -310.0
-offset_top = -310.0
+offset_left = -330.0
+offset_top = -170.0
 offset_right = -30.0
 offset_bottom = -30.0
 grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="Dial" type="Control" parent="Root"]
+[node name="Readout" type="Control" parent="Root"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
+offset_right = 200.0
+offset_bottom = 90.0
 mouse_filter = 2
-script = ExtResource("2_dial")
+script = ExtResource("3_readout")
 
-[node name="Speed" type="Label" parent="Root"]
+[node name="Gear" type="Control" parent="Root"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = 34.0
-offset_right = 90.0
-offset_bottom = 82.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 42
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
+anchors_preset = 0
+offset_left = 215.0
+offset_top = 10.0
+offset_right = 275.0
+offset_bottom = 60.0
+mouse_filter = 2
+script = ExtResource("4_gear")
 
 [node name="Unit" type="Label" parent="Root"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -60.0
-offset_top = 80.0
-offset_right = 60.0
-offset_bottom = 98.0
-theme_override_colors/font_color = Color(1, 0.55, 0.1, 1)
-theme_override_font_sizes/font_size = 16
+anchors_preset = 0
+offset_left = 205.0
+offset_top = 62.0
+offset_right = 285.0
+offset_bottom = 84.0
+theme_override_font_sizes/font_size = 17
 text = "KM/H"
 horizontal_alignment = 1
 
-[node name="Gear" type="Label" parent="Root"]
+[node name="Bar" type="Control" parent="Root"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -28.0
-offset_top = -30.0
-offset_right = 28.0
-offset_bottom = 30.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 40
-text = "N"
-horizontal_alignment = 1
-vertical_alignment = 1
+anchors_preset = 0
+offset_top = 96.0
+offset_right = 275.0
+offset_bottom = 108.0
+mouse_filter = 2
+script = ExtResource("2_bar")
 
 [node name="Mode" type="Label" parent="Root"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -60.0
-offset_top = 98.0
-offset_right = 60.0
-offset_bottom = 116.0
-theme_override_colors/font_color = Color(1, 1, 1, 0.7)
-theme_override_font_sizes/font_size = 12
+anchors_preset = 0
+offset_top = 116.0
+offset_right = 100.0
+offset_bottom = 134.0
+theme_override_colors/font_color = Color(0.62, 0.65, 0.7, 1)
+theme_override_font_sizes/font_size = 13
 text = "AUTO"
-horizontal_alignment = 1
 
 [node name="Handbrake" type="Label" parent="Root"]
+modulate = Color(1, 0.27, 0.3, 0.2)
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.0
-anchor_right = 0.5
-anchor_bottom = 0.0
-offset_left = -80.0
-offset_top = -26.0
-offset_right = 80.0
-offset_bottom = -4.0
-modulate = Color(1, 0.2, 0.15, 0.2)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 16
+anchors_preset = 0
+offset_left = 110.0
+offset_top = 116.0
+offset_right = 275.0
+offset_bottom = 134.0
+theme_override_font_sizes/font_size = 13
 text = "FREIO DE MAO"
-horizontal_alignment = 1
+horizontal_alignment = 2

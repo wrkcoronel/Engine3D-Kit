@@ -24,11 +24,11 @@ No AUTO, S parado engata a re (`CarEngine.REVERSE`) e S andando freia.
 ## 1b. Trocar de marcha (M, Shift, Ctrl)
 
 ```
-car_input.gd:_read_gear_keys          so o aperto (nao segurar) vira shift_up/down_pressed
+car_input.gd:_read_gear_keys          so o aperto (nao segurar) ou um giro do scroll vira shift_up/down_pressed
   -> car_engine.gd:handle_driver_shifts   M alterna AUTO/MANUAL; no MANUAL Shift sobe e Ctrl desce
   -> car_engine.gd:_manual_shift_down     parado na 1a, descer engata a re (como no Forza)
   -> car_engine.gd:wants_brake            no MANUAL, S e so freio
-  -> speedometer.gd:update_hud            marcha no centro do conta-giros, vermelha perto do corte
+  -> speedometer.gd:update_hud            velocidade digital grande; caixa da marcha vermelha no MANUAL e branca no AUTO; barra de rpm enche e fica vermelha perto do corte
 ```
 
 ## 2. Virar (A / D)
