@@ -41,6 +41,7 @@ func _ready() -> void:
 	_tire_fx.setup(self, _visual)
 	_wheels.setup($Visual/Model as Node3D)
 	_hud.visible = false
+	_hud.set_rpm_scale(_engine.redline_rpm)
 	_cam.snap()
 
 
@@ -49,8 +50,8 @@ func _process(_delta: float) -> void:
 		return
 	var speed := linear_velocity.length()
 	var kmh := speed * CarTelemetryFrame.KMH_PER_METER_PER_SECOND
-	var rpm_fraction := _engine.rpm_fraction()
-	_hud.update_hud(kmh, rpm_fraction, _engine.gear_text(), input.handbraking)
+	var gear := _engine.gear_text()
+	_hud.update_hud(kmh, _engine.rpm, gear, input.handbraking, _engine.manual)
 
 
 func _unhandled_input(event: InputEvent) -> void:

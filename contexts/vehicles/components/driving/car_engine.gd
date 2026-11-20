@@ -119,10 +119,6 @@ func gear_text() -> String:
 	return str(gear)
 
 
-func rpm_fraction() -> float:
-	return clampf(rpm / redline_rpm, 0.0, 1.0)
-
-
 func _pushes_against_gear() -> bool:
 	var pushing_forward_in_reverse := _throttle > 0.0 and gear == REVERSE
 	var pushing_backward_in_gear := _throttle < 0.0 and gear >= FIRST
