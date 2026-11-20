@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://contexts/vehicles/car.gd" id="1_car"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/ui/speedometer.tscn" id="2_speedo"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://contexts/vehicles/components/suspension/car_suspension.gd" id="5_suspension"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/driving/car_tires.gd" id="6_tire_grip"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_wheels.gd" id="7_wheels"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/driving/car_engine.gd" id="8_engine"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/models/gol_gti.glb" id="9_gol"]
 
 [sub_resource type="PhysicsMaterial" id="body_material"]
@@ -18,6 +19,7 @@ size = Vector3(1.66, 1, 4)
 ; CORPO RIGIDO: quem apoia o carro sao os 4 raios de suspensao (no Suspension).
 ; A caixa e so a carroceria: comeca 0.3 m acima do chao, na altura do pneu com a mola no fim do curso.
 ; O centro de massa fica baixo (0.45 m) para o carro nao capotar a toa em curva.
+; linear_damp_mode = substituir com 0: sem o freio invisivel do Godot, quem freia e o arrasto do ar.
 [node name="Car" type="RigidBody3D" groups=["vehicles"]]
 collision_layer = 1
 collision_mask = 1
@@ -25,6 +27,7 @@ mass = 1000.0
 physics_material_override = SubResource("body_material")
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, 0.45, -0.25)
+linear_damp_mode = 1
 can_sleep = false
 continuous_cd = true
 script = ExtResource("1_car")
@@ -55,3 +58,6 @@ script = ExtResource("6_tire_grip")
 
 [node name="Wheels" type="Node" parent="."]
 script = ExtResource("7_wheels")
+
+[node name="Engine" type="Node" parent="."]
+script = ExtResource("8_engine")
