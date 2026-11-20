@@ -11,16 +11,30 @@ documento explica o resto: onde cada coisa mora e por que.
 ```
 app/            monta os contextos em cenas jogaveis
   main.tscn       mundo + jogador + carro
-  arena.tscn      piso, muro e jogador, para testar tiro (R recarrega)
+  arena.tscn      piso, muro e jogador, para testar tiro (F5 recarrega)
 
 contexts/       um contexto por assunto
   world/          mapa: piso, ceu, luz, predios e rampas (props/; a rampa tem transicao de 9 graus na base)
   player/         corpo do jogador: movimento, pulo, correr, agachar, deslizar
     components/     mouse_look, head_lean
-  weapons/        arma
-    gun.gd          orquestra: atira e junta a pose final
-    components/     wall_avoid, cover_peek, aim, sway, recoil, sprint
-    effects/        impact (marca do tiro)
+  weapons/        as quatro armas que o jogador carrega (1911, Boito Pump, carabina .22, rifle de caca)
+    gun.gd          orquestra: le o teclado, junta a pose final e decide tiro, recarga e conferencia
+    components/     separados por assunto
+      arsenal/        stats e catalogo das armas, municao, troca de arma (1-4, roda, Q), teclas
+      pose/           wall_avoid, cover_peek, aim, sway, recoil, sprint, holster (coldre/costas),
+                      sight (mira pelas miras da arma), pose_builder
+      firing/         gatilho (semi e automatico), dispersao, dano por distancia, tiro (raio),
+                      clarao, rastro, estojo ejetado, sons
+      reload/         recarga de pente e da Boito cartucho por cartucho
+      check/          conferencia da municao (V segurado: pente na mao, tubo ou acao; R com a arma
+                      cheia: camara), furos do pente
+      action/         pecas que se mexem: corredica e cao da 1911, telha da Boito, ferrolho da .22
+                      e do rifle (recuam no tiro e na conferencia e ejetam o estojo)
+      scope/          a lente da luneta do rifle
+    models/         cenas das armas e cartuchos (malhas OBJ, materiais, sons). Os nomes dos nos
+                    ficam em portugues porque o codigo os acha pelo nome (ex.: Visual/Corpo)
+    ui/             shader da mira da luneta
+    effects/        impact (marca do tiro) e tracer (rastro)
   vehicles/       carro (corpo rigido com suspensao, tracao dianteira)
     car.gd          orquestra: forcas das rodas, entrar/sair, desvirar
     components/     separados por assunto
@@ -47,7 +61,47 @@ tests/          testes que rodam sem abrir o jogo, uma pasta por contexto
   world/              geometria da rampa (a transicao encosta no chao e na rampa)
   shared/             testes do ray_util e do TelemetryLog
   player/             testes da telemetria do jogador
+  weapons/            municao, dano, gatilho, conferencia, troca e as quatro armas atirando
+
+tools/           ferramentas fora do jogo, uma pasta por assunto (tem .gdignore: o Godot nao enxerga)
+  car/              gol_gti.blend e build_gol_gti.py, que monta o carro e exporta o gol_gti.glb
+  weapons/
+    blends/           <arma>.blend: as quatro armas, peca por peca, com os mesmos nomes dos nos
+                      do Godot e um esqueleto com uma animacao (Action) para cada coisa que a arma faz
+    animations/       <arma>_animations.json: as animacoes gravadas do jogo, quadro a quadro
+    blender/          scripts que rodam dentro do Blender (montar os .blend, exportar as malhas)
+    godot/            script que roda no Godot (gravar as animacoes)
 ```
+
+## Armas no Blender
+
+As armas existem nos dois lugares: as cenas `.tscn` (o jogo usa) e os `.blend` (para editar). O
+caminho de ida e volta:
+
+1. `build_weapon_blends.py` le as cenas das armas e monta um `.blend` por arma: importa cada malha
+   OBJ, recria os cartuchos e o clarao, copia os materiais e guarda em cada objeto o caminho do no
+   no Godot (`godot_path`) e o arquivo da malha (`godot_mesh`). Se existir
+   `animations/<arma>_animations.json`, cria o objeto `Esqueleto`: um osso para cada peca que se mexe
+   (a peca fica presa no osso) e uma Action separada para cada animacao: `tiro`, `recarga` (falta
+   uma bala), `recarga_vazia`, `conferir_camara`, `conferir_pente`, `guardar` e `sacar`. Para ver
+   uma, selecione o `Esqueleto`, abra o Action Editor e escolha a Action. Peca que some (cartucho na
+   camara, arma guardada) tem a escala do osso zerada naquele quadro.
+2. `record_weapon_animations.gd` roda o jogo sem janela, faz cada arma atirar, recarregar e conferir
+   e grava a pose de cada peca quadro a quadro nesse `.json`. A animacao no Blender e a mesma do
+   jogo, porque vem do proprio codigo.
+3. Depois de editar uma peca no Blender, `export_weapon_meshes.py` grava a malha de volta no OBJ que
+   a cena usa (so a malha; posicao e animacao continuam no Godot).
+
+```powershell
+$blender = "C:/Program Files/Blender Foundation/Blender 5.2/blender.exe"
+godot_console --headless --path . --fixed-fps 30 --script res://tools/weapons/godot/record_weapon_animations.gd
+& $blender -b --factory-startup --python tools/weapons/blender/build_weapon_blends.py -- .
+& $blender -b tools/weapons/blends/pistol_1911.blend --python tools/weapons/blender/export_weapon_meshes.py -- .
+```
+
+As animacoes no Blender sao para ver e estudar. Quem anima no jogo e o codigo de
+`contexts/weapons/components/action/`, `reload/` e `check/`: mudar a animacao no Blender nao muda o
+jogo.
 
 ## Regras
 
@@ -55,7 +109,8 @@ tests/          testes que rodam sem abrir o jogo, uma pasta por contexto
   nao conhece ninguem.
 - **Um contexto nao mexe nos detalhes de outro.** As ligacoes que existem hoje:
   - `weapons` chama `take_hit(hit, dir, damage)` em quem tiver esse metodo. Hoje nada tem.
-  - `weapons` usa o `HeadLean` do jogador (inclinar a cabeca no cover) e le `is_sprinting`.
+  - `weapons` usa o `HeadLean` do jogador (inclinar a cabeca no cover), le `is_sprinting` e muda
+    `MouseLook.sensitivity_scale` (mira e luneta deixam o mouse mais lento).
   - `vehicles` acha o jogador pelo grupo `player` ao entrar no carro.
   - `vehicles`, `player` e `weapons` mandam eventos e amostras para `Telemetry.record` e
     `Telemetry.sample` (em `shared/telemetry/`). Sem o no `Telemetry` na cena, nada acontece.
