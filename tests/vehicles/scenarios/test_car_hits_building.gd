@@ -7,7 +7,7 @@ const SETTLE_TICKS := 30
 
 func test_bate_de_lado_no_building1_a_30kmh() -> void:
 	var scenario := CarScenario.new()
-	scenario.start(self, Vector3(25.8, 0.1, -12.45), DIAGONAL_TOWARD_BUILDING1)
+	scenario.start(self, Vector3(27.5, 0.1, -12.45), DIAGONAL_TOWARD_BUILDING1)
 	await scenario.settle(SETTLE_TICKS)
 	await scenario.drive(180, CarScenario.hold_speed(THIRTY_KMH))
 	scenario.print_events("bate_de_lado_no_building1_a_30kmh")

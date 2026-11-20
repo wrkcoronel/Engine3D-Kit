@@ -5,11 +5,8 @@ const SOURCE := "carro"
 const BUMP_VERTICAL_SPEED_CHANGE := 2.0
 const SUDDEN_DECELERATION := 100.0
 const SHORT_AIR_TIME := 0.25
-const HANGING_CENTER_DROP := 1.0
-const HANG_TOLERANCE := 0.05
 
 var detail := TelemetryDetailWindow.new()
-var longest_edge_slide_time := 0.0
 
 var _has_previous := false
 var _was_on_floor := true
@@ -20,10 +17,6 @@ var _previous_wheels_on_ground := 0
 var _previous_contacts: Array[String] = []
 var _touched_colliders: Array[String] = []
 var _air_time := 0.0
-var _hanging := false
-var _hang_time := 0.0
-var _sliding_off_edge := false
-var _edge_slide_time := 0.0
 
 
 func _init() -> void:
@@ -40,8 +33,6 @@ func report(from: Node, frame: CarTelemetryFrame, delta: float) -> void:
 func forget() -> void:
 	_has_previous = false
 	_air_time = 0.0
-	_hanging = false
-	_hang_time = 0.0
 	_touched_colliders.clear()
 	detail.clear()
 
@@ -53,8 +44,6 @@ func events_for(frame: CarTelemetryFrame, delta: float) -> Array[String]:
 		_check_air(frame, delta, events, anomalies)
 		_check_bump(frame, anomalies)
 		_check_speed_loss(frame, delta, anomalies)
-		_check_hanging(frame, delta, events, anomalies)
-		_check_edge_slide(frame, delta, events)
 		_check_ground_change(frame, events)
 		_check_new_contacts(frame, events)
 		_add_anomalies(frame, anomalies, events)
@@ -127,35 +116,6 @@ func _check_speed_loss(frame: CarTelemetryFrame, delta: float, anomalies: Array[
 	var change := "%.0f -> %.0f km/h" % [previous_kmh, frame.speed_kmh()]
 	var touching := ", ".join(PackedStringArray(frame.contact_names))
 	anomalies.append("FREOU DE REPENTE: %s em um frame, contatos: [%s]" % [change, touching])
-
-
-func _check_hanging(
-	frame: CarTelemetryFrame, delta: float, events: Array[String], anomalies: Array[String]
-) -> void:
-	var hanging_now := frame.on_floor and frame.center_ground_drop > HANGING_CENTER_DROP
-	var was_reported := _hang_time > HANG_TOLERANCE
-	if hanging_now:
-		_hang_time += delta
-	var reported_now := _hang_time > HANG_TOLERANCE
-	if hanging_now and reported_now and not was_reported:
-		anomalies.append("PENDURADO NA BORDA: apoiado no chao com o centro sobre o vazio")
-	if _hanging and not hanging_now:
-		events.append("saiu da borda depois de %.2f s pendurado" % _hang_time)
-		_hang_time = 0.0
-	_hanging = hanging_now
-
-
-func _check_edge_slide(frame: CarTelemetryFrame, delta: float, events: Array[String]) -> void:
-	if frame.sliding_off_edge:
-		_edge_slide_time += delta
-		longest_edge_slide_time = maxf(longest_edge_slide_time, _edge_slide_time)
-	if frame.sliding_off_edge and not _sliding_off_edge:
-		var where := TelemetryLog.format_vector(frame.position)
-		events.append("ESCORREGANDO DA BORDA: centro sobre o vazio em %s" % where)
-	if _sliding_off_edge and not frame.sliding_off_edge:
-		events.append("soltou da borda depois de %.2f s escorregando" % _edge_slide_time)
-		_edge_slide_time = 0.0
-	_sliding_off_edge = frame.sliding_off_edge
 
 
 func _check_ground_change(frame: CarTelemetryFrame, events: Array[String]) -> void:

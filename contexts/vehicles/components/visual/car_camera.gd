@@ -70,7 +70,7 @@ func _base_pitch() -> float:
 
 
 func _update(delta: float, snapping: bool) -> void:
-	var car_yaw := _car.rotation.y
+	var car_yaw := _flat_yaw()
 	_cam_yaw = (
 		car_yaw if snapping else lerp_angle(_cam_yaw, car_yaw, 1.0 - exp(-cam_yaw_smooth * delta))
 	)
@@ -95,6 +95,11 @@ func _update(delta: float, snapping: bool) -> void:
 	)
 	look_at(_car.global_position + Vector3.UP * cam_look_height)
 	_apply_shake(delta)
+
+
+func _flat_yaw() -> float:
+	var car_forward := -_car.global_basis.z
+	return atan2(-car_forward.x, -car_forward.z)
 
 
 func _apply_shake(delta: float) -> void:

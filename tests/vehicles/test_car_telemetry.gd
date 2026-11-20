@@ -117,38 +117,6 @@ func _has_event(events: Array[String], text: String) -> bool:
 	return false
 
 
-func test_hanging_on_edge_is_reported_after_tolerance() -> void:
-	var telemetry := CarTelemetry.new()
-	telemetry.events_for(_frame_on_floor(Vector3.ZERO), FRAME_TIME)
-	var all_events: Array[String] = []
-	for frame_index: int in 5:
-		var hanging := _frame_on_floor(Vector3.ZERO)
-		hanging.center_ground_drop = INF
-		all_events.append_array(telemetry.events_for(hanging, FRAME_TIME))
-	assert_true(_has_event(all_events, "PENDURADO NA BORDA"), "pendurado por 5 frames e avisado")
-
-
-func test_one_frame_on_edge_is_not_hanging() -> void:
-	var telemetry := CarTelemetry.new()
-	telemetry.events_for(_frame_on_floor(Vector3.ZERO), FRAME_TIME)
-	var hanging := _frame_on_floor(Vector3.ZERO)
-	hanging.center_ground_drop = INF
-	var events := telemetry.events_for(hanging, FRAME_TIME)
-	assert_true(not _has_event(events, "PENDURADO NA BORDA"), "1 frame e o tempo de reagir")
-
-
-func test_edge_slide_time_is_measured() -> void:
-	var telemetry := CarTelemetry.new()
-	telemetry.events_for(_frame_on_floor(Vector3.ZERO), FRAME_TIME)
-	for frame_index: int in 30:
-		var sliding := _frame_in_air(Vector3.ZERO)
-		sliding.sliding_off_edge = true
-		telemetry.events_for(sliding, FRAME_TIME)
-	var events := telemetry.events_for(_frame_in_air(Vector3.ZERO), FRAME_TIME)
-	assert_true(_has_event(events, "soltou da borda"), "avisa quando solta da borda")
-	assert_near(telemetry.longest_edge_slide_time, 0.5, 0.02, "mede quanto tempo escorregou")
-
-
 func test_sudden_stop_lists_contacts() -> void:
 	var telemetry := CarTelemetry.new()
 	telemetry.events_for(_frame_on_floor(Vector3(0.0, 0.0, -20.0)), FRAME_TIME)

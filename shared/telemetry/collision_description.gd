@@ -4,12 +4,18 @@ extends RefCounted
 
 static func describe(collision: KinematicCollision3D) -> String:
 	var collider := collision.get_collider() as Node
+	var shape_node := collision.get_collider_shape() as CollisionShape3D
 	var point := collision.get_position()
+	return describe_contact(collider, shape_node, point, collision.get_normal())
+
+
+static func describe_contact(
+	collider: Node, shape_node: CollisionShape3D, point: Vector3, normal: Vector3
+) -> String:
 	var parts: PackedStringArray = []
 	parts.append(_collider_name(collider))
 	parts.append("ponto " + TelemetryLog.format_vector(point))
-	parts.append("normal " + TelemetryLog.format_vector(collision.get_normal()))
-	var shape_node := collision.get_collider_shape() as CollisionShape3D
+	parts.append("normal " + TelemetryLog.format_vector(normal))
 	if shape_node:
 		parts.append(describe_shape(shape_node))
 		parts.append(_nearest_edge_text(shape_node, point))

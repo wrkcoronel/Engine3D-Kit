@@ -18,8 +18,7 @@ var contact_points: Array[Vector3] = []
 var contact_names: Array[String] = []
 var contact_details: Array[String] = []
 var wheels: Array[WheelGround] = []
-var center_ground_drop := 0.0
-var sliding_off_edge := false
+var roll_degrees := 0.0
 
 
 func _init(car_position: Vector3, car_velocity: Vector3, car_input: CarInput) -> void:
@@ -31,39 +30,67 @@ func _init(car_position: Vector3, car_velocity: Vector3, car_input: CarInput) ->
 
 
 static func from_car(
-	car: CharacterBody3D, car_input: CarInput, probe: GroundProbe, edge_support: CarEdgeSupport
+	car: RigidBody3D,
+	car_input: CarInput,
+	suspension: CarSuspension,
+	body_contacts: Array[CarBodyContact],
 ) -> CarTelemetryFrame:
-	var frame := CarTelemetryFrame.new(car.global_position, car.velocity, car_input)
-	frame.read_floor(car.is_on_floor(), car.get_floor_normal(), probe)
-	frame.sliding_off_edge = edge_support.hanging_off_edge
-	for index: int in car.get_slide_collision_count():
-		frame.read_collision(car.get_slide_collision(index))
+	var frame := CarTelemetryFrame.new(car.global_position, car.linear_velocity, car_input)
+	frame.read_wheels(suspension.wheels)
+	frame.roll_degrees = rad_to_deg(car.global_basis.y.angle_to(Vector3.UP))
+	for body_contact: CarBodyContact in body_contacts:
+		frame.read_contact(body_contact)
 	return frame
 
 
-func read_floor(car_on_floor: bool, car_floor_normal: Vector3, probe: GroundProbe) -> void:
-	on_floor = car_on_floor
-	floor_normal = car_floor_normal
-	wheel_ground_names = probe.wheel_ground_names.duplicate()
-	wheel_ground_heights = probe.wheel_ground_heights.duplicate()
-	wheels = probe.wheels.duplicate()
-	center_ground_drop = probe.center_ground_drop
+func read_wheels(suspension_wheels: Array[WheelGround]) -> void:
+	var normals_sum := Vector3.ZERO
+	for wheel: WheelGround in suspension_wheels:
+		wheels.append(_copy_of(wheel))
+		if not wheel.touching:
+			continue
+		wheel_ground_names.append(wheel.ground_name)
+		wheel_ground_heights.append(wheel.point.y)
+		normals_sum += wheel.normal
+	on_floor = not wheel_ground_names.is_empty()
+	floor_normal = Vector3.ZERO
+	if on_floor:
+		floor_normal = normals_sum.normalized()
 
 
-func read_collision(collision: KinematicCollision3D) -> void:
-	var collider := collision.get_collider() as Node
-	if collider == null:
+func read_contact(body_contact: CarBodyContact) -> void:
+	if body_contact.collider == null:
 		return
-	var rounded_normal := collision.get_normal().snapped(Vector3.ONE * 0.1)
-	var contact_name := TelemetryLog.describe_node(collider)
+	var rounded_normal := body_contact.normal.snapped(Vector3.ONE * 0.1)
+	var contact_name := TelemetryLog.describe_node(body_contact.collider)
 	var contact := "%s normal %s" % [contact_name, TelemetryLog.format_vector(rounded_normal)]
 	if contacts.has(contact):
 		return
 	contacts.append(contact)
-	contact_points.append(collision.get_position())
-	contact_details.append(CollisionDescription.describe(collision))
+	contact_points.append(body_contact.point)
+	contact_details.append(_describe_contact(body_contact))
 	if not contact_names.has(contact_name):
 		contact_names.append(contact_name)
+
+
+func _describe_contact(body_contact: CarBodyContact) -> String:
+	var collider := body_contact.collider
+	var shape_node := body_contact.shape_node
+	var point := body_contact.point
+	return CollisionDescription.describe_contact(collider, shape_node, point, body_contact.normal)
+
+
+func _copy_of(wheel: WheelGround) -> WheelGround:
+	var copy := WheelGround.new()
+	copy.touching = wheel.touching
+	copy.ground_name = wheel.ground_name
+	copy.point = wheel.point
+	copy.normal = wheel.normal
+	copy.gap = wheel.gap
+	copy.spring_length = wheel.spring_length
+	copy.compression = wheel.compression
+	copy.compression_speed = wheel.compression_speed
+	return copy
 
 
 func touches_name_starting_with(prefix: String) -> bool:
