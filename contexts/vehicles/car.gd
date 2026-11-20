@@ -69,8 +69,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		_cam.add_look(motion.relative)
 	elif key and key.pressed and key.keycode == KEY_ESCAPE:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	elif button and button.pressed and _is_scroll(button):
+		input.register_scroll(button.button_index)
 	elif button and button.pressed:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func _is_scroll(button: InputEventMouseButton) -> bool:
+	if button.button_index == MOUSE_BUTTON_WHEEL_UP:
+		return true
+	return button.button_index == MOUSE_BUTTON_WHEEL_DOWN
 
 
 func _try_enter() -> void:
