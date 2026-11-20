@@ -21,15 +21,17 @@ contexts/       um contexto por assunto
     gun.gd          orquestra: atira e junta a pose final
     components/     wall_avoid, cover_peek, aim, sway, recoil, sprint
     effects/        impact (marca do tiro)
-  vehicles/       carro
-    car.gd          orquestra: fisica de direcao, aceleracao e entrar/sair
+  vehicles/       carro (corpo rigido com suspensao, tracao dianteira)
+    car.gd          orquestra: forcas das rodas, entrar/sair, desvirar
     components/     separados por assunto
-      driving/        input, grip (aderencia), seat (entrar/sair)
-      ground/         ground_probe, wheel_ground, edge_support (escorrega da borda),
-                      fall (limite da velocidade de queda)
-      visual/         tilt, body_lean, wheels, tire_fx (fumaca e marcas), camera, spring_value
-      telemetry/      telemetry, telemetry_context, telemetry_frame (eventos e anomalias)
-    ui/             speedometer (HUD: km/h, marcha, rotacao, freio de mao)
+      driving/        input, engine (motor e cambio de 5 marchas, AUTO ou MANUAL), steering (volante),
+                      tires (atrito do pneu), wheel_command, upright (desvirar com R ou A/D),
+                      seat (entrar/sair)
+      suspension/     suspension (raios e molas das 4 rodas), wheel_ground (o que cada roda ve)
+      visual/         wheels (rodas na altura da mola), tire_fx (fumaca e marcas), camera
+      telemetry/      telemetry, telemetry_context, telemetry_frame, body_contact
+                      (eventos e anomalias)
+    ui/             speedometer (HUD) e tachometer_dial (conta-giros redondo desenhado em _draw)
 
 shared/         usado por mais de um contexto
   physics/ray_util.gd   distancia de um raio ate o primeiro obstaculo
@@ -66,23 +68,31 @@ tests/          testes que rodam sem abrir o jogo, uma pasta por contexto
 
 ## Como o carro funciona (o maior contexto)
 
+O carro e um `RigidBody3D` de 1000 kg: o motor de fisica (Jolt) move e gira o corpo nos 3 eixos.
+O `car.gd` so calcula forcas. A caixa de colisao e a carroceria e fica 0.3 m acima do chao; quem
+segura o carro sao 4 molas, uma por roda. Por isso ele tomba de verdade quando o centro de massa
+passa da borda de uma rampa, inclina nas curvas e mergulha na freada.
+
 Todo frame de fisica, o `car.gd` segue estes passos, cada um numa funcao com nome:
 
-1. le o teclado (W/S, A/D, espaco) e pergunta ao `CarEdgeSupport` se o centro do carro esta
-   sobre o vazio (ai ele escorrega da borda em modo flutuante, em vez de ficar equilibrado);
-2. suaviza o volante (`_smooth_steering`);
-3. gira o carro (`_turn`) e calcula quanta tracao sobra para acelerar;
-4. acelera ou freia (`_apply_throttle`) e aplica a gravidade da rampa (`_apply_slope`);
-5. deixa o `CarGrip` remover a velocidade lateral e aplicar o freio de mao;
-6. move o corpo (`_move`); abaixo de ~71 km/h, se perder o chao com o centro ainda sobre a
-   rampa, volta para o chao (`_snap_back_onto_ramp`), para nao dar pulinho antes do topo;
-7. manda os numeros do frame para os efeitos dos pneus (`CarTireFx`) e para a telemetria.
+1. le o teclado (W/S, A/D, espaco, R, Shift/Ctrl/M do cambio) e suaviza o volante (`CarSteering`);
+2. o `CarSuspension` lanca um raio para baixo em cada roda e mede quanto a mola encolheu;
+3. o `CarEngine` escolhe a marcha e calcula a forca do motor pela rotacao (torque x relacao);
+4. para cada roda no chao (`_apply_wheel_force`): forca da mola para cima (com batente no fim do
+   curso e barra estabilizadora) e forca do pneu (`CarTires`): motor so nas rodas da frente,
+   freio, deslize lateral e o limite do atrito (circulo de atrito). Freio de mao trava as de tras;
+5. arrasto do ar (`_apply_air_drag`); o amortecimento padrao do Godot fica desligado no
+   `car.tscn` (`linear_damp_mode`), senao ele freia o carro como um paraquedas;
+6. capotado: R desvira no proximo `_integrate_forces`, A/D balancam o carro (`_rock_when_flipped`);
+7. coloca cada roda desenhada na altura da mola e manda os numeros para a fumaca dos pneus e a
+   telemetria.
 
-O carro nao tem suspensao: a colisao e uma caixa de 1.66 x 1 x 4 m que so gira no eixo Y. As
-rodas e a inclinacao sao so visuais. O `GroundProbe` lanca um raio por roda e um no centro.
+Os numeros do carro ficam como `@export` em `car.gd` (freio, volante, arrasto), no no `Engine`
+(torque, rotacoes, marchas; hoje perto de um Gol GTI 16v: 0-100 em ~7 s, ~200 km/h), no no `Suspension`
+(molas) e no no `Tires` (atrito). O centro de massa (baixo e mais para a frente, como o motor do
+Gol) fica no `car.tscn`.
 
-Fora da fisica, a cada frame: `CarTilt` inclina o visual, `CarCamera` segue o carro e o
-`Speedometer` mostra os dados.
+Fora da fisica, a cada frame: `CarCamera` segue o carro e o `Speedometer` mostra os dados.
 
 ## Qualidade automatica
 
@@ -93,7 +103,10 @@ Fora da fisica, a cada frame: `CarTilt` inclina o visual, `CarCamera` segue o ca
   - So alguns: `... run_scenarios.gd -- --cenario ramp5` (roda os testes cujo nome contem `ramp5`).
   - Com detalhe: acrescente `--telemetria-detalhada` (0.5 s antes e depois de cada anomalia).
   - Os cenarios de `test_car_ramp_telemetry.gd` falham se aparecer SOLAVANCO, PERDEU O CHAO
-    RAPIDO, PENDURADO NA BORDA, FREOU DE REPENTE sem predio, ou se o carro nao chegar na rampa.
+    RAPIDO ou FREOU DE REPENTE sem predio ate o carro decolar do topo, ou se ele nao chegar na
+    rampa. O pouso depois do salto nao conta: cair de ~10 m bate o fundo de qualquer carro.
+  - `test_car_ramp_edges.gd` confere as bordas: centro fora tomba e cai, carroceria fora com as
+    rodas em cima anda normal, nada fica preso na quina nem flutua.
 - Dentro do Claude Code, os hooks de `.claude/` rodam isso sozinhos. O `CLAUDE.md` tem as regras
   que a IA segue.
 
