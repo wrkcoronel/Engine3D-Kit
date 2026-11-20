@@ -17,7 +17,14 @@ var _last_sample_time := -INF
 
 
 static func format_vector(vector: Vector3) -> String:
-	return "(%.2f, %.2f, %.2f)" % [vector.x, vector.y, vector.z]
+	var x := round_to_two_decimals(vector.x)
+	var y := round_to_two_decimals(vector.y)
+	var z := round_to_two_decimals(vector.z)
+	return "(%.2f, %.2f, %.2f)" % [x, y, z]
+
+
+static func round_to_two_decimals(value: float) -> float:
+	return roundf(value * 100.0) / 100.0
 
 
 static func format_line(clock: String, time: float, source: String, message: String) -> String:

@@ -68,3 +68,10 @@ func test_recorded_event_has_clock() -> void:
 func test_format_vector_uses_two_decimals() -> void:
 	var text := TelemetryLog.format_vector(Vector3(1.0, -2.5, 0.125))
 	assert_eq(text, "(1.00, -2.50, 0.13)", "vetor com duas casas")
+
+
+func test_halfway_values_round_away_from_zero_on_every_system() -> void:
+	var text := TelemetryLog.format_vector(Vector3(0.125, -0.125, 0.375))
+	assert_eq(
+		text, "(0.13, -0.13, 0.38)", "o meio arredonda para longe do zero em qualquer sistema"
+	)
