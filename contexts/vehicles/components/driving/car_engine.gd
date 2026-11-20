@@ -24,6 +24,7 @@ const TORQUE_FRACTION_AT_REDLINE := 0.8
 
 var gear := FIRST
 var rpm := 900.0
+var manual := false
 
 var _shift_time_left := 0.0
 var _forward_speed := 0.0
@@ -56,11 +57,34 @@ static func wheel_force_from(
 func update(throttle: float, forward_speed: float, delta: float) -> void:
 	_throttle = throttle
 	_forward_speed = forward_speed
-	_choose_direction()
+	if not manual:
+		_choose_direction()
 	_shift_time_left = maxf(_shift_time_left - delta, 0.0)
 	rpm = _rpm_from_speed()
-	if gear >= FIRST:
+	if gear >= FIRST and not manual:
 		_shift_automatically()
+
+
+func handle_driver_shifts(wants_up: bool, wants_down: bool, wants_mode_change: bool) -> void:
+	if wants_mode_change:
+		manual = not manual
+	if not manual:
+		return
+	if wants_up:
+		_manual_shift_up()
+	if wants_down:
+		_manual_shift_down()
+
+
+func wants_brake() -> bool:
+	var standing_still := absf(_forward_speed) < STOPPED_SPEED
+	if _throttle == 0.0:
+		return standing_still
+	if manual:
+		return _throttle < 0.0
+	if _throttle > 0.0:
+		return _forward_speed < -STOPPED_SPEED
+	return _forward_speed > STOPPED_SPEED
 
 
 func drive_force() -> float:
@@ -68,7 +92,9 @@ func drive_force() -> float:
 		return 0.0
 	if _throttle == 0.0:
 		return _engine_braking_force()
-	if _pushes_against_gear():
+	if _throttle < 0.0 and manual:
+		return 0.0
+	if not manual and _pushes_against_gear():
 		return 0.0
 	var torque_fraction := torque_fraction_at(rpm, idle_rpm, peak_torque_rpm, redline_rpm)
 	var torque := max_torque * torque_fraction * absf(_throttle)
@@ -88,7 +114,7 @@ func gear_text() -> String:
 	if gear == REVERSE:
 		return "R"
 	var standing_still := absf(_forward_speed) < STOPPED_SPEED
-	if standing_still and _throttle == 0.0:
+	if standing_still and _throttle == 0.0 and not manual:
 		return "N"
 	return str(gear)
 
@@ -101,6 +127,23 @@ func _pushes_against_gear() -> bool:
 	var pushing_forward_in_reverse := _throttle > 0.0 and gear == REVERSE
 	var pushing_backward_in_gear := _throttle < 0.0 and gear >= FIRST
 	return pushing_forward_in_reverse or pushing_backward_in_gear
+
+
+func _manual_shift_up() -> void:
+	if gear == REVERSE:
+		gear = FIRST
+		return
+	if gear < gear_ratios.size():
+		_shift_to(gear + 1)
+
+
+func _manual_shift_down() -> void:
+	if gear > FIRST:
+		_shift_to(gear - 1)
+		return
+	var standing_still := absf(_forward_speed) < STOPPED_SPEED
+	if gear == FIRST and standing_still:
+		gear = REVERSE
 
 
 func _choose_direction() -> void:

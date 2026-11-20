@@ -102,10 +102,13 @@ func _physics_process(delta: float) -> void:
 	input.update(_driver != null)
 	var forward_speed := linear_velocity.dot(-global_basis.z)
 	_engine.update(input.throttle, forward_speed, delta)
+	var shift_up := input.shift_up_pressed
+	var shift_down := input.shift_down_pressed
+	_engine.handle_driver_shifts(shift_up, shift_down, input.gearbox_mode_pressed)
 	var steer_angle := _steer_angle(forward_speed, delta)
 	var space_state := get_world_3d().direct_space_state
 	_suspension.sample(space_state, global_transform, get_rid(), delta)
-	_apply_wheel_forces(steer_angle, forward_speed, delta)
+	_apply_wheel_forces(steer_angle, delta)
 	_apply_air_drag()
 	_request_upright()
 	_rock_when_flipped()
@@ -133,14 +136,14 @@ func _steer_angle(forward_speed: float, delta: float) -> float:
 	return CarSteering.wheel_angle(steering, max_angle, forward_speed, SPEED_FOR_HALF_STEER_ANGLE)
 
 
-func _apply_wheel_forces(steer_angle: float, car_forward_speed: float, delta: float) -> void:
+func _apply_wheel_forces(steer_angle: float, delta: float) -> void:
 	var mass_per_wheel := mass / WHEEL_COUNT
 	_front_wheels_spinning = false
 	for wheel_index: int in WHEEL_COUNT:
 		var wheel := _suspension.wheels[wheel_index]
 		if not wheel.touching:
 			continue
-		var command := _wheel_command(wheel_index, car_forward_speed)
+		var command := _wheel_command(wheel_index)
 		_apply_wheel_force(wheel_index, command, steer_angle, mass_per_wheel, delta)
 
 
@@ -191,24 +194,16 @@ func _wheel_velocities() -> Array[Vector3]:
 	return velocities
 
 
-func _wheel_command(wheel_index: int, car_forward_speed: float) -> CarWheelCommand:
+func _wheel_command(wheel_index: int) -> CarWheelCommand:
 	var command := CarWheelCommand.new()
 	var front := CarSuspension.is_front(wheel_index)
-	if _wants_brake(input.throttle, car_forward_speed):
+	if _engine.wants_brake():
 		command.brake_force = mass * braking / WHEEL_COUNT
 	if front:
 		command.drive_force = _engine.drive_force() / DRIVEN_WHEEL_COUNT
 	if not front and input.handbraking:
 		command.locked = true
 	return command
-
-
-func _wants_brake(throttle: float, forward_speed: float) -> bool:
-	if throttle > 0.0:
-		return forward_speed < -STOPPED_SPEED
-	if throttle < 0.0:
-		return forward_speed > STOPPED_SPEED
-	return absf(forward_speed) < STOPPED_SPEED
 
 
 func _apply_air_drag() -> void:
