@@ -1,0 +1,236 @@
+[gd_scene load_steps=22 format=3]
+
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/receptor.obj" id="Mesh_receptor"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/coronha.obj" id="Mesh_coronha"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/soleira.obj" id="Mesh_soleira"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/guarda_mao.obj" id="Mesh_guarda_mao"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/cano.obj" id="Mesh_cano"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/interior_cano.obj" id="Mesh_interior_cano"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/carregador.obj" id="Mesh_carregador"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/guarda_mato.obj" id="Mesh_guarda_mato"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/gatilho.obj" id="Mesh_gatilho"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/janela_ferrolho.obj" id="Mesh_janela_ferrolho"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/alavanca_ferrolho.obj" id="Mesh_alavanca_ferrolho"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/pomo_ferrolho.obj" id="Mesh_pomo_ferrolho"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/luneta.obj" id="Mesh_luneta"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/lentes.obj" id="Mesh_lentes"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/aneis_luneta.obj" id="Mesh_aneis_luneta"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/hunting_rifle/meshes/ajustes_luneta.obj" id="Mesh_ajustes_luneta"]
+[ext_resource type="Material" path="res://contexts/weapons/models/hunting_rifle/materials/rifle_metal.tres" id="rifle_metal"]
+[ext_resource type="Material" path="res://contexts/weapons/models/hunting_rifle/materials/rifle_madeira.tres" id="rifle_madeira"]
+[ext_resource type="Material" path="res://contexts/weapons/models/hunting_rifle/materials/rifle_borracha.tres" id="rifle_borracha"]
+[ext_resource type="Material" path="res://contexts/weapons/models/hunting_rifle/materials/rifle_ferrolho.tres" id="rifle_ferrolho"]
+[ext_resource type="Material" path="res://contexts/weapons/models/hunting_rifle/materials/lente_luneta.tres" id="lente_luneta"]
+[ext_resource type="Script" path="res://contexts/weapons/components/scope/rifle_scope_lens.gd" id="Luneta"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/models/ammo/cartridge_308.tscn" id="Cartucho_308"]
+
+[sub_resource type="StandardMaterial3D" id="ClaraoMaterial"]
+shading_mode = 0
+albedo_color = Color(1, 0.86, 0.4, 1)
+[sub_resource type="SphereMesh" id="ClaraoMesh"]
+material = SubResource("ClaraoMaterial")
+radius = 0.035
+height = 0.07
+
+[sub_resource type="BoxMesh" id="TorreAnel"]
+size = Vector3(0.0196, 0.0135, 0.0096)
+
+[sub_resource type="CylinderMesh" id="ParafusoBase"]
+top_radius = 0.0022
+bottom_radius = 0.0022
+height = 0.0275
+radial_segments = 16
+rings = 1
+
+[node name="RifleCaca" type="Node3D"]
+position = Vector3(0.20, -0.22, -0.38)
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Corpo" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_receptor")
+material_override = ExtResource("rifle_metal")
+
+[node name="Coronha" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_coronha")
+material_override = ExtResource("rifle_madeira")
+
+[node name="Soleira" type="MeshInstance3D" parent="Visual/Coronha"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_soleira")
+material_override = ExtResource("rifle_borracha")
+
+[node name="GuardaMao" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_guarda_mao")
+material_override = ExtResource("rifle_madeira")
+
+[node name="Cano" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_cano")
+material_override = ExtResource("rifle_metal")
+
+[node name="InteriorCano" type="MeshInstance3D" parent="Visual/Cano"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_interior_cano")
+material_override = ExtResource("rifle_borracha")
+
+[node name="Carregador" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_carregador")
+material_override = ExtResource("rifle_metal")
+
+[node name="GuardaMato" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_guarda_mato")
+material_override = ExtResource("rifle_metal")
+
+[node name="Gatilho" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_gatilho")
+material_override = ExtResource("rifle_metal")
+
+[node name="JanelaFerrolho" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_janela_ferrolho")
+material_override = ExtResource("rifle_ferrolho")
+
+[node name="AlavancaFerrolho" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_alavanca_ferrolho")
+material_override = ExtResource("rifle_ferrolho")
+
+[node name="Pomo" type="MeshInstance3D" parent="Visual/Corpo/AlavancaFerrolho"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_pomo_ferrolho")
+material_override = ExtResource("rifle_metal")
+
+[node name="Luneta" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_luneta")
+material_override = ExtResource("rifle_metal")
+script = ExtResource("Luneta")
+
+[node name="Objetiva" type="Marker3D" parent="Visual/Luneta"]
+editor_description = "Centro da objetiva: de onde a camera da luneta olha, para a frente do cano."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, -0.3)
+
+[node name="Imagem" type="SubViewport" parent="Visual/Luneta"]
+size = Vector2i(256, 256)
+render_target_update_mode = 0
+
+[node name="Camera" type="Camera3D" parent="Visual/Luneta/Imagem"]
+cull_mask = 1
+fov = 20.0
+near = 0.3
+far = 300.0
+
+[node name="Lentes" type="MeshInstance3D" parent="Visual/Luneta"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_lentes")
+material_override = ExtResource("lente_luneta")
+
+[node name="Aneis" type="MeshInstance3D" parent="Visual/Luneta"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_aneis_luneta")
+material_override = ExtResource("rifle_metal")
+
+
+[node name="TorreFrente" type="MeshInstance3D" parent="Visual/Luneta/Aneis"]
+editor_description = "Corpo do anel: liga a base no receptor ao anel em volta do tubo (sem ele a luneta ficava solta, flutuando)."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04975, -0.168)
+cast_shadow = 0
+layers = 2
+mesh = SubResource("TorreAnel")
+material_override = ExtResource("rifle_metal")
+
+[node name="ParafusoFrente" type="MeshInstance3D" parent="Visual/Luneta/Aneis"]
+editor_description = "Parafuso transversal que prende a base no trilho do receptor."
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0.033, -0.168)
+cast_shadow = 0
+layers = 2
+mesh = SubResource("ParafusoBase")
+material_override = ExtResource("rifle_ferrolho")
+
+[node name="TorreTras" type="MeshInstance3D" parent="Visual/Luneta/Aneis"]
+editor_description = "Corpo do anel: liga a base no receptor ao anel em volta do tubo (sem ele a luneta ficava solta, flutuando)."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04975, -0.042)
+cast_shadow = 0
+layers = 2
+mesh = SubResource("TorreAnel")
+material_override = ExtResource("rifle_metal")
+
+[node name="ParafusoTras" type="MeshInstance3D" parent="Visual/Luneta/Aneis"]
+editor_description = "Parafuso transversal que prende a base no trilho do receptor."
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0.033, -0.042)
+cast_shadow = 0
+layers = 2
+mesh = SubResource("ParafusoBase")
+material_override = ExtResource("rifle_ferrolho")
+[node name="Ajustes" type="MeshInstance3D" parent="Visual/Luneta"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_ajustes_luneta")
+material_override = ExtResource("rifle_metal")
+
+[node name="Efeitos" type="Node3D" parent="."]
+
+[node name="Clarao" type="MeshInstance3D" parent="Efeitos"]
+visible = false
+position = Vector3(0, 0.009, -0.785)
+scale = Vector3(1, 0.65, 1.8)
+cast_shadow = 0
+mesh = SubResource("ClaraoMesh")
+
+[node name="LuzDisparo" type="OmniLight3D" parent="Efeitos"]
+visible = false
+position = Vector3(0, 0.009, -0.785)
+light_color = Color(1, 0.74, 0.4, 1)
+light_energy = 10.0
+light_volumetric_fog_energy = 0.0
+omni_range = 15.0
+omni_attenuation = 1.6
+shadow_enabled = true
+
+[node name="AcaoAberta" type="Node3D" parent="Visual/Corpo"]
+visible = false
+editor_description = "Acao aberta (so na conferencia): com o ferrolho para tras, os tres cartuchos de cima aparecem em zigue-zague pela janela de ejecao do Corpo (receptor.obj), inteiros dentro do receptor redondo; o quarto e o quinto ficam embaixo, no carregador dentro da madeira (GuardaMao), escondidos."
+
+[node name="Cartucho1" parent="Visual/Corpo/AcaoAberta" instance=ExtResource("Cartucho_308")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0035, 0.0145, -0.113)
+
+[node name="Cartucho2" parent="Visual/Corpo/AcaoAberta" instance=ExtResource("Cartucho_308")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0035, 0.0095, -0.111)
+
+[node name="Cartucho3" parent="Visual/Corpo/AcaoAberta" instance=ExtResource("Cartucho_308")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0035, 0.0045, -0.113)
+
+[node name="Cartucho4" parent="Visual/Corpo/AcaoAberta" instance=ExtResource("Cartucho_308")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0035, -0.018, -0.111)
+
+[node name="Cartucho5" parent="Visual/Corpo/AcaoAberta" instance=ExtResource("Cartucho_308")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0035, -0.023, -0.113)
+
+[node name="Conferencia" type="Marker3D" parent="."]
+transform = Transform3D(0.67291, 0.17241, 0.71935, -0.48389, 0.83813, 0.25177, -0.55950, -0.51751, 0.64742, 0.017, 0.004, -0.11)
+editor_description = "Conferencia de municao, com a arma jogada de lado na diagonal (lado direito para o olho): no C o ferrolho abre todo e mostra o carregador; no R com a arma cheia ele recua so metadata/recuo_camara (fracao do curso). Os dois mostram os cartuchos que estao na arma: os tres de cima a vista, o resto escondido no carregador. As maos levam este ponto ate metadata/alvo e o +Z dele se vira para o olho."
+metadata/recuo_camara = 0.4
+metadata/puxar_carregador = Vector3(0, 0, 0)
+metadata/alvo = Vector3(0.05, -0.09, -0.32)

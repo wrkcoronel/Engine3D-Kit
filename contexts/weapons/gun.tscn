@@ -1,43 +1,35 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://contexts/weapons/gun.gd" id="1_gun"]
 [ext_resource type="PackedScene" path="res://contexts/weapons/effects/impact.tscn" id="2_impact"]
-[ext_resource type="Script" path="res://contexts/weapons/components/gun_wall_avoid.gd" id="3_wall"]
-[ext_resource type="Script" path="res://contexts/weapons/components/gun_cover_peek.gd" id="4_cover"]
-[ext_resource type="Script" path="res://contexts/weapons/components/gun_aim.gd" id="5_aim"]
-[ext_resource type="Script" path="res://contexts/weapons/components/gun_sway.gd" id="6_sway"]
-[ext_resource type="Script" path="res://contexts/weapons/components/gun_recoil.gd" id="7_recoil"]
-[ext_resource type="Script" path="res://contexts/weapons/components/gun_sprint.gd" id="8_sprint"]
+[ext_resource type="Script" path="res://contexts/weapons/components/pose/gun_wall_avoid.gd" id="3_wall"]
+[ext_resource type="Script" path="res://contexts/weapons/components/pose/gun_cover_peek.gd" id="4_cover"]
+[ext_resource type="Script" path="res://contexts/weapons/components/pose/gun_aim.gd" id="5_aim"]
+[ext_resource type="Script" path="res://contexts/weapons/components/pose/gun_sway.gd" id="6_sway"]
+[ext_resource type="Script" path="res://contexts/weapons/components/pose/gun_recoil.gd" id="7_recoil"]
+[ext_resource type="Script" path="res://contexts/weapons/components/pose/gun_sprint.gd" id="8_sprint"]
+[ext_resource type="Script" path="res://contexts/weapons/components/firing/gun_shooter.gd" id="9_shooter"]
+[ext_resource type="Script" path="res://contexts/weapons/components/firing/gun_sounds.gd" id="10_sounds"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/effects/tracer.tscn" id="11_tracer"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/models/pistol_1911/pistol_1911.tscn" id="12_pistol"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/models/boito_pump/boito_pump.tscn" id="13_boito"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/models/carbine_22/carbine_22.tscn" id="14_carbine"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/models/hunting_rifle/hunting_rifle.tscn" id="15_rifle"]
+[ext_resource type="AudioStream" path="res://contexts/weapons/models/pistol_1911/sounds/pistol_shot.wav" id="16_pistol_shot"]
+[ext_resource type="AudioStream" path="res://contexts/weapons/models/boito_pump/sounds/shotgun_shot.wav" id="17_shotgun_shot"]
+[ext_resource type="AudioStream" path="res://contexts/weapons/models/carbine_22/sounds/automatic_shot.wav" id="18_carbine_shot"]
+[ext_resource type="AudioStream" path="res://contexts/weapons/models/hunting_rifle/sounds/sniper_shot.wav" id="19_rifle_shot"]
+[ext_resource type="AudioStream" path="res://contexts/weapons/models/sounds/reload.wav" id="20_reload"]
+[ext_resource type="AudioStream" path="res://contexts/weapons/models/sounds/empty_click.wav" id="21_empty"]
+[ext_resource type="AudioStream" path="res://contexts/weapons/models/sounds/weapon_switch.wav" id="22_switch"]
+[ext_resource type="AudioStream" path="res://contexts/weapons/models/boito_pump/sounds/cartucho_entra.wav" id="23_shell_in"]
+[ext_resource type="Shader" path="res://contexts/weapons/ui/scope_overlay.gdshader" id="24_scope_shader"]
 
-[sub_resource type="BoxMesh" id="gun_mesh"]
-size = Vector3(0.1, 0.15, 0.5)
-
-[sub_resource type="StandardMaterial3D" id="gun_mat"]
-albedo_color = Color(0.1, 0.1, 0.1, 1)
-
-[sub_resource type="BoxMesh" id="front_sight_mesh"]
-size = Vector3(0.012, 0.05, 0.012)
-
-[sub_resource type="BoxMesh" id="rear_sight_mesh"]
-size = Vector3(0.05, 0.03, 0.02)
+[sub_resource type="ShaderMaterial" id="scope_material"]
+shader = ExtResource("24_scope_shader")
 
 [node name="Gun" type="Node3D"]
 script = ExtResource("1_gun")
-impact_scene = ExtResource("2_impact")
-
-[node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("gun_mesh")
-surface_material_override/0 = SubResource("gun_mat")
-
-[node name="FrontSight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -0.22)
-mesh = SubResource("front_sight_mesh")
-surface_material_override/0 = SubResource("gun_mat")
-
-[node name="RearSight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0.2)
-mesh = SubResource("rear_sight_mesh")
-surface_material_override/0 = SubResource("gun_mat")
 
 [node name="WallAvoid" type="Node" parent="."]
 script = ExtResource("3_wall")
@@ -56,3 +48,75 @@ script = ExtResource("7_recoil")
 
 [node name="Sprint" type="Node" parent="."]
 script = ExtResource("8_sprint")
+
+[node name="Shooter" type="Node" parent="."]
+script = ExtResource("9_shooter")
+impact_scene = ExtResource("2_impact")
+tracer_scene = ExtResource("11_tracer")
+
+[node name="Sounds" type="Node" parent="."]
+script = ExtResource("10_sounds")
+
+[node name="Reload" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource("20_reload")
+volume_db = -14.0
+max_polyphony = 4
+
+[node name="EmptyClick" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource("21_empty")
+volume_db = -15.0
+max_polyphony = 4
+
+[node name="Switch" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource("22_switch")
+volume_db = -18.0
+max_polyphony = 4
+
+[node name="ShellIn" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource("23_shell_in")
+volume_db = -12.0
+max_polyphony = 4
+
+[node name="Pistola" parent="." instance=ExtResource("12_pistol")]
+
+[node name="ShotSound" type="AudioStreamPlayer" parent="Pistola"]
+stream = ExtResource("16_pistol_shot")
+volume_db = -11.0
+max_polyphony = 4
+
+[node name="Escopeta" parent="." instance=ExtResource("13_boito")]
+visible = false
+
+[node name="ShotSound" type="AudioStreamPlayer" parent="Escopeta"]
+stream = ExtResource("17_shotgun_shot")
+volume_db = -9.0
+max_polyphony = 4
+
+[node name="Carabina22" parent="." instance=ExtResource("14_carbine")]
+visible = false
+
+[node name="ShotSound" type="AudioStreamPlayer" parent="Carabina22"]
+stream = ExtResource("18_carbine_shot")
+volume_db = -14.0
+max_polyphony = 8
+
+[node name="RifleCaca" parent="." instance=ExtResource("15_rifle")]
+visible = false
+
+[node name="ShotSound" type="AudioStreamPlayer" parent="RifleCaca"]
+stream = ExtResource("19_rifle_shot")
+volume_db = -9.0
+max_polyphony = 4
+
+[node name="ScopeOverlay" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Lens" type="ColorRect" parent="ScopeOverlay"]
+visible = false
+material = SubResource("scope_material")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

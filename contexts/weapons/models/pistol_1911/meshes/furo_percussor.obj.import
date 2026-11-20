@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bcpxf2prfsbnx"
+path="res://.godot/imported/furo_percussor.obj-a270372843f3ae790c5bb17eb56fc8bf.mesh"
+
+[deps]
+
+files=["res://.godot/imported/furo_percussor.obj-a270372843f3ae790c5bb17eb56fc8bf.mesh"]
+
+source_file="res://contexts/weapons/models/pistol_1911/meshes/furo_percussor.obj"
+dest_files=["res://.godot/imported/furo_percussor.obj-a270372843f3ae790c5bb17eb56fc8bf.mesh", "res://.godot/imported/furo_percussor.obj-a270372843f3ae790c5bb17eb56fc8bf.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=false
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

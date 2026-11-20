@@ -1,0 +1,401 @@
+[gd_scene format=3 uid="uid://c26dxblgf6sl8"]
+
+[ext_resource type="Material" path="res://contexts/weapons/models/pistol_1911/materials/pistola_cabo.tres" id="Material_cabo"]
+[ext_resource type="Material" path="res://contexts/weapons/models/pistol_1911/materials/pistola_cano.tres" id="Material_cano"]
+[ext_resource type="Material" path="res://contexts/weapons/models/pistol_1911/materials/pistola_carregador.tres" id="Material_carregador"]
+[ext_resource type="Material" path="res://contexts/weapons/models/pistol_1911/materials/pistola_corpo.tres" id="Material_corpo"]
+[ext_resource type="Material" path="res://contexts/weapons/models/pistol_1911/materials/pistola_ferrolho_janela.tres" id="Material_ferrolho_janela"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/furo_vazio.tres" id="Mun_furo_vazio"]
+[ext_resource type="Material" path="res://contexts/weapons/models/pistol_1911/materials/pistola_madeira.tres" id="Material_madeira"]
+[ext_resource type="Material" path="res://contexts/weapons/models/pistol_1911/materials/pistola_recessos.tres" id="Material_recessos"]
+[ext_resource type="Material" path="res://contexts/weapons/models/pistol_1911/materials/pistola_xadrez.tres" id="Material_xadrez"]
+[ext_resource type="ArrayMesh" uid="uid://bainn5thgxpa5" path="res://contexts/weapons/models/pistol_1911/meshes/armacao.obj" id="Mesh_armacao"]
+[ext_resource type="ArrayMesh" uid="uid://dis6mw2dh5sev" path="res://contexts/weapons/models/pistol_1911/meshes/botao_carregador.obj" id="Mesh_botao_carregador"]
+[ext_resource type="ArrayMesh" uid="uid://cbyckk4xg6bdd" path="res://contexts/weapons/models/pistol_1911/meshes/bucha_cano.obj" id="Mesh_bucha_cano"]
+[ext_resource type="ArrayMesh" uid="uid://lvl56oordome" path="res://contexts/weapons/models/pistol_1911/meshes/cabo.obj" id="Mesh_cabo"]
+[ext_resource type="ArrayMesh" uid="uid://bnm8nvco3lj8q" path="res://contexts/weapons/models/pistol_1911/meshes/camara.obj" id="Mesh_camara"]
+[ext_resource type="ArrayMesh" uid="uid://8fshhaok1h22" path="res://contexts/weapons/models/pistol_1911/meshes/cano.obj" id="Mesh_cano"]
+[ext_resource type="ArrayMesh" uid="uid://bijfe73g5usbx" path="res://contexts/weapons/models/pistol_1911/meshes/carregador.obj" id="Mesh_carregador"]
+[ext_resource type="ArrayMesh" uid="uid://dj6r8cp7oi1oc" path="res://contexts/weapons/models/pistol_1911/meshes/cauda_armacao.obj" id="Mesh_cauda_armacao"]
+[ext_resource type="ArrayMesh" uid="uid://b001ggo8j2pte" path="res://contexts/weapons/models/pistol_1911/meshes/fendas_parafusos.obj" id="Mesh_fendas_parafusos"]
+[ext_resource type="ArrayMesh" uid="uid://bwij2vnku61wg" path="res://contexts/weapons/models/pistol_1911/meshes/ferrolho.obj" id="Mesh_ferrolho"]
+[ext_resource type="ArrayMesh" uid="uid://cq7wuc1wdysri" path="res://contexts/weapons/models/pistol_1911/meshes/gatilho.obj" id="Mesh_gatilho"]
+[ext_resource type="ArrayMesh" uid="uid://gw2was8wy8fq" path="res://contexts/weapons/models/pistol_1911/meshes/guarda_mato.obj" id="Mesh_guarda_mato"]
+[ext_resource type="ArrayMesh" uid="uid://mnk54up80i52" path="res://contexts/weapons/models/pistol_1911/meshes/interior_cano.obj" id="Mesh_interior_cano"]
+[ext_resource type="ArrayMesh" uid="uid://ny07mxjs5i6t" path="res://contexts/weapons/models/pistol_1911/meshes/linha_ferrolho.obj" id="Mesh_linha_ferrolho"]
+[ext_resource type="ArrayMesh" uid="uid://bd0h2h46s5817" path="res://contexts/weapons/models/pistol_1911/meshes/martelo.obj" id="Mesh_martelo"]
+[ext_resource type="ArrayMesh" uid="uid://b1m4va0bxm5t6" path="res://contexts/weapons/models/pistol_1911/meshes/mira_traseira.obj" id="Mesh_mira_traseira"]
+[ext_resource type="ArrayMesh" uid="uid://do6gybqob7sga" path="res://contexts/weapons/models/pistol_1911/meshes/parafusos_talas.obj" id="Mesh_parafusos_talas"]
+[ext_resource type="ArrayMesh" uid="uid://cpvypm182bvyb" path="res://contexts/weapons/models/pistol_1911/meshes/retentor_ferrolho.obj" id="Mesh_retentor_ferrolho"]
+[ext_resource type="ArrayMesh" uid="uid://d4hcs7tqyp54t" path="res://contexts/weapons/models/pistol_1911/meshes/seguranca_cabo.obj" id="Mesh_seguranca_cabo"]
+[ext_resource type="ArrayMesh" uid="uid://cd4ol842qusar" path="res://contexts/weapons/models/pistol_1911/meshes/serrilhas.obj" id="Mesh_serrilhas"]
+[ext_resource type="ArrayMesh" uid="uid://ccx4x3pin4xix" path="res://contexts/weapons/models/pistol_1911/meshes/tala_direita.obj" id="Mesh_tala_direita"]
+[ext_resource type="ArrayMesh" uid="uid://bq6anaa1fe47i" path="res://contexts/weapons/models/pistol_1911/meshes/tala_esquerda.obj" id="Mesh_tala_esquerda"]
+[ext_resource type="ArrayMesh" uid="uid://dkf3sgw2qmi27" path="res://contexts/weapons/models/pistol_1911/meshes/tampao_mola.obj" id="Mesh_tampao_mola"]
+[ext_resource type="ArrayMesh" uid="uid://djc8k1ocku07j" path="res://contexts/weapons/models/pistol_1911/meshes/trava_manual.obj" id="Mesh_trava_manual"]
+[ext_resource type="ArrayMesh" uid="uid://dspw4gnnopug3" path="res://contexts/weapons/models/pistol_1911/meshes/xadrez_direita.obj" id="Mesh_xadrez_direita"]
+[ext_resource type="ArrayMesh" uid="uid://bli7hkbcco6ev" path="res://contexts/weapons/models/pistol_1911/meshes/xadrez_esquerda.obj" id="Mesh_xadrez_esquerda"]
+[ext_resource type="ArrayMesh" uid="uid://n8ravuy8qwft" path="res://contexts/weapons/models/pistol_1911/meshes/mira_frontal.obj" id="Mesh_mira_frontal"]
+[ext_resource type="ArrayMesh" uid="uid://co0d2gnb6adt7" path="res://contexts/weapons/models/pistol_1911/meshes/interior_ferrolho.obj" id="Mesh_interior_ferrolho"]
+[ext_resource type="ArrayMesh" uid="uid://dpxguby0yc3rm" path="res://contexts/weapons/models/pistol_1911/meshes/furo_pente.obj" id="Mesh_furo_pente"]
+[ext_resource type="ArrayMesh" uid="uid://1ekius6xqp4x" path="res://contexts/weapons/models/pistol_1911/meshes/tubo_cano.obj" id="Mesh_tubo_cano"]
+[ext_resource type="ArrayMesh" uid="uid://dqouynpwwpblu" path="res://contexts/weapons/models/pistol_1911/meshes/face_culatra.obj" id="Mesh_face_culatra"]
+[ext_resource type="ArrayMesh" uid="uid://bcpxf2prfsbnx" path="res://contexts/weapons/models/pistol_1911/meshes/furo_percussor.obj" id="Mesh_furo_percussor"]
+[ext_resource type="ArrayMesh" uid="uid://dcrato8nr4nh3" path="res://contexts/weapons/models/pistol_1911/meshes/extrator.obj" id="Mesh_extrator"]
+[ext_resource type="ArrayMesh" uid="uid://278jy7su6qkm" path="res://contexts/weapons/models/pistol_1911/meshes/garra_extrator.obj" id="Mesh_garra_extrator"]
+[ext_resource type="ArrayMesh" uid="uid://clmh5o76k2ue1" path="res://contexts/weapons/models/pistol_1911/meshes/tunel_mola.obj" id="Mesh_tunel_mola"]
+[ext_resource type="ArrayMesh" uid="uid://bo8tw0h6f44io" path="res://contexts/weapons/models/pistol_1911/meshes/trilho.obj" id="Mesh_trilho"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/models/ammo/cartridge_45.tscn" id="Cartucho_45"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/latao.tres" id="Mun_latao"]
+
+[sub_resource type="StandardMaterial3D" id="ClaraoMaterial"]
+shading_mode = 0
+albedo_color = Color(1, 0.867, 0.447, 1)
+
+[sub_resource type="SphereMesh" id="ClaraoMesh"]
+material = SubResource("ClaraoMaterial")
+radius = 0.035
+height = 0.07
+
+[node name="Pistola" type="Node3D" unique_id=6785070]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, -0.18, -0.42)
+
+[node name="Visual" type="Node3D" parent="." unique_id=810509922]
+
+[node name="Corpo" type="MeshInstance3D" parent="Visual" unique_id=1145822926]
+layers = 2
+material_override = ExtResource("Material_ferrolho_janela")
+cast_shadow = 0
+mesh = ExtResource("Mesh_ferrolho")
+
+[node name="Camara" type="MeshInstance3D" parent="Visual/Corpo" unique_id=1224806178]
+editor_description = "Capuz chanfrado e boca oca da camara. Acompanha o pequeno destravamento do cano na conferencia; o movimento do pai Corpo e compensado por ammo_inspection.gd."
+layers = 2
+material_override = ExtResource("Material_cano")
+cast_shadow = 0
+mesh = ExtResource("Mesh_camara")
+
+[node name="SerrilhasEsquerda" type="MeshInstance3D" parent="Visual/Corpo" unique_id=2063716230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0118, 0, 0)
+layers = 2
+material_override = ExtResource("Material_recessos")
+cast_shadow = 0
+mesh = ExtResource("Mesh_serrilhas")
+
+[node name="SerrilhasDireita" type="MeshInstance3D" parent="Visual/Corpo" unique_id=2140370276]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0118, 0, 0)
+layers = 2
+material_override = ExtResource("Material_recessos")
+cast_shadow = 0
+mesh = ExtResource("Mesh_serrilhas")
+
+[node name="MiraTraseira" type="MeshInstance3D" parent="Visual/Corpo" unique_id=2072589750]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_mira_traseira")
+
+[node name="Armacao" type="MeshInstance3D" parent="Visual" unique_id=1833212061]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_armacao")
+
+[node name="GuardaMato" type="MeshInstance3D" parent="Visual/Armacao" unique_id=1442034753]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_guarda_mato")
+
+[node name="Gatilho" type="MeshInstance3D" parent="Visual/Armacao" unique_id=1696108056]
+layers = 2
+material_override = ExtResource("Material_cano")
+cast_shadow = 0
+mesh = ExtResource("Mesh_gatilho")
+
+[node name="Cauda" type="MeshInstance3D" parent="Visual/Armacao" unique_id=144907845]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_cauda_armacao")
+
+[node name="Martelo" type="MeshInstance3D" parent="Visual/Armacao" unique_id=71098923]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_martelo")
+
+[node name="TampaoMola" type="MeshInstance3D" parent="Visual/Corpo" unique_id=189605404]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_tampao_mola")
+
+[node name="RetentorFerrolho" type="MeshInstance3D" parent="Visual/Armacao" unique_id=398176224]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_retentor_ferrolho")
+
+[node name="TravaManual" type="MeshInstance3D" parent="Visual/Armacao" unique_id=322986821]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_trava_manual")
+
+[node name="BotaoCarregador" type="MeshInstance3D" parent="Visual/Armacao" unique_id=1533149817]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_botao_carregador")
+
+[node name="SeparacaoFerrolho" type="MeshInstance3D" parent="Visual/Armacao" unique_id=1802922839]
+layers = 2
+material_override = ExtResource("Material_recessos")
+cast_shadow = 0
+mesh = ExtResource("Mesh_linha_ferrolho")
+
+[node name="Cabo" type="MeshInstance3D" parent="Visual" unique_id=15146579]
+layers = 2
+material_override = ExtResource("Material_cabo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_cabo")
+
+[node name="SegurancaCabo" type="MeshInstance3D" parent="Visual/Cabo" unique_id=2126352494]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_seguranca_cabo")
+
+[node name="TalaEsquerda" type="MeshInstance3D" parent="Visual/Cabo" unique_id=2022089519]
+layers = 2
+material_override = ExtResource("Material_madeira")
+cast_shadow = 0
+mesh = ExtResource("Mesh_tala_esquerda")
+
+[node name="TalaDireita" type="MeshInstance3D" parent="Visual/Cabo" unique_id=185181441]
+layers = 2
+material_override = ExtResource("Material_madeira")
+cast_shadow = 0
+mesh = ExtResource("Mesh_tala_direita")
+
+[node name="XadrezEsquerdo" type="MeshInstance3D" parent="Visual/Cabo" unique_id=2056291887]
+layers = 2
+material_override = ExtResource("Material_xadrez")
+cast_shadow = 0
+mesh = ExtResource("Mesh_xadrez_esquerda")
+
+[node name="XadrezDireito" type="MeshInstance3D" parent="Visual/Cabo" unique_id=876479878]
+layers = 2
+material_override = ExtResource("Material_xadrez")
+cast_shadow = 0
+mesh = ExtResource("Mesh_xadrez_direita")
+
+[node name="Parafusos" type="MeshInstance3D" parent="Visual/Cabo" unique_id=1750083909]
+layers = 2
+material_override = ExtResource("Material_cano")
+cast_shadow = 0
+mesh = ExtResource("Mesh_parafusos_talas")
+
+[node name="FendasParafusos" type="MeshInstance3D" parent="Visual/Cabo" unique_id=1933868710]
+layers = 2
+material_override = ExtResource("Material_recessos")
+cast_shadow = 0
+mesh = ExtResource("Mesh_fendas_parafusos")
+
+[node name="Cano" type="MeshInstance3D" parent="Visual" unique_id=1078772258]
+layers = 2
+material_override = ExtResource("Material_cano")
+cast_shadow = 0
+mesh = ExtResource("Mesh_cano")
+
+[node name="Bucha" type="MeshInstance3D" parent="Visual/Corpo" unique_id=2104197978]
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_bucha_cano")
+
+[node name="InteriorCano" type="MeshInstance3D" parent="Visual/Cano" unique_id=1196638338]
+layers = 2
+material_override = ExtResource("Material_recessos")
+cast_shadow = 0
+mesh = ExtResource("Mesh_interior_cano")
+
+[node name="Carregador" type="MeshInstance3D" parent="Visual" unique_id=1820445172]
+layers = 2
+material_override = ExtResource("Material_carregador")
+cast_shadow = 0
+mesh = ExtResource("Mesh_carregador")
+
+[node name="MiraArma" type="MeshInstance3D" parent="Visual/Corpo" unique_id=1914857319]
+transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, 0, 0.0365, -0.141)
+layers = 2
+material_override = ExtResource("Material_corpo")
+cast_shadow = 0
+mesh = ExtResource("Mesh_mira_frontal")
+
+[node name="Efeitos" type="Node3D" parent="." unique_id=522729358]
+
+[node name="Clarao" type="MeshInstance3D" parent="Efeitos" unique_id=591040735]
+transform = Transform3D(1, 0, 0, 0, 0.65, 0, 0, 0, 1.8, 0, 0.02, -0.163)
+visible = false
+cast_shadow = 0
+mesh = SubResource("ClaraoMesh")
+
+[node name="LuzDisparo" type="OmniLight3D" parent="Efeitos" unique_id=819990592]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.163)
+visible = false
+light_color = Color(1, 0.72, 0.38, 1)
+light_energy = 7.0
+light_volumetric_fog_energy = 0.0
+omni_range = 12.0
+omni_attenuation = 1.6
+shadow_enabled = true
+
+[node name="AlinhamentoMira" type="Marker3D" parent="." unique_id=123274459]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0385, 0.24)
+gizmo_extents = 0.04
+
+[node name="CartuchoTopo" parent="Visual/Carregador" instance=ExtResource("Cartucho_45")]
+transform = Transform3D(1, 0, 0, 0, 0.99756, -0.06976, 0, 0.06976, 0.99756, 0, -0.0315, 0.0148)
+visible = false
+
+[node name="FurosTras" type="Node3D" parent="Visual/Carregador"]
+editor_description = "Furos de conferencia na traseira do pente, de cima para baixo: latao enquanto houver bala naquela altura."
+visible = false
+
+[node name="Furo1" type="MeshInstance3D" parent="Visual/Carregador/FurosTras"]
+transform = Transform3D(1, 0, 0, 0, 0.29237, -0.95630, 0, 0.95630, 0.29237, 0, -0.04088, 0.03505)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_furo_pente")
+material_override = ExtResource("Mun_latao")
+
+[node name="Furo2" type="MeshInstance3D" parent="Visual/Carregador/FurosTras"]
+transform = Transform3D(1, 0, 0, 0, 0.29237, -0.95630, 0, 0.95630, 0.29237, 0, -0.05038, 0.03796)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_furo_pente")
+material_override = ExtResource("Mun_latao")
+
+[node name="Furo3" type="MeshInstance3D" parent="Visual/Carregador/FurosTras"]
+transform = Transform3D(1, 0, 0, 0, 0.29237, -0.95630, 0, 0.95630, 0.29237, 0, -0.05988, 0.04086)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_furo_pente")
+material_override = ExtResource("Mun_latao")
+
+[node name="Furo4" type="MeshInstance3D" parent="Visual/Carregador/FurosTras"]
+transform = Transform3D(1, 0, 0, 0, 0.29237, -0.95630, 0, 0.95630, 0.29237, 0, -0.06938, 0.04376)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_furo_pente")
+material_override = ExtResource("Mun_latao")
+
+[node name="Furo5" type="MeshInstance3D" parent="Visual/Carregador/FurosTras"]
+transform = Transform3D(1, 0, 0, 0, 0.29237, -0.95630, 0, 0.95630, 0.29237, 0, -0.07888, 0.04667)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_furo_pente")
+material_override = ExtResource("Mun_latao")
+
+[node name="Furo6" type="MeshInstance3D" parent="Visual/Carregador/FurosTras"]
+transform = Transform3D(1, 0, 0, 0, 0.29237, -0.95630, 0, 0.95630, 0.29237, 0, -0.08838, 0.04957)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_furo_pente")
+material_override = ExtResource("Mun_latao")
+
+[node name="Furo7" type="MeshInstance3D" parent="Visual/Carregador/FurosTras"]
+transform = Transform3D(1, 0, 0, 0, 0.29237, -0.95630, 0, 0.95630, 0.29237, 0, -0.09788, 0.05248)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_furo_pente")
+material_override = ExtResource("Mun_latao")
+
+[node name="Conferencia" type="Marker3D" parent="Visual/Carregador"]
+transform = Transform3D(1, 0, 0, 0, 0.95630, 0.29237, 0, -0.29237, 0.95630, 0, -0.07, 0.0439)
+editor_description = "Conferencia de municao com o pente na mao: o pente desce metadata/puxar_carregador, a mao esquerda o leva ate metadata/alvo (espaco da camera) e este ponto (traseira do pente) se vira para o olho."
+metadata/puxar_carregador = Vector3(0, -0.1, 0)
+metadata/alvo = Vector3(-0.075, -0.065, -0.23)
+
+[node name="Interior" type="MeshInstance3D" parent="Visual/Corpo"]
+editor_description = "Interior escuro do ferrolho (faces para dentro), visto pela janela de ejecao aberta no material pistola_ferrolho_janela.tres; por ela tambem se ve o capuz da camara (Camara)."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0200, -0.063)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_interior_ferrolho")
+material_override = ExtResource("Mun_furo_vazio")
+
+[node name="CartuchoCamara" parent="Visual" instance=ExtResource("Cartucho_45")]
+editor_description = "Cartucho .45 no eixo do cano. Na conferencia, o extrator acompanha o culote para tras, mostrando o latao na abertura curta, sem ejetar nem consumir municao. A transformacao inicial e guardada como repouso pelo modulo de conferencia."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.018, -0.0265)
+visible = false
+
+[node name="ConferenciaCamara" type="Marker3D" parent="."]
+transform = Transform3D(0.67291, 0.17241, 0.71935, -0.48389, 0.83813, 0.25177, -0.55950, -0.51751, 0.64742, 0.0148, 0.018, -0.012)
+editor_description = "Conferencia da camara (R segurado com a arma cheia ou sem reserva): primeiro a pistola vira na diagonal, depois o ferrolho recua o curso inteiro (35 mm), como na trava aberta. Ao soltar R, o ferrolho fecha antes de a arma voltar. As maos levam este ponto ate metadata/alvo (espaco da camera) e o +Z dele se vira para o olho."
+metadata/alvo = Vector3(0.03, -0.06, -0.24)
+metadata/recuo_ferrolho = 0.035
+
+[node name="Tubo" type="MeshInstance3D" parent="Visual/Cano"]
+editor_description = "Continuacao do cano por dentro da corredica, unida a boca original. Acompanha o pequeno destravamento do conjunto na conferencia."
+position = Vector3(0, 0.02, -0.0885)
+rotation = Vector3(1.5707963, 0, 0)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_tubo_cano")
+material_override = ExtResource("Material_cano")
+
+[node name="FaceCulatra" type="MeshInstance3D" parent="Visual/Corpo"]
+editor_description = "Face interna da corredica atras do culote, com orificio do percussor e extrator a direita. Recua com a corredica; nao e uma placa flutuante sobre a janela."
+position = Vector3(0, 0.018, -0.0097)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_face_culatra")
+material_override = ExtResource("Material_cano")
+
+[node name="FuroPercussor" type="MeshInstance3D" parent="Visual/Corpo/FaceCulatra"]
+position = Vector3(0, 0, -0.00086)
+rotation = Vector3(1.5707963, 0, 0)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_furo_percussor")
+material_override = ExtResource("Material_recessos")
+
+[node name="Extrator" type="MeshInstance3D" parent="Visual/Corpo"]
+position = Vector3(0.0082, 0.018, -0.013)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_extrator")
+material_override = ExtResource("Material_cano")
+
+[node name="Garra" type="MeshInstance3D" parent="Visual/Corpo/Extrator"]
+position = Vector3(-0.0014, 0, -0.0037)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_garra_extrator")
+material_override = ExtResource("Material_cano")
+
+[node name="TrilhoDireito" type="MeshInstance3D" parent="Visual/Armacao"]
+position = Vector3(0.0094, 0.0096, 0.009)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_trilho")
+material_override = ExtResource("Material_cano")
+
+[node name="TrilhoEsquerdo" type="MeshInstance3D" parent="Visual/Armacao"]
+position = Vector3(-0.0094, 0.0096, 0.009)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_trilho")
+material_override = ExtResource("Material_cano")
+
+[node name="TunelMola" type="MeshInstance3D" parent="Visual/Armacao"]
+editor_description = "Boca do tunel da mola recuperadora na frente do guarda-po; aparece quando a corredica recua."
+position = Vector3(0, 0.0045, -0.1302)
+rotation = Vector3(1.5707963, 0, 0)
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_tunel_mola")
+material_override = ExtResource("Material_recessos")

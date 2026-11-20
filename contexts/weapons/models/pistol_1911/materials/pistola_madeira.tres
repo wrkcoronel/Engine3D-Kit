@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "pistola_madeira"
+albedo_color = Color(0.245, 0.095, 0.038, 1)
+metallic = 0
+roughness = 0.7

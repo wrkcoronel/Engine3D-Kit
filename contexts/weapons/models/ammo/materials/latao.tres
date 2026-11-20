@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "latao"
+albedo_color = Color(0.78, 0.6, 0.26, 1)
+metallic = 0.85
+roughness = 0.32

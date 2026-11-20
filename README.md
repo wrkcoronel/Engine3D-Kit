@@ -1,6 +1,6 @@
 # Engine
 
-Jogo 3D em primeira pessoa feito no **Godot 4.8** com GDScript. Tem um jogador a pe, uma arma e um
+Jogo 3D em primeira pessoa feito no **Godot 4.8** com GDScript. Tem um jogador a pe, quatro armas e um
 carro (Gol GTI) com fisica propria, para andar numa arena com predios e rampas.
 
 O projeto tambem e um jeito de aprender: o codigo e escrito para ser lido. Nomes completos, uma
@@ -16,7 +16,11 @@ Abra a pasta no Godot 4.8 e rode. A cena principal e `app/main.tscn` (mundo, jog
 | W A S D | andar | acelerar, frear e direcao (setas tambem) |
 | Mouse | olhar | olhar em volta |
 | Botao esquerdo | atirar | |
-| Botao direito | mirar | |
+| Botao direito | mirar (o rifle usa a luneta) | |
+| 1 2 3 4 / roda do mouse | pistola 1911, espingarda Boito, carabina .22, rifle de caca | |
+| Q | guardar a arma (maos livres) | |
+| R | recarregar; com a arma cheia, conferir a camara (na 1911, segure) | |
+| V (segurado) | conferir o pente, o tubo ou a acao | |
 | Shift | correr | |
 | Ctrl ou C | agachar | |
 | Espaco | pular | freio de mao |
@@ -24,7 +28,7 @@ Abra a pasta no Godot 4.8 e rode. A cena principal e `app/main.tscn` (mundo, jog
 | Esc | soltar o mouse | soltar o mouse |
 | F3 | mostrar a telemetria | mostrar a telemetria |
 | F2 | salvar relatorio da telemetria | salvar relatorio da telemetria |
-| R | recarregar a cena (arena) | |
+| F5 | recarregar a cena (arena) | |
 
 ## Como o codigo e organizado
 

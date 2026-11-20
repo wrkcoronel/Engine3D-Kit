@@ -28,4 +28,4 @@ script = ExtResource("2_lean")
 current = true
 
 [node name="Gun" parent="Head/Camera" instance=ExtResource("4_gun")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.25, -0.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://u6drl8mgwg1q"
+path="res://.godot/imported/janela_pente.obj-644d883cde04c8aff9649ca7f2ad4bb6.mesh"
+
+[deps]
+
+files=["res://.godot/imported/janela_pente.obj-644d883cde04c8aff9649ca7f2ad4bb6.mesh"]
+
+source_file="res://contexts/weapons/models/carbine_22/meshes/janela_pente.obj"
+dest_files=["res://.godot/imported/janela_pente.obj-644d883cde04c8aff9649ca7f2ad4bb6.mesh", "res://.godot/imported/janela_pente.obj-644d883cde04c8aff9649ca7f2ad4bb6.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=false
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

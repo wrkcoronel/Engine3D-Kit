@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "rifle_madeira"
+albedo_color = Color(0.235, 0.10, 0.037, 1)
+metallic = 0
+roughness = 0.58

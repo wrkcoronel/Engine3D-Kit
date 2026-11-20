@@ -51,9 +51,9 @@ reload_scene={
 "meta_pressed": false,
 "pressed": false,
 "keycode": 0,
-"physical_keycode": 82,
+"physical_keycode": 4194336,
 "key_label": 0,
-"unicode": 114,
+"unicode": 0,
 "location": 0,
 "echo": false,
 "script": null

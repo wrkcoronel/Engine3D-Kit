@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "escopeta_recessos"
+albedo_color = Color(0.009, 0.011, 0.013, 1)
+metallic = 0.1
+roughness = 0.85
