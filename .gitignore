@@ -3,3 +3,4 @@
 /android/
 .claude/.last_check
 *.blend1
+__pycache__/
