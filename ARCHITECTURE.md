@@ -45,7 +45,7 @@ contexts/       um contexto por assunto
       visual/         wheels (rodas na altura da mola), tire_fx (fumaca e marcas), camera
       telemetry/      telemetry, telemetry_context, telemetry_frame, body_contact
                       (eventos e anomalias)
-    ui/             speedometer (HUD) e tachometer_dial (conta-giros redondo desenhado em _draw)
+    ui/             speedometer (HUD), speed_readout (velocidade), gear_badge (caixa da marcha), rpm_bar (barra de rpm), italic_font
 
 shared/         usado por mais de um contexto
   physics/ray_util.gd   distancia de um raio ate o primeiro obstaculo
