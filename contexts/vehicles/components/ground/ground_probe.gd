@@ -5,6 +5,7 @@ const RAY_START_HEIGHT := 1.5
 const RAY_LENGTH := 3.0
 const WHEEL_RADIUS := 0.29
 const MIN_FLOOR_NORMAL_HEIGHT := 0.1
+const MIN_WHEELS_FOR_DRIVING_SLOPE := 3
 
 var half_width := 0.70
 var half_wheelbase := 1.235
@@ -13,24 +14,78 @@ var found_ground := false
 var surface_normal := Vector3.UP
 var center_point := Vector3.ZERO
 var center_height := 0.0
+var wheel_ground_names: Array[String] = []
+var wheel_ground_heights: Array[float] = []
+var center_ground_drop := 0.0
+var wheels: Array[WheelGround] = []
 
 
 func sample(
 	space_state: PhysicsDirectSpaceState3D, car_transform: Transform3D, car_body: RID
 ) -> void:
+	center_ground_drop = _center_ground_drop(space_state, car_transform, car_body)
 	found_ground = false
-	var ground_points: Array[Vector3] = []
+	wheel_ground_names.clear()
+	wheel_ground_heights.clear()
+	wheels.clear()
 	for wheel_local_position: Vector3 in _wheel_center_positions():
 		var hit := _wheel_ground_hit(space_state, car_transform, car_body, wheel_local_position)
-		if not hit.is_empty():
-			ground_points.append(hit["position"] as Vector3)
+		var wheel := WheelGround.new()
+		wheels.append(wheel)
+		if hit.is_empty():
+			continue
+		var ground_point := hit["position"] as Vector3
+		_remember_wheel_ground(hit["collider"] as Node, ground_point)
+		wheel.touching = true
+		wheel.ground_name = wheel_ground_names.back() as String
+		wheel.point = ground_point
+		wheel.normal = hit["normal"] as Vector3
+		wheel.gap = car_transform.origin.y - ground_point.y
+	_fit_plane_to_touching_wheels(car_transform.origin)
+
+
+func _fit_plane_to_touching_wheels(car_center: Vector3) -> void:
+	var ground_points: Array[Vector3] = []
+	var normals_sum := Vector3.ZERO
+	for wheel: WheelGround in wheels:
+		if wheel.touching:
+			ground_points.append(wheel.point)
+			normals_sum += wheel.normal
 	if ground_points.size() == 4:
 		fit_plane(ground_points[0], ground_points[1], ground_points[2], ground_points[3])
 		return
 	if ground_points.size() == 3:
-		fit_plane_from_three(
-			ground_points[0], ground_points[1], ground_points[2], car_transform.origin
-		)
+		fit_plane_from_three(ground_points[0], ground_points[1], ground_points[2], car_center)
+		return
+	if ground_points.size() == 2:
+		fit_plane_from_two(ground_points[0], ground_points[1], normals_sum, car_center)
+		return
+	if ground_points.size() == 1:
+		_store_plane(normals_sum.normalized(), ground_points[0], car_center)
+
+
+func found_ground_under_most_wheels() -> bool:
+	if not found_ground:
+		return false
+	return wheel_ground_names.size() >= MIN_WHEELS_FOR_DRIVING_SLOPE
+
+
+func _center_ground_drop(
+	space_state: PhysicsDirectSpaceState3D, car_transform: Transform3D, car_body: RID
+) -> float:
+	var hit := _wheel_ground_hit(space_state, car_transform, car_body, Vector3.ZERO)
+	if hit.is_empty():
+		return INF
+	var ground_point := hit["position"] as Vector3
+	return car_transform.origin.y - ground_point.y
+
+
+func _remember_wheel_ground(ground: Node, ground_point: Vector3) -> void:
+	var ground_name := "?"
+	if ground:
+		ground_name = TelemetryLog.describe_node(ground)
+	wheel_ground_names.append(ground_name)
+	wheel_ground_heights.append(ground_point.y)
 
 
 func _wheel_ground_hit(
@@ -66,6 +121,15 @@ func fit_plane_from_three(
 	var plane_normal := first_edge.cross(second_edge).normalized()
 	if plane_normal.y < 0.0:
 		plane_normal = -plane_normal
+	_store_plane(plane_normal, first_point, car_center)
+
+
+func fit_plane_from_two(
+	first_point: Vector3, second_point: Vector3, ground_up: Vector3, car_center: Vector3
+) -> void:
+	var line_between_wheels := (second_point - first_point).normalized()
+	var ground_up_along_line := line_between_wheels * ground_up.dot(line_between_wheels)
+	var plane_normal := (ground_up - ground_up_along_line).normalized()
 	_store_plane(plane_normal, first_point, car_center)
 
 

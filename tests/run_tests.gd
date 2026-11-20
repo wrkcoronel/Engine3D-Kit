@@ -25,6 +25,9 @@ func _run_all() -> void:
 			var method_name: String = method.name
 			if not method_name.begins_with("test_"):
 				continue
+			var label := "%s::%s" % [file_name, method_name]
+			if not _accepts_test(label):
+				continue
 
 			var suite := script.new() as TestCase
 			suite.tree = self
@@ -34,7 +37,6 @@ func _run_all() -> void:
 			if suite.checks == 0:
 				suite.failures.append("nenhuma verificacao rodou: o teste quebrou ou esta vazio")
 
-			var label := "%s::%s" % [file_name, method_name]
 			total_tests += 1
 			total_checks += suite.checks
 			if suite.failures.is_empty():
@@ -54,6 +56,23 @@ func _run_all() -> void:
 		quit(1)
 		return
 	quit(1 if not failed_tests.is_empty() else 0)
+
+
+func _accepts_test(label: String) -> bool:
+	var scenario_name := _command_line_value("--cenario")
+	if scenario_name.is_empty():
+		return true
+	return label.contains(scenario_name)
+
+
+func _command_line_value(flag: String) -> String:
+	var arguments := OS.get_cmdline_user_args()
+	var flag_index := arguments.find(flag)
+	if flag_index == -1:
+		return ""
+	if flag_index + 1 >= arguments.size():
+		return ""
+	return arguments[flag_index + 1]
 
 
 func _accepts_suite(relative_path: String) -> bool:

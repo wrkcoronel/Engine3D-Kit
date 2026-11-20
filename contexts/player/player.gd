@@ -24,6 +24,7 @@ var _crouching := false
 var _crouch_t := 0.0
 var _slide_dir := Vector3.ZERO
 var _slide_speed := 0.0
+var _telemetry := PlayerTelemetry.new()
 
 @onready var _collision: CollisionShape3D = $Collision
 @onready var _shape: CapsuleShape3D = _collision.shape
@@ -103,6 +104,15 @@ func _physics_process(delta: float) -> void:
 		velocity.z = dir.z * speed
 	_step_up()
 	move_and_slide()
+	_report_telemetry(delta)
+
+
+func _report_telemetry(delta: float) -> void:
+	var on_floor := is_on_floor()
+	var state_text := PlayerTelemetry.describe(
+		global_position, velocity, on_floor, is_sprinting, is_sliding, _crouching
+	)
+	_telemetry.report(self, delta, velocity.y, on_floor, is_sliding, state_text)
 
 
 func _step_up() -> void:

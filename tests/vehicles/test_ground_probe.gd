@@ -111,3 +111,39 @@ func test_three_wheels_on_slope_give_height_at_car_center() -> void:
 	assert_near(probe.center_height, 0.0, 0.001, "altura da rampa no centro do carro")
 	var tilt := probe.surface_normal.angle_to(Vector3.UP)
 	assert_near(tilt, SLOPE_ANGLE, 0.001, "inclinacao vem dos tres pontos")
+
+
+func test_two_wheels_on_slope_edge_give_height_at_car_center() -> void:
+	var probe := GroundProbe.new()
+	var rise_per_meter := tan(SLOPE_ANGLE)
+	var slope_up := Vector3(0.0, 1.0, rise_per_meter).normalized()
+	var front_wheel := Vector3(1.0, rise_per_meter, -1.0)
+	var rear_wheel := Vector3(1.0, -rise_per_meter, 1.0)
+	var car_center := Vector3(0.0, 5.0, 0.0)
+	probe.fit_plane_from_two(front_wheel, rear_wheel, slope_up * 2.0, car_center)
+	assert_true(probe.found_ground, "duas rodas na borda da rampa bastam")
+	assert_near(probe.center_height, 0.0, 0.001, "altura da rampa no centro do carro")
+	var tilt := probe.surface_normal.angle_to(Vector3.UP)
+	assert_near(tilt, SLOPE_ANGLE, 0.001, "inclinacao vem da normal que as rodas acharam")
+
+
+func test_two_wheels_keep_plane_through_both_points() -> void:
+	var probe := GroundProbe.new()
+	var left_wheel := Vector3(-1.0, 0.0, 0.0)
+	var right_wheel := Vector3(1.0, 0.4, 0.0)
+	probe.fit_plane_from_two(left_wheel, right_wheel, Vector3.UP, Vector3.ZERO)
+	var line_between_wheels := right_wheel - left_wheel
+	var normal_across_line := probe.surface_normal.dot(line_between_wheels)
+	assert_near(normal_across_line, 0.0, 0.001, "o plano passa pelas duas rodas")
+	assert_near(probe.center_height, 0.2, 0.001, "altura no meio das duas rodas")
+
+
+func test_two_wheels_are_not_enough_for_driving_slope() -> void:
+	var probe := GroundProbe.new()
+	probe.wheel_ground_names.assign(["Ramp", "Ramp"])
+	var left_wheel := Vector3(-1.0, 0.0, 0.0)
+	var right_wheel := Vector3(1.0, 0.0, 0.0)
+	probe.fit_plane_from_two(left_wheel, right_wheel, Vector3.UP, Vector3.ZERO)
+	assert_true(probe.found_ground, "duas rodas acham chao para o visual")
+	var message := "duas rodas nao bastam para inclinar a velocidade do carro"
+	assert_true(not probe.found_ground_under_most_wheels(), message)

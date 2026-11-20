@@ -79,6 +79,20 @@ func _spread_direction(cam: Camera3D) -> Vector3:
 	)
 
 
+func _report_shot(hit: Dictionary, from: Vector3) -> void:
+	if hit.is_empty():
+		Telemetry.record(self, "arma", "tiro: nao acertou nada")
+		return
+	var target := hit["collider"] as Node
+	var hit_position := hit["position"] as Vector3
+	var distance := from.distance_to(hit_position)
+	var target_name := TelemetryLog.describe_node(target)
+	var where := TelemetryLog.format_vector(hit_position)
+	Telemetry.record(
+		self, "arma", "tiro: acertou %s a %.1f m em %s" % [target_name, distance, where]
+	)
+
+
 func shoot(cam: Camera3D) -> void:
 	recoil.fire()
 	var from := cam.global_position
@@ -86,6 +100,7 @@ func shoot(cam: Camera3D) -> void:
 	var to := from + dir * shoot_range
 	var query := PhysicsRayQueryParameters3D.create(from, to, 1)
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	_report_shot(hit, from)
 	if hit.is_empty():
 		return
 	var target: Object = hit.collider

@@ -22,6 +22,8 @@ brevidade. Isto vale para qualquer codigo que a IA escrever ou alterar.
   em componentes, como `contexts/weapons/` e `contexts/vehicles/components/`.
 - Cada contexto mora na sua pasta em `contexts/`. O `.gd` principal orquestra; as partes ficam
   em `components/`.
+- Quando `components/` ficar grande, separar em subpastas pelo assunto (o que o componente faz).
+  Exemplo, o carro: `driving/`, `ground/`, `visual/` e `telemetry/`.
 - Componente nao le o estado do dono: recebe tudo por argumento tipado.
 
 ## Tipos (o projeto trata aviso como erro)
@@ -67,7 +69,8 @@ Rodar, nesta ordem, e deixar tudo limpo:
 
 ## Organizacao dos testes
 - Uma pasta por contexto, sem subpastas do codigo: o teste de
-  `contexts/vehicles/components/car_grip.gd` fica em `tests/vehicles/test_car_grip.gd`. Codigo de
+  `contexts/vehicles/components/driving/car_grip.gd` fica em `tests/vehicles/test_car_grip.gd`
+  (as subpastas de `components/` tambem nao se repetem nos testes). Codigo de
   `shared/` testa em `tests/shared/`. O nome e o do arquivo testado com `test_` na frente.
 - Cenarios (o jogo rodando com o carro sendo dirigido por codigo) ficam em `scenarios/` dentro da
   pasta do contexto, como `tests/vehicles/scenarios/`. Eles nao rodam no `run_tests.gd`, so no
