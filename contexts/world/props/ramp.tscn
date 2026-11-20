@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [sub_resource type="BoxMesh" id="ramp_mesh"]
 size = Vector3(10, 1, 24)
@@ -6,12 +6,21 @@ size = Vector3(10, 1, 24)
 [sub_resource type="BoxShape3D" id="ramp_shape"]
 size = Vector3(10, 1, 24)
 
+[sub_resource type="BoxMesh" id="transition_mesh"]
+size = Vector3(10, 1, 3.9507)
+
+[sub_resource type="BoxShape3D" id="transition_shape"]
+size = Vector3(10, 1, 3.9507)
+
 [sub_resource type="StandardMaterial3D" id="ramp_mat"]
 albedo_color = Color(0.9, 0.75, 0.2, 1)
 
 ; RAMPA de 18 graus, 10 m de largura e 24 m de comprimento.
 ; A origem fica no centro da borda BAIXA, no chao. A rampa sobe em direcao a -Z (frente do no).
 ; Para virar a rampa, gire o no no eixo Y.
+; TRANSICAO de 9 graus na base: comeca no chao em z = +2.0 e encontra a rampa em z = -1.902
+; (altura 0.618). Divide a dobra de 0 para 18 graus em duas de 9, para o carro rapido nao dar
+; solavanco ao entrar.
 [node name="Ramp" type="StaticBody3D"]
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
@@ -22,3 +31,12 @@ surface_material_override/0 = SubResource("ramp_mat")
 [node name="Collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.951, -0.309, 0, 0.309, 0.951, 0, 3.2325, -11.5665)
 shape = SubResource("ramp_shape")
+
+[node name="TransitionMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.98769, -0.15643, 0, 0.15643, 0.98769, 0, -0.18482, -0.02927)
+mesh = SubResource("transition_mesh")
+surface_material_override/0 = SubResource("ramp_mat")
+
+[node name="TransitionCollision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.98769, -0.15643, 0, 0.15643, 0.98769, 0, -0.18482, -0.02927)
+shape = SubResource("transition_shape")

@@ -21,8 +21,7 @@ func update(delta: float, car: CharacterBody3D, visual: Node3D, ground_probe: Gr
 		smoothing_rate = tilt_smooth_ground
 		visual_height = _grounded_visual_height(car, ground_probe)
 	else:
-		var current_up := visual.global_basis.y
-		surface_up = (current_up - nose * current_up.dot(nose)).normalized()
+		surface_up = _level_up(nose)
 	var smoothing := 1.0 - exp(-smoothing_rate * delta)
 	var just_landed := car.is_on_floor() and not _was_on_floor
 	var ground_is_measured := car.is_on_floor() and ground_probe.found_ground
@@ -42,10 +41,10 @@ func _flat_forward(car: CharacterBody3D) -> Vector3:
 
 
 func _air_nose(car: CharacterBody3D, forward: Vector3) -> Vector3:
-	var horizontal_speed := Vector2(car.velocity.x, car.velocity.z).length()
-	if horizontal_speed <= MIN_HORIZONTAL_SPEED_FOR_AIR_PITCH:
+	var speed_along_forward := absf(car.velocity.dot(forward))
+	if speed_along_forward <= MIN_HORIZONTAL_SPEED_FOR_AIR_PITCH:
 		return forward
-	var velocity_direction := forward * horizontal_speed + Vector3.UP * car.velocity.y
+	var velocity_direction := forward * speed_along_forward + Vector3.UP * car.velocity.y
 	return velocity_direction.normalized()
 
 
@@ -69,3 +68,8 @@ func _apply_orientation(
 	var target := Basis(right, surface_up, backward).get_rotation_quaternion()
 	var current := visual.global_basis.get_rotation_quaternion()
 	visual.global_basis = Basis(current.slerp(target, smoothing))
+
+
+func _level_up(nose: Vector3) -> Vector3:
+	var up_along_nose := nose * Vector3.UP.dot(nose)
+	return (Vector3.UP - up_along_nose).normalized()

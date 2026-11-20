@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" path="res://contexts/vehicles/car.gd" id="1_car"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/ui/speedometer.tscn" id="2_speedo"]
-[ext_resource type="Script" path="res://contexts/vehicles/components/car_camera.gd" id="3_cam"]
-[ext_resource type="Script" path="res://contexts/vehicles/components/car_tire_fx.gd" id="4_tires"]
-[ext_resource type="Script" path="res://contexts/vehicles/components/car_tilt.gd" id="5_tilt"]
-[ext_resource type="Script" path="res://contexts/vehicles/components/car_grip.gd" id="6_grip"]
-[ext_resource type="Script" path="res://contexts/vehicles/components/car_wheels.gd" id="7_wheels"]
-[ext_resource type="Script" path="res://contexts/vehicles/components/car_body_lean.gd" id="8_lean"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_camera.gd" id="3_cam"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_tire_fx.gd" id="4_tires"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_tilt.gd" id="5_tilt"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/driving/car_grip.gd" id="6_grip"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_wheels.gd" id="7_wheels"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_body_lean.gd" id="8_lean"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/models/gol_gti.glb" id="9_gol"]
 
 [sub_resource type="BoxShape3D" id="car_shape"]

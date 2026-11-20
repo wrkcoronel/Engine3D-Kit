@@ -29,6 +29,8 @@ var _move_sign := 1.0
 var _handbraking := false
 var _steer_wheel := 0.0
 var _ground_probe := GroundProbe.new()
+var _edge_support := CarEdgeSupport.new()
+var _telemetry := CarTelemetry.new()
 
 @onready var _hud: Speedometer = $Speedometer
 @onready var _cam: CarCamera = $Camera
@@ -77,14 +79,12 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _try_enter() -> void:
-	var player := get_tree().get_first_node_in_group("player") as CharacterBody3D
-	if player == null or global_position.distance_to(player.global_position) > enter_distance:
+	var player := CarSeat.find_player_near(get_tree(), global_position, enter_distance)
+	if player == null:
 		return
 	_driver = player
+	CarSeat.hide_player(player)
 	_cam.snap()
-	player.process_mode = Node.PROCESS_MODE_DISABLED
-	player.visible = false
-	player.get_node("Collision").set_deferred("disabled", true)
 	_cam.make_current()
 	_hud.visible = true
 
@@ -93,23 +93,21 @@ func _exit() -> void:
 	var player := _driver
 	_driver = null
 	_hud.visible = false
-	player.global_position = global_position - global_basis.x * 2.2 + Vector3.UP * 0.3
-	player.rotation.y = rotation.y
-	player.velocity = Vector3.ZERO
-	player.process_mode = Node.PROCESS_MODE_INHERIT
-	player.visible = true
-	player.get_node("Collision").set_deferred("disabled", false)
-	player.get_node("Head/Camera").make_current()
+	CarSeat.place_player_beside(player, global_transform)
 
 
 func _physics_process(delta: float) -> void:
-	_read_input()
+	input.update(_driver != null)
 	var throttle := input.throttle
 	var steer_input := input.steering
 	var handbraking := input.handbraking
 	_handbraking = handbraking
 
-	var grounded := is_on_floor()
+	var on_floor_before := is_on_floor()
+	var touching_count := get_slide_collision_count()
+	_edge_support.update(on_floor_before, _ground_probe.center_ground_drop, touching_count)
+	motion_mode = _edge_support.motion_mode()
+	var grounded := on_floor_before and not _edge_support.hanging_off_edge
 
 	var steering := _smooth_steering(steer_input, delta)
 
@@ -137,6 +135,9 @@ func _physics_process(delta: float) -> void:
 		. limit_length(max_speed)
 	)
 	_vel = _grip.apply_handbrake_or_rest(_vel, throttle, handbraking, grounded, delta)
+	if _edge_support.hanging_off_edge:
+		var normals_touched := CarEdgeSupport.contact_normals_of(self)
+		_vel += _edge_support.slide_push(normals_touched, _vel.length(), delta)
 
 	var fall_speed := -velocity.y
 	_move(slope_rotation, grounded, delta)
@@ -149,6 +150,18 @@ func _physics_process(delta: float) -> void:
 	_tires.update(
 		grounded, throttle, handbraking, sideways_speed, forward_speed_before_turn, total_speed
 	)
+	_report_telemetry(delta)
+
+
+func _report_telemetry(delta: float) -> void:
+	if _driver == null:
+		_telemetry.forget()
+		return
+	_telemetry.report(self, telemetry_frame(), delta)
+
+
+func telemetry_frame() -> CarTelemetryFrame:
+	return CarTelemetryFrame.from_car(self, input, _ground_probe, _edge_support)
 
 
 func _on_landed(fall_speed: float) -> void:
@@ -180,7 +193,7 @@ func _update_visuals(delta: float) -> void:
 func _slope_normal(grounded: bool) -> Vector3:
 	if not grounded:
 		return Vector3.UP
-	if _ground_probe.found_ground:
+	if _ground_probe.found_ground_under_most_wheels():
 		return _ground_probe.surface_normal
 	return get_floor_normal()
 
@@ -254,30 +267,34 @@ func _apply_slope(
 	return forward_speed - absf(get_gravity().y) * GRAVITY_MULTIPLIER * uphill_amount * delta
 
 
+func _snap_back_onto_ramp(was_grounded: bool) -> void:
+	var gravity_strength := absf(get_gravity().y) * GRAVITY_MULTIPLIER
+	var center_drop := _ground_probe.center_ground_drop
+	var on_floor_now := is_on_floor()
+	var speed := _vel.length()
+	var edge := _edge_support
+	if edge.should_snap_back(was_grounded, on_floor_now, center_drop, speed, gravity_strength):
+		apply_floor_snap()
+
+
 func _move(slope_rotation: Quaternion, grounded: bool, delta: float) -> void:
 	if grounded:
 		velocity = slope_rotation * _vel
 		var climbing := velocity.y > 0.0
 		if climbing:
 			var slope_normal := slope_rotation * Vector3.UP
-			velocity -= slope_normal * GROUND_STICK_SPEED
+			var stick_speed := minf(GROUND_STICK_SPEED, velocity.y / slope_normal.y)
+			velocity -= slope_normal * stick_speed
 	else:
 		var vertical_speed := velocity.y
 		velocity = _vel
 		velocity.y = vertical_speed + get_gravity().y * GRAVITY_MULTIPLIER * delta
 	move_and_slide()
-
+	if not is_on_floor():
+		velocity.y = CarFall.limited_vertical_speed(velocity.y, get_real_velocity().y)
+	_snap_back_onto_ramp(grounded)
 	var horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
 	if is_on_floor() and horizontal_velocity.length() > 0.01:
 		_vel = horizontal_velocity.normalized() * velocity.length()
 	else:
 		_vel = horizontal_velocity
-
-
-func _read_input() -> void:
-	if not input.from_keyboard:
-		return
-	if _driver:
-		input.read_keyboard()
-		return
-	input.clear()

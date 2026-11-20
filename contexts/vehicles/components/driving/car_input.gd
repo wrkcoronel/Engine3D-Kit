@@ -17,6 +17,15 @@ func read_keyboard() -> void:
 	handbraking = Input.is_physical_key_pressed(KEY_SPACE)
 
 
+func update(has_driver: bool) -> void:
+	if not from_keyboard:
+		return
+	if has_driver:
+		read_keyboard()
+		return
+	clear()
+
+
 func clear() -> void:
 	throttle = 0.0
 	steering = 0.0
