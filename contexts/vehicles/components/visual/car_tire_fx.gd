@@ -7,7 +7,7 @@ extends Node
 @export var max_skid_marks := 400
 @export var smoke_full_speed := 50.0
 
-var _car: CharacterBody3D
+var _car: PhysicsBody3D
 var _smoke: Array[CPUParticles3D] = []
 var _skid_root: Node3D
 var _skid_tex: GradientTexture2D
@@ -16,7 +16,7 @@ var _skid_next := 0
 var _skid_last: Array = [null, null]
 
 
-func setup(car: CharacterBody3D, visual: Node3D) -> void:
+func setup(car: PhysicsBody3D, visual: Node3D) -> void:
 	_car = car
 	_hide_from_skid_marks(visual)
 	_smoke = [

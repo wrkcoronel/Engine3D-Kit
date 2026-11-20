@@ -16,6 +16,7 @@ var telemetry := CarTelemetry.new()
 var events: Array[String] = []
 var ramp_touch_kmh := -1.0
 var worst_fall_visual_turn_degrees := 0.0
+var worst_roll_degrees := 0.0
 
 var _tree: SceneTree
 var _wheels: Array[Node3D] = []
@@ -28,7 +29,7 @@ var _last_visual_rotation := Quaternion.IDENTITY
 static func hold_speed(target_speed: float) -> Callable:
 	return func(driven_car: Car) -> void:
 		driven_car.input.throttle = 0.0
-		var below_target := driven_car.velocity.length() < target_speed
+		var below_target := driven_car.linear_velocity.length() < target_speed
 		if below_target:
 			driven_car.input.throttle = 1.0
 
@@ -41,11 +42,17 @@ func start(test: TestCase, position: Vector3, yaw_degrees: float) -> void:
 	car.input.from_keyboard = false
 	car.global_position = position
 	car.rotation.y = deg_to_rad(yaw_degrees)
+	car.linear_velocity = Vector3.ZERO
+	car.angular_velocity = Vector3.ZERO
 	car.reset_physics_interpolation()
 	_visual = car.get_node("Visual") as Node3D
 	telemetry.detail.enabled = TelemetryDetailWindow.asked_on_command_line()
 	for wheel_name: String in WHEEL_NAMES:
 		_wheels.append(car.get_node("Visual/Model/" + wheel_name) as Node3D)
+
+
+func launch(speed: float) -> void:
+	car.linear_velocity = -car.global_basis.z * speed
 
 
 func drive(ticks: int, controller: Callable) -> void:
@@ -60,6 +67,7 @@ func settle(ticks: int) -> void:
 	events.clear()
 	worst_fall_visual_turn_degrees = 0.0
 	worst_wheel_float = 0.0
+	worst_roll_degrees = 0.0
 	telemetry.forget()
 
 
@@ -80,7 +88,7 @@ func print_events(label: String) -> void:
 func _record_telemetry() -> void:
 	var frame := car.telemetry_frame()
 	var not_measured_yet := ramp_touch_kmh < 0.0
-	var touching_ramp := frame.touches_name_starting_with("Ramps/")
+	var touching_ramp := frame.ground_summary().contains("Ramps/")
 	if not_measured_yet and touching_ramp:
 		ramp_touch_kmh = frame.speed_kmh()
 	var delta := car.get_physics_process_delta_time()
@@ -93,14 +101,15 @@ func _measure() -> void:
 	_ticks_driven += 1
 	_record_telemetry()
 	_measure_visual_turn()
-	var on_floor := car.is_on_floor()
+	var on_floor := car.is_on_ground()
 	var floor_changed := on_floor != _was_on_floor
 	if floor_changed and _near_ramp():
 		floor_changes_near_ramp += 1
 	var took_off := _was_on_floor and not on_floor
 	if took_off:
-		takeoff_climb_speed = maxf(takeoff_climb_speed, car.velocity.y)
+		takeoff_climb_speed = maxf(takeoff_climb_speed, car.linear_velocity.y)
 	_was_on_floor = on_floor
+	_measure_roll()
 	if on_floor:
 		_measure_wheel_sink()
 
@@ -117,7 +126,7 @@ func _measure_wheel_sink() -> void:
 		if hit.is_empty():
 			continue
 		var ground_height := (hit["position"] as Vector3).y
-		var wheel_bottom := wheel.global_position.y - GroundProbe.WHEEL_RADIUS
+		var wheel_bottom := wheel.global_position.y - CarSuspension.WHEEL_RADIUS
 		var wheel_gap := wheel_bottom - ground_height
 		worst_wheel_sink = minf(worst_wheel_sink, wheel_gap)
 		lowest_wheel_gap = minf(lowest_wheel_gap, wheel_gap)
@@ -136,8 +145,14 @@ func _measure_visual_turn() -> void:
 	var rotation_now := _visual.global_basis.get_rotation_quaternion()
 	var turn_radians := _last_visual_rotation.angle_to(rotation_now)
 	_last_visual_rotation = rotation_now
-	var falling_or_landing := not _was_on_floor or not car.is_on_floor()
+	var falling_or_landing := not _was_on_floor or not car.is_on_ground()
 	if not falling_or_landing:
 		return
 	var turn_degrees := rad_to_deg(turn_radians)
 	worst_fall_visual_turn_degrees = maxf(worst_fall_visual_turn_degrees, turn_degrees)
+
+
+func _measure_roll() -> void:
+	var right_side_rise := clampf(absf(car.global_basis.x.y), 0.0, 1.0)
+	var side_tilt_degrees := rad_to_deg(asin(right_side_rise))
+	worst_roll_degrees = maxf(worst_roll_degrees, side_tilt_degrees)

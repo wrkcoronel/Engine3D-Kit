@@ -12,7 +12,7 @@ static func lines_for(frame: CarTelemetryFrame, previous_floor_normal: Vector3) 
 	var lines: Array[String] = []
 	lines.append(PREFIX + _motion_text(frame))
 	lines.append(PREFIX + _normal_text(frame, previous_floor_normal))
-	lines.append(PREFIX + _center_text(frame))
+	lines.append(PREFIX + "carroceria inclinada %.1f graus" % frame.roll_degrees)
 	for wheel_index: int in frame.wheels.size():
 		lines.append(PREFIX + frame.wheels[wheel_index].describe(wheel_index))
 	for contact_detail: String in frame.contact_details:
@@ -44,9 +44,3 @@ static func _normal_text(frame: CarTelemetryFrame, previous_floor_normal: Vector
 	var before := TelemetryLog.format_vector(previous_floor_normal)
 	var after := TelemetryLog.format_vector(frame.floor_normal)
 	return "normal do chao antes %s agora %s, mudou %.1f graus" % [before, after, change]
-
-
-static func _center_text(frame: CarTelemetryFrame) -> String:
-	if is_inf(frame.center_ground_drop):
-		return "centro do carro: nenhum chao ate 1.5 m abaixo"
-	return "centro do carro: chao %.2f m abaixo da base" % frame.center_ground_drop

@@ -1,25 +1,36 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://contexts/vehicles/car.gd" id="1_car"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/ui/speedometer.tscn" id="2_speedo"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_camera.gd" id="3_cam"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_tire_fx.gd" id="4_tires"]
-[ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_tilt.gd" id="5_tilt"]
-[ext_resource type="Script" path="res://contexts/vehicles/components/driving/car_grip.gd" id="6_grip"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/suspension/car_suspension.gd" id="5_suspension"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/driving/car_tires.gd" id="6_tire_grip"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_wheels.gd" id="7_wheels"]
-[ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_body_lean.gd" id="8_lean"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/models/gol_gti.glb" id="9_gol"]
+
+[sub_resource type="PhysicsMaterial" id="body_material"]
+friction = 0.4
 
 [sub_resource type="BoxShape3D" id="car_shape"]
 size = Vector3(1.66, 1, 4)
 
-[node name="Car" type="CharacterBody3D" groups=["vehicles"]]
+; CORPO RIGIDO: quem apoia o carro sao os 4 raios de suspensao (no Suspension).
+; A caixa e so a carroceria: comeca 0.3 m acima do chao, na altura do pneu com a mola no fim do curso.
+; O centro de massa fica baixo (0.45 m) para o carro nao capotar a toa em curva.
+[node name="Car" type="RigidBody3D" groups=["vehicles"]]
 collision_layer = 1
 collision_mask = 1
+mass = 1000.0
+physics_material_override = SubResource("body_material")
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, 0.45, -0.25)
+can_sleep = false
+continuous_cd = true
 script = ExtResource("1_car")
 
 [node name="Collision" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 shape = SubResource("car_shape")
 
 [node name="Visual" type="Node3D" parent="."]
@@ -36,14 +47,11 @@ transform = Transform3D(1, 0, 0, 0, 0.98, 0.1987, 0, -0.1987, 0.98, 0, 3.0, 6.5)
 [node name="TireFx" type="Node" parent="."]
 script = ExtResource("4_tires")
 
-[node name="Tilt" type="Node" parent="."]
-script = ExtResource("5_tilt")
+[node name="Suspension" type="Node" parent="."]
+script = ExtResource("5_suspension")
 
-[node name="Grip" type="Node" parent="."]
-script = ExtResource("6_grip")
+[node name="Tires" type="Node" parent="."]
+script = ExtResource("6_tire_grip")
 
 [node name="Wheels" type="Node" parent="."]
 script = ExtResource("7_wheels")
-
-[node name="BodyLean" type="Node" parent="."]
-script = ExtResource("8_lean")
