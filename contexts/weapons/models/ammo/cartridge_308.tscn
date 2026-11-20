@@ -1,0 +1,63 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/cobre.tres" id="cobre"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/latao.tres" id="latao"]
+
+[sub_resource type="CylinderMesh" id="M0"]
+top_radius = 0.006
+bottom_radius = 0.006
+height = 0.043
+radial_segments = 32
+rings = 1
+
+[sub_resource type="CylinderMesh" id="M1"]
+top_radius = 0.0044
+bottom_radius = 0.006
+height = 0.004
+radial_segments = 32
+rings = 1
+
+[sub_resource type="CylinderMesh" id="M2"]
+top_radius = 0.0044
+bottom_radius = 0.0044
+height = 0.004
+radial_segments = 32
+rings = 1
+
+[sub_resource type="CylinderMesh" id="M3"]
+top_radius = 0.0012
+bottom_radius = 0.0039
+height = 0.02
+radial_segments = 32
+rings = 1
+
+[node name="Cartucho308" type="Node3D"]
+editor_description = ".308: 71 mm, estojo com ombro e gargalo, ponta de cobre. A ponta aponta para -Z."
+
+[node name="Estojo" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0.014)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("M0")
+material_override = ExtResource("latao")
+
+[node name="Ombro" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.0095)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("M1")
+material_override = ExtResource("latao")
+
+[node name="Gargalo" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.0135)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("M2")
+material_override = ExtResource("latao")
+
+[node name="Projetil" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.0255)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("M3")
+material_override = ExtResource("cobre")

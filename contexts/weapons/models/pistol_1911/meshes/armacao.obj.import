@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bainn5thgxpa5"
+path="res://.godot/imported/armacao.obj-e50cf123e102db3a830c3740c042a7fb.mesh"
+
+[deps]
+
+files=["res://.godot/imported/armacao.obj-e50cf123e102db3a830c3740c042a7fb.mesh"]
+
+source_file="res://contexts/weapons/models/pistol_1911/meshes/armacao.obj"
+dest_files=["res://.godot/imported/armacao.obj-e50cf123e102db3a830c3740c042a7fb.mesh", "res://.godot/imported/armacao.obj-e50cf123e102db3a830c3740c042a7fb.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=false
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://contexts/weapons/models/hunting_rifle/materials/lente_luneta.gdshader" id="1"]
+
+[resource]
+resource_name = "lente_luneta"
+shader = ExtResource("1")
+shader_parameter/centro_y = 0.065
+shader_parameter/raio = 0.0179
+shader_parameter/revestimento = Color(0.32, 0.5, 0.42, 1)
+shader_parameter/brilho_tratamento = Color(0.55, 0.35, 0.85, 1)

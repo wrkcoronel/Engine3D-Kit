@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ccx4x3pin4xix"
+path="res://.godot/imported/tala_direita.obj-32dae13695f3921d226ae6652666a699.mesh"
+
+[deps]
+
+files=["res://.godot/imported/tala_direita.obj-32dae13695f3921d226ae6652666a699.mesh"]
+
+source_file="res://contexts/weapons/models/pistol_1911/meshes/tala_direita.obj"
+dest_files=["res://.godot/imported/tala_direita.obj-32dae13695f3921d226ae6652666a699.mesh", "res://.godot/imported/tala_direita.obj-32dae13695f3921d226ae6652666a699.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=false
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

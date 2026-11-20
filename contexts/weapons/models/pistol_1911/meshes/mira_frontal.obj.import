@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://n8ravuy8qwft"
+path="res://.godot/imported/mira_frontal.obj-dd0ac2475e6df8f7fb1995be66d1b564.mesh"
+
+[deps]
+
+files=["res://.godot/imported/mira_frontal.obj-dd0ac2475e6df8f7fb1995be66d1b564.mesh"]
+
+source_file="res://contexts/weapons/models/pistol_1911/meshes/mira_frontal.obj"
+dest_files=["res://.godot/imported/mira_frontal.obj-dd0ac2475e6df8f7fb1995be66d1b564.mesh", "res://.godot/imported/mira_frontal.obj-dd0ac2475e6df8f7fb1995be66d1b564.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=false
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

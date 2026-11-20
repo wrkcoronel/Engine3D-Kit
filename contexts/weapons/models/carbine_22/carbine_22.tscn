@@ -1,0 +1,319 @@
+[gd_scene load_steps=21 format=3]
+
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/receptor.obj" id="Mesh_receptor"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/coronha.obj" id="Mesh_coronha"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/soleira.obj" id="Mesh_soleira"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/guarda_mao.obj" id="Mesh_guarda_mao"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/cano.obj" id="Mesh_cano"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/interior_cano.obj" id="Mesh_interior_cano"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/carregador.obj" id="Mesh_carregador"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/guarda_mato.obj" id="Mesh_guarda_mato"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/gatilho.obj" id="Mesh_gatilho"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/alavanca.obj" id="Mesh_alavanca"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/mira_traseira.obj" id="Mesh_mira_traseira"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/base_mira.obj" id="Mesh_base_mira"]
+[ext_resource type="Material" path="res://contexts/weapons/models/carbine_22/materials/carabina_metal.tres" id="carabina_metal"]
+[ext_resource type="Material" path="res://contexts/weapons/models/carbine_22/materials/carabina_receptor.tres" id="carabina_receptor"]
+[ext_resource type="Material" path="res://contexts/weapons/models/carbine_22/materials/carabina_madeira.tres" id="carabina_madeira"]
+[ext_resource type="Material" path="res://contexts/weapons/models/carbine_22/materials/carabina_borracha.tres" id="carabina_borracha"]
+[ext_resource type="Material" path="res://contexts/weapons/models/carbine_22/materials/carabina_ferrolho.tres" id="carabina_ferrolho"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/models/ammo/cartridge_22.tscn" id="Cartucho_22"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/latao.tres" id="Mun_latao"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/furo_vazio.tres" id="Mun_furo_vazio"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/janela_pente.obj" id="Mesh_janela_pente"]
+[ext_resource type="Material" path="res://contexts/weapons/models/carbine_22/materials/carabina_polimero.tres" id="carabina_polimero"]
+[sub_resource type="BoxMesh" id="SelaMiraTraseiraMesh"]
+size = Vector3(0.0196, 0.0106, 0.012)
+
+[sub_resource type="BoxMesh" id="MiraFrontalMesh"]
+size = Vector3(0.0025, 0.009, 0.006)
+[sub_resource type="StandardMaterial3D" id="ClaraoMaterial"]
+shading_mode = 0
+albedo_color = Color(1, 0.86, 0.4, 1)
+[sub_resource type="SphereMesh" id="ClaraoMesh"]
+material = SubResource("ClaraoMaterial")
+radius = 0.035
+height = 0.07
+
+[sub_resource type="BoxMesh" id="InteriorMesh"]
+size = Vector3(0.029, 0.0259, 0.15)
+flip_faces = true
+
+[sub_resource type="BoxMesh" id="FerrolhoMesh"]
+size = Vector3(0.025, 0.017, 0.0625)
+
+[sub_resource type="BoxMesh" id="ExtratorMesh"]
+size = Vector3(0.003, 0.003, 0.002)
+
+[sub_resource type="CylinderMesh" id="PercussorMesh"]
+top_radius = 0.0012
+bottom_radius = 0.0012
+height = 0.001
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BalaJanela"]
+size = Vector3(0.0006, 0.0052, 0.0052)
+
+[sub_resource type="BoxMesh" id="SeguidorMesh"]
+size = Vector3(0.0012, 0.003, 0.0055)
+
+[node name="Carabina22" type="Node3D"]
+position = Vector3(0.20, -0.22, -0.38)
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Corpo" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_receptor")
+material_override = ExtResource("carabina_receptor")
+
+[node name="Coronha" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_coronha")
+material_override = ExtResource("carabina_madeira")
+
+[node name="Soleira" type="MeshInstance3D" parent="Visual/Coronha"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_soleira")
+material_override = ExtResource("carabina_borracha")
+
+[node name="GuardaMao" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_guarda_mao")
+material_override = ExtResource("carabina_madeira")
+
+[node name="Cano" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_cano")
+material_override = ExtResource("carabina_metal")
+
+[node name="InteriorCano" type="MeshInstance3D" parent="Visual/Cano"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_interior_cano")
+material_override = ExtResource("carabina_borracha")
+
+[node name="Carregador" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_carregador")
+material_override = ExtResource("carabina_polimero")
+
+[node name="GuardaMato" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_guarda_mato")
+material_override = ExtResource("carabina_metal")
+
+[node name="Gatilho" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_gatilho")
+material_override = ExtResource("carabina_metal")
+
+[node name="Interior" type="MeshInstance3D" parent="Visual/Corpo"]
+editor_description = "Interior escuro do receptor (faces para dentro), visto pela janela de ejecao aberta no material carabina_receptor.tres. Fica todo dentro do receptor (x +-0,0145, y -0,0155 a 0,0104): maior, as quinas atravessavam os chanfros do topo e as laterais e apareciam por fora como laminas e triangulos pretos."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00255, -0.07)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("InteriorMesh")
+material_override = ExtResource("Mun_furo_vazio")
+
+[node name="CartuchoCamara" parent="Visual/Corpo" instance=ExtResource("Cartucho_22")]
+editor_description = "Cartucho .22 LR na camara, no eixo do cano, com o aro encostado na face do ferrolho; aparece pela janela de ejecao quando o ferrolho recua (so com bala)."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, -0.1151)
+visible = false
+
+[node name="JanelaEjecao" type="Node3D" parent="Visual/Corpo"]
+editor_description = "Ferrolho, visto pela janela de ejecao: corpo de aco, extrator e percussor na face. A cada tiro recua metadata/curso e volta; na conferencia da camara recua metadata/conferencia (ammo_inspection.gd)."
+metadata/curso = 0.033
+metadata/conferencia = 0.014
+
+[node name="Corpo" type="MeshInstance3D" parent="Visual/Corpo/JanelaEjecao"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0025, 0.0005, -0.07125)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FerrolhoMesh")
+material_override = ExtResource("carabina_ferrolho")
+
+[node name="Extrator" type="MeshInstance3D" parent="Visual/Corpo/JanelaEjecao"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0125, 0.0085, -0.1035)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("ExtratorMesh")
+material_override = ExtResource("carabina_metal")
+
+[node name="Percussor" type="MeshInstance3D" parent="Visual/Corpo/JanelaEjecao"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.0075, -0.103)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("PercussorMesh")
+material_override = ExtResource("carabina_metal")
+
+[node name="Alavanca" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_alavanca")
+material_override = ExtResource("carabina_metal")
+
+[node name="MiraTraseira" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_mira_traseira")
+material_override = ExtResource("carabina_metal")
+
+[node name="SelaMiraTraseira" type="MeshInstance3D" parent="Visual/Cano"]
+editor_description = "Sela da mira traseira: abraca o topo do cano ate o fundo da mira (y 0,019). Sem ela a mira, de fundo plano e mais larga que o cano, flutuava 1 mm acima dele e de lado se via atraves da fresta."
+position = Vector3(0, 0.0139, -0.171)
+cast_shadow = 0
+layers = 2
+mesh = SubResource("SelaMiraTraseiraMesh")
+material_override = ExtResource("carabina_metal")
+
+[node name="BaseMira" type="MeshInstance3D" parent="Visual/Cano"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_base_mira")
+material_override = ExtResource("carabina_metal")
+
+[node name="MiraFrontal" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.0235, -0.593)
+cast_shadow = 0
+layers = 2
+mesh = SubResource("MiraFrontalMesh")
+material_override = ExtResource("carabina_metal")
+
+[node name="Efeitos" type="Node3D" parent="."]
+
+[node name="Clarao" type="MeshInstance3D" parent="Efeitos"]
+visible = false
+position = Vector3(0, 0.009, -0.629)
+scale = Vector3(1, 0.65, 1.8)
+cast_shadow = 0
+mesh = SubResource("ClaraoMesh")
+
+[node name="LuzDisparo" type="OmniLight3D" parent="Efeitos"]
+visible = false
+position = Vector3(0, 0.009, -0.629)
+light_color = Color(1, 0.74, 0.4, 1)
+light_energy = 3.0
+light_volumetric_fog_energy = 0.0
+omni_range = 7.0
+omni_attenuation = 1.6
+shadow_enabled = true
+
+[node name="AlinhamentoMira" type="Marker3D" parent="."]
+position = Vector3(0, 0.028, 0.42)
+gizmo_extents = 0.04
+
+[node name="CartuchoTopo" parent="Visual/Carregador" instance=ExtResource("Cartucho_22")]
+transform = Transform3D(1, 0, 0, 0, 0.99863, -0.05234, 0, 0.05234, 0.99863, 0, -0.0215, -0.094)
+visible = false
+
+[node name="Janela" type="MeshInstance3D" parent="Visual/Carregador"]
+editor_description = "Janela estreita do lado direito do pente (escondido com a arma nas maos), por onde se veem os cartuchos e o seguidor."
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("Mesh_janela_pente")
+material_override = ExtResource("Mun_furo_vazio")
+metadata/fixo = true
+
+[node name="FurosJanela" type="Node3D" parent="Visual/Carregador"]
+editor_description = "Cartuchos vistos pela janela, de cima para baixo: latao enquanto houver bala naquela altura (10)."
+metadata/fixo = true
+
+[node name="Bala1" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.0535, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Bala2" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.0604, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Bala3" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.0673, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Bala4" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.0742, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Bala5" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.0811, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Bala6" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.0880, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Bala7" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.0949, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Bala8" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.1018, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Bala9" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.1087, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Bala10" type="MeshInstance3D" parent="Visual/Carregador/FurosJanela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0068, -0.1156, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("BalaJanela")
+material_override = ExtResource("Mun_latao")
+
+[node name="Seguidor" type="MeshInstance3D" parent="Visual/Carregador"]
+editor_description = "Seguidor do pente, logo abaixo do ultimo cartucho (ammo_inspection.gd o move pela janela)."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0070, -0.1225, -0.0950)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("SeguidorMesh")
+material_override = ExtResource("carabina_ferrolho")
+metadata/fixo = true
+
+[node name="ConferenciaCamara" type="Marker3D" parent="."]
+transform = Transform3D(0.67291, 0.17241, 0.71935, -0.48389, 0.83813, 0.25177, -0.55950, -0.51751, 0.64742, 0.0172, 0.004, -0.095)
+editor_description = "Conferencia da camara (R com a arma cheia), como na carabina de verdade: o ferrolho recua um pouco e a arma vira na diagonal, com o lado direito (janela de ejecao) para o olho. As maos levam este ponto ate metadata/alvo (espaco da camera) e o +Z dele se vira para o olho."
+metadata/alvo = Vector3(0.025, -0.075, -0.2)
+
+[node name="Conferencia" type="Marker3D" parent="Visual/Carregador"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.0067, -0.085, -0.095)
+editor_description = "Conferencia do pente (C): o pente desce metadata/puxar_carregador, a mao esquerda o leva ate metadata/alvo (espaco da camera) e este ponto (lado direito, no meio da janela) se vira para o olho."
+metadata/puxar_carregador = Vector3(0, -0.07, 0)
+metadata/alvo = Vector3(-0.065, -0.065, -0.22)

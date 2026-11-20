@@ -1,0 +1,79 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/latao.tres" id="latao"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/plastico_vermelho.tres" id="plastico_vermelho"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/niquel.tres" id="niquel"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/plastico_vermelho_escuro.tres" id="escuro"]
+
+[sub_resource type="CylinderMesh" id="Culote"]
+top_radius = 0.0104
+bottom_radius = 0.0104
+height = 0.0128
+radial_segments = 32
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Aro"]
+top_radius = 0.0112
+bottom_radius = 0.0112
+height = 0.0012
+radial_segments = 32
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Espoleta"]
+top_radius = 0.0031
+bottom_radius = 0.0031
+height = 0.0003
+radial_segments = 24
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Tubo"]
+top_radius = 0.0101
+bottom_radius = 0.0101
+height = 0.056
+radial_segments = 32
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Fechamento"]
+top_radius = 0.0094
+bottom_radius = 0.0094
+height = 0.0004
+radial_segments = 24
+rings = 1
+
+[node name="Cartucho12" type="Node3D"]
+editor_description = "Calibre 12: 70 mm. Culote de latao com aro e espoleta niquelada, tubo de plastico vermelho e fechamento em estrela na frente. O fundo do tubo aponta para -Z."
+
+[node name="Culote" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0.0274)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("Culote")
+material_override = ExtResource("latao")
+
+[node name="Aro" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0.0344)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("Aro")
+material_override = ExtResource("latao")
+
+[node name="Espoleta" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0.03505)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("Espoleta")
+material_override = ExtResource("niquel")
+
+[node name="Tubo" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.007)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("Tubo")
+material_override = ExtResource("plastico_vermelho")
+
+[node name="Fechamento" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.0351)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("Fechamento")
+material_override = ExtResource("escuro")

@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "furo_vazio"
+albedo_color = Color(0.015, 0.015, 0.017, 1)
+metallic = 0.0
+roughness = 1.0

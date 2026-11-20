@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://contexts/weapons/models/materials/metal_com_janela.gdshader" id="1"]
+
+[resource]
+resource_name = "escopeta_receptor"
+shader = ExtResource("1")
+shader_parameter/cor = Color(0.095, 0.105, 0.115, 1)
+shader_parameter/metalico = 0.75
+shader_parameter/rugosidade = 0.34
+shader_parameter/janela_min = Vector3(0.017, -0.0025, -0.1295)
+shader_parameter/janela_max = Vector3(0.04, 0.0165, -0.0685)

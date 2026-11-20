@@ -8,8 +8,12 @@ extends Node
 var _kick := 0.0
 
 
-func fire() -> void:
-	_kick = 1.0
+func fire(strength: float) -> void:
+	_kick = strength
+
+
+func reset() -> void:
+	_kick = 0.0
 
 
 func update(delta: float) -> void:

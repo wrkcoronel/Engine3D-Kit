@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://d4hcs7tqyp54t"
+path="res://.godot/imported/seguranca_cabo.obj-0cb8c4ea9a24664ae79554006303e8c2.mesh"
+
+[deps]
+
+files=["res://.godot/imported/seguranca_cabo.obj-0cb8c4ea9a24664ae79554006303e8c2.mesh"]
+
+source_file="res://contexts/weapons/models/pistol_1911/meshes/seguranca_cabo.obj"
+dest_files=["res://.godot/imported/seguranca_cabo.obj-0cb8c4ea9a24664ae79554006303e8c2.mesh", "res://.godot/imported/seguranca_cabo.obj-0cb8c4ea9a24664ae79554006303e8c2.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=false
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

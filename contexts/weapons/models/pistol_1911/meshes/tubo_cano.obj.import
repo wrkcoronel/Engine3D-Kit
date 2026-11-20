@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://1ekius6xqp4x"
+path="res://.godot/imported/tubo_cano.obj-ff5d4bc3cd830d6bd965ae2b43f0deab.mesh"
+
+[deps]
+
+files=["res://.godot/imported/tubo_cano.obj-ff5d4bc3cd830d6bd965ae2b43f0deab.mesh"]
+
+source_file="res://contexts/weapons/models/pistol_1911/meshes/tubo_cano.obj"
+dest_files=["res://.godot/imported/tubo_cano.obj-ff5d4bc3cd830d6bd965ae2b43f0deab.mesh", "res://.godot/imported/tubo_cano.obj-ff5d4bc3cd830d6bd965ae2b43f0deab.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=false
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

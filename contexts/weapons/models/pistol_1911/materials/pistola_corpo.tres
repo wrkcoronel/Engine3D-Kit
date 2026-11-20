@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "pistola_corpo"
+albedo_color = Color(0.115, 0.125, 0.14, 1)
+metallic = 0.72
+roughness = 0.32

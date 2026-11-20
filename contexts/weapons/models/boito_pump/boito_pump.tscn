@@ -1,0 +1,297 @@
+[gd_scene load_steps=27 format=3]
+
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/receptor.obj" id="Mesh_receptor"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/coronha_madeira.obj" id="Mesh_coronha_madeira"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/soleira.obj" id="Mesh_soleira"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/veios_madeira.obj" id="Mesh_veios_madeira"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/telha_madeira.obj" id="Mesh_telha_madeira"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/ranhuras_telha.obj" id="Mesh_ranhuras_telha"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/hastes_bomba.obj" id="Mesh_hastes_bomba"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/tubo_carregador.obj" id="Mesh_tubo_carregador"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/tampa_tubo.obj" id="Mesh_tampa_tubo"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/cano.obj" id="Mesh_cano"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/interior_cano.obj" id="Mesh_interior_cano"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/abracadeira.obj" id="Mesh_abracadeira"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/guarda_mato.obj" id="Mesh_guarda_mato"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/gatilho.obj" id="Mesh_gatilho"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/seguranca.obj" id="Mesh_seguranca"]
+[ext_resource type="ArrayMesh" path="res://contexts/weapons/models/boito_pump/meshes/linha_visada.obj" id="Mesh_linha_visada"]
+[ext_resource type="Material" path="res://contexts/weapons/models/boito_pump/materials/escopeta_metal.tres" id="escopeta_metal"]
+[ext_resource type="Material" path="res://contexts/weapons/models/boito_pump/materials/escopeta_receptor.tres" id="escopeta_receptor"]
+[ext_resource type="Material" path="res://contexts/weapons/models/boito_pump/materials/escopeta_madeira.tres" id="escopeta_madeira"]
+[ext_resource type="Material" path="res://contexts/weapons/models/boito_pump/materials/escopeta_borracha.tres" id="escopeta_borracha"]
+[ext_resource type="Material" path="res://contexts/weapons/models/boito_pump/materials/escopeta_recessos.tres" id="escopeta_recessos"]
+[ext_resource type="Material" path="res://contexts/weapons/models/boito_pump/materials/escopeta_ferrolho.tres" id="escopeta_ferrolho"]
+[ext_resource type="PackedScene" path="res://contexts/weapons/models/ammo/cartridge_12.tscn" id="Cartucho_12"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/plastico_vermelho.tres" id="Mun_plastico_vermelho"]
+[ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/furo_vazio.tres" id="Mun_furo_vazio"]
+
+[sub_resource type="SphereMesh" id="MiraFrontalMesh"]
+radius = 0.0015
+height = 0.003
+[sub_resource type="StandardMaterial3D" id="ClaraoMaterial"]
+shading_mode = 0
+albedo_color = Color(1, 0.86, 0.4, 1)
+[sub_resource type="SphereMesh" id="ClaraoMesh"]
+material = SubResource("ClaraoMaterial")
+radius = 0.035
+height = 0.07
+
+[sub_resource type="BoxMesh" id="JanelaCargaMesh"]
+size = Vector3(0.022, 0.0008, 0.075)
+
+[sub_resource type="BoxMesh" id="InteriorMesh"]
+size = Vector3(0.039, 0.0435, 0.17)
+flip_faces = true
+
+[sub_resource type="BoxMesh" id="FerrolhoMesh"]
+size = Vector3(0.031, 0.018, 0.07)
+
+[sub_resource type="BoxMesh" id="ExtratorMesh"]
+size = Vector3(0.004, 0.004, 0.003)
+
+[sub_resource type="CylinderMesh" id="PercussorMesh"]
+top_radius = 0.0015
+bottom_radius = 0.0015
+height = 0.001
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="FuroTubo"]
+top_radius = 0.0032
+bottom_radius = 0.0032
+height = 0.0008
+radial_segments = 10
+rings = 1
+
+[node name="Escopeta" type="Node3D"]
+position = Vector3(0.20, -0.22, -0.38)
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Corpo" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_receptor")
+material_override = ExtResource("escopeta_receptor")
+
+[node name="Coronha" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_coronha_madeira")
+material_override = ExtResource("escopeta_madeira")
+
+[node name="Soleira" type="MeshInstance3D" parent="Visual/Coronha"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_soleira")
+material_override = ExtResource("escopeta_borracha")
+
+[node name="VeiosMadeira" type="MeshInstance3D" parent="Visual/Coronha"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_veios_madeira")
+material_override = ExtResource("escopeta_madeira")
+
+[node name="Bomba" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_telha_madeira")
+material_override = ExtResource("escopeta_madeira")
+
+[node name="Ranhuras" type="MeshInstance3D" parent="Visual/Bomba"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_ranhuras_telha")
+material_override = ExtResource("escopeta_recessos")
+
+[node name="Hastes" type="MeshInstance3D" parent="Visual/Bomba"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_hastes_bomba")
+material_override = ExtResource("escopeta_metal")
+
+[node name="Carregador" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_tubo_carregador")
+material_override = ExtResource("escopeta_metal")
+
+[node name="Tampa" type="MeshInstance3D" parent="Visual/Carregador"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_tampa_tubo")
+material_override = ExtResource("escopeta_metal")
+
+[node name="Cano" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_cano")
+material_override = ExtResource("escopeta_metal")
+
+[node name="Interior" type="MeshInstance3D" parent="Visual/Cano"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_interior_cano")
+material_override = ExtResource("escopeta_recessos")
+
+[node name="Abracadeira" type="MeshInstance3D" parent="Visual/Cano"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_abracadeira")
+material_override = ExtResource("escopeta_metal")
+
+[node name="Ferrolho" type="Node3D" parent="Visual/Corpo"]
+editor_description = "Ferrolho, visto pela janela de ejecao aberta no material escopeta_receptor.tres: corpo de aco, extrator e percussor na face. Recua com a telha na conferencia da camara."
+
+[node name="Corpo" type="MeshInstance3D" parent="Visual/Corpo/Ferrolho"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0035, 0.007, -0.0945)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FerrolhoMesh")
+material_override = ExtResource("escopeta_ferrolho")
+
+[node name="Extrator" type="MeshInstance3D" parent="Visual/Corpo/Ferrolho"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0175, 0.0125, -0.1305)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("ExtratorMesh")
+material_override = ExtResource("escopeta_metal")
+
+[node name="Percussor" type="MeshInstance3D" parent="Visual/Corpo/Ferrolho"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.007, -0.1300)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("PercussorMesh")
+material_override = ExtResource("escopeta_metal")
+
+[node name="GuardaMato" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_guarda_mato")
+material_override = ExtResource("escopeta_metal")
+
+[node name="Gatilho" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_gatilho")
+material_override = ExtResource("escopeta_metal")
+
+[node name="Seguranca" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_seguranca")
+material_override = ExtResource("escopeta_metal")
+
+[node name="LinhaVisada" type="MeshInstance3D" parent="Visual/Corpo"]
+cast_shadow = 0
+layers = 2
+mesh = ExtResource("Mesh_linha_visada")
+material_override = ExtResource("escopeta_metal")
+
+[node name="MiraFrontal" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.0265, -0.687)
+cast_shadow = 0
+layers = 2
+mesh = SubResource("MiraFrontalMesh")
+material_override = ExtResource("escopeta_metal")
+
+[node name="Efeitos" type="Node3D" parent="."]
+
+[node name="Clarao" type="MeshInstance3D" parent="Efeitos"]
+visible = false
+position = Vector3(0, 0.012, -0.711)
+scale = Vector3(1, 0.65, 1.8)
+cast_shadow = 0
+mesh = SubResource("ClaraoMesh")
+
+[node name="LuzDisparo" type="OmniLight3D" parent="Efeitos"]
+visible = false
+position = Vector3(0, 0.012, -0.711)
+light_color = Color(1, 0.74, 0.4, 1)
+light_energy = 12.0
+light_volumetric_fog_energy = 0.0
+omni_range = 16.0
+omni_attenuation = 1.6
+shadow_enabled = true
+
+[node name="AlinhamentoMira" type="Marker3D" parent="."]
+position = Vector3(0, 0.028, 0.42)
+gizmo_extents = 0.04
+
+[node name="JanelaCarga" type="MeshInstance3D" parent="Visual/Corpo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0278, -0.11)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("JanelaCargaMesh")
+material_override = ExtResource("Mun_furo_vazio")
+
+[node name="CartuchoCarga" parent="Visual/Corpo" instance=ExtResource("Cartucho_12")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.019, -0.115)
+
+[node name="CartuchoRecarga" parent="Visual/Corpo" instance=ExtResource("Cartucho_12")]
+visible = false
+editor_description = "Cartucho que a recarga empurra pela janela de carga para dentro do tubo, um por vez (weapon_inventory.gd)."
+
+[node name="FurosTubo" type="Node3D" parent="Visual/Carregador"]
+editor_description = "Furos no tubo do carregador, de tras para a frente: cada um fica vermelho se ha cartucho."
+
+[node name="Furo1" type="MeshInstance3D" parent="Visual/Carregador/FurosTubo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0294, -0.39)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FuroTubo")
+material_override = ExtResource("Mun_plastico_vermelho")
+
+[node name="Furo2" type="MeshInstance3D" parent="Visual/Carregador/FurosTubo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0294, -0.43)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FuroTubo")
+material_override = ExtResource("Mun_plastico_vermelho")
+
+[node name="Furo3" type="MeshInstance3D" parent="Visual/Carregador/FurosTubo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0294, -0.47)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FuroTubo")
+material_override = ExtResource("Mun_plastico_vermelho")
+
+[node name="Furo4" type="MeshInstance3D" parent="Visual/Carregador/FurosTubo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0294, -0.51)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FuroTubo")
+material_override = ExtResource("Mun_plastico_vermelho")
+
+[node name="Furo5" type="MeshInstance3D" parent="Visual/Carregador/FurosTubo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0294, -0.55)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FuroTubo")
+material_override = ExtResource("Mun_plastico_vermelho")
+
+[node name="Conferencia" type="Marker3D" parent="."]
+transform = Transform3D(-0.70155, -0.59522, 0.39184, 0.11504, -0.63724, -0.76203, 0.70327, -0.48953, 0.51553, 0, -0.03, -0.11)
+editor_description = "Conferencia de municao, na janela de carga: a arma vira de barriga para cima e vem na diagonal, com a mao direita no punho da coronha (embaixo, a direita, perto do peito) e a esquerda na telha (a frente, a esquerda). As maos levam este ponto ate metadata/alvo (espaco da camera) e o +Z dele se vira para o olho do jogador."
+metadata/puxar_carregador = Vector3(0, 0, 0)
+metadata/alvo = Vector3(0.0173, -0.1564, -0.36)
+
+[node name="Interior" type="MeshInstance3D" parent="Visual/Corpo"]
+editor_description = "Interior escuro do receptor (faces para dentro), visto pela janela de ejecao. Fica todo dentro do receptor (x +-0,0195, y -0,025 a 0,0185): maior, as quinas atravessavam os chanfros e apareciam por fora como laminas e triangulos pretos."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00325, -0.08)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("InteriorMesh")
+material_override = ExtResource("escopeta_recessos")
+
+[node name="CartuchoCamara" parent="Visual/Corpo" instance=ExtResource("Cartucho_12")]
+editor_description = "Cartucho 12 na camara, no eixo do cano, com o culote de latao encostado na face do ferrolho; aparece pela janela de ejecao quando telha e ferrolho recuam (so com bala)."
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.007, -0.1646)
+visible = false
+
+[node name="ConferenciaCamara" type="Marker3D" parent="."]
+transform = Transform3D(0.67291, 0.17241, 0.71935, -0.48389, 0.83813, 0.25177, -0.55950, -0.51751, 0.64742, 0.023, 0.008, -0.105)
+editor_description = "Conferencia da camara (R com a arma cheia): a telha e o ferrolho recuam 3 cm e a arma vira na diagonal, com o lado direito (janela de ejecao) para o olho. As maos levam este ponto ate metadata/alvo e o +Z dele se vira para o olho."
+metadata/alvo = Vector3(0.035, -0.09, -0.3)
+metadata/recuo_ferrolho = 0.03

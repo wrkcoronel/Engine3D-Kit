@@ -1,7 +1,6 @@
 class_name GunAim
 extends Node
 
-@export var aim_position := Vector3(0.0, -0.12, -0.45)
 @export var fov := 55.0
 @export var smooth := 14.0
 @export var stability := 0.7
@@ -15,6 +14,10 @@ func update(delta: float, cam: Camera3D, wants_aim: bool) -> void:
 		_hip_fov = cam.fov
 	amount = lerpf(amount, 1.0 if wants_aim else 0.0, 1.0 - exp(-smooth * delta))
 	cam.fov = lerpf(_hip_fov, fov, amount)
+
+
+func reset() -> void:
+	amount = 0.0
 
 
 func steady() -> float:

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dp6ad51dc8t6o"
+path="res://.godot/imported/hastes_bomba.obj-316d18cd8fb33ea1c5148addfe466a7b.mesh"
+
+[deps]
+
+files=["res://.godot/imported/hastes_bomba.obj-316d18cd8fb33ea1c5148addfe466a7b.mesh"]
+
+source_file="res://contexts/weapons/models/boito_pump/meshes/hastes_bomba.obj"
+dest_files=["res://.godot/imported/hastes_bomba.obj-316d18cd8fb33ea1c5148addfe466a7b.mesh", "res://.godot/imported/hastes_bomba.obj-316d18cd8fb33ea1c5148addfe466a7b.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=false
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
