@@ -13,6 +13,7 @@ const DRIVEN_WHEEL_COUNT := 2
 @export var steer_response := 4.0
 @export var steer_return := 7.0
 @export var air_drag := 0.5
+@export var rock_torque := 12000.0
 @export var enter_distance := 4.0
 
 var input := CarInput.new()
@@ -107,6 +108,7 @@ func _physics_process(delta: float) -> void:
 	_apply_wheel_forces(steer_angle, forward_speed, delta)
 	_apply_air_drag()
 	_request_upright()
+	_rock_when_flipped()
 	_shake_camera_on_landing()
 	_update_visuals(delta, steer_angle, forward_speed)
 	_report_telemetry(delta)
@@ -219,6 +221,14 @@ func _request_upright() -> void:
 		return
 	if CarUpright.can_upright(global_basis, linear_velocity.length()):
 		_upright_requested = true
+
+
+func _rock_when_flipped() -> void:
+	if input.steering == 0.0 or _body_contacts.is_empty():
+		return
+	if not CarUpright.can_upright(global_basis, linear_velocity.length()):
+		return
+	apply_torque(CarUpright.rock_torque(global_basis, input.steering, rock_torque))
 
 
 func _shake_camera_on_landing() -> void:
