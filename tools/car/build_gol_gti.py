@@ -588,7 +588,7 @@ def main():
     render_folder = arguments[1] if len(arguments) > 1 else None
     build_car()
     model_path = project_folder / "contexts" / "vehicles" / "models" / "gol_gti.glb"
-    blend_path = project_folder / "tools" / "blender" / "gol_gti.blend"
+    blend_path = project_folder / "tools" / "car" / "gol_gti.blend"
     model_path.parent.mkdir(parents=True, exist_ok=True)
     export(model_path, blend_path)
     if render_folder:
