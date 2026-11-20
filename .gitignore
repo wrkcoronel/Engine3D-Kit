@@ -4,3 +4,4 @@
 .claude/.last_check
 *.blend1
 __pycache__/
+.vscode/
