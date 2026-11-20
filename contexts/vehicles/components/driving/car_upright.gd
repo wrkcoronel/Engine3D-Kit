@@ -29,6 +29,11 @@ static func upright_transform(car_transform: Transform3D) -> Transform3D:
 	return standing
 
 
+static func rock_torque(car_basis: Basis, steering: float, strength: float) -> Vector3:
+	var car_forward := -car_basis.z
+	return car_forward * -steering * strength
+
+
 static func _flat_forward(car_basis: Basis) -> Vector3:
 	var forward := -car_basis.z
 	forward.y = 0.0
