@@ -60,6 +60,65 @@ func test_braking_while_moving_forward_does_not_reverse() -> void:
 	engine.free()
 
 
+func test_mode_key_switches_to_manual() -> void:
+	var engine := CarEngine.new()
+	engine.handle_driver_shifts(false, false, true)
+	assert_true(engine.manual, "M liga o cambio manual")
+	engine.handle_driver_shifts(false, false, true)
+	assert_true(not engine.manual, "M de novo volta para o automatico")
+	engine.free()
+
+
+func test_manual_does_not_shift_by_itself() -> void:
+	var engine := CarEngine.new()
+	engine.manual = true
+	var speed_past_shift := _speed_for_rpm(engine, engine.shift_up_rpm + 200.0)
+	engine.update(1.0, speed_past_shift, FRAME_TIME)
+	assert_eq(engine.gear, CarEngine.FIRST, "no manual o motor vai ao corte sem trocar")
+	engine.free()
+
+
+func test_manual_shift_keys_change_gear() -> void:
+	var engine := CarEngine.new()
+	engine.manual = true
+	engine.update(1.0, 10.0, FRAME_TIME)
+	engine.handle_driver_shifts(true, false, false)
+	assert_eq(engine.gear, 2, "Shift sobe a marcha")
+	engine.handle_driver_shifts(false, true, false)
+	assert_eq(engine.gear, CarEngine.FIRST, "Ctrl desce a marcha")
+	engine.free()
+
+
+func test_manual_reverse_by_shifting_down_when_stopped() -> void:
+	var engine := CarEngine.new()
+	engine.manual = true
+	engine.update(0.0, 0.0, FRAME_TIME)
+	engine.handle_driver_shifts(false, true, false)
+	assert_eq(engine.gear, CarEngine.REVERSE, "parado, descer da primeira engata a re")
+	engine.update(1.0, 0.0, FRAME_TIME)
+	assert_true(engine.drive_force() < 0.0, "de re no manual, W leva o carro para tras")
+	assert_true(not engine.wants_brake(), "e nao freia")
+	engine.free()
+
+
+func test_manual_cannot_reverse_while_moving() -> void:
+	var engine := CarEngine.new()
+	engine.manual = true
+	engine.update(0.0, 10.0, FRAME_TIME)
+	engine.handle_driver_shifts(false, true, false)
+	assert_eq(engine.gear, CarEngine.FIRST, "andando, descer da primeira nao engata a re")
+	engine.free()
+
+
+func test_manual_s_always_brakes() -> void:
+	var engine := CarEngine.new()
+	engine.manual = true
+	engine.update(-1.0, 0.0, FRAME_TIME)
+	assert_true(engine.wants_brake(), "no manual S e so freio")
+	assert_eq(engine.gear, CarEngine.FIRST, "e nao engata a re sozinho")
+	engine.free()
+
+
 func _speed_for_rpm(engine: CarEngine, target_rpm: float) -> float:
 	var rpm_at_one_meter_per_second := CarEngine.engine_rpm_for(1.0, engine.total_ratio())
 	return target_rpm / rpm_at_one_meter_per_second
