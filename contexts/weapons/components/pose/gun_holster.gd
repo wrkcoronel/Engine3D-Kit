@@ -36,6 +36,13 @@ func hides_model() -> bool:
 	return amount >= HIDDEN_AT
 
 
+func is_changing_weapon() -> bool:
+	if has_pending():
+		return true
+	var drawing := not holstered and amount > 0.0
+	return drawing
+
+
 func has_pending() -> bool:
 	return pending_index != NO_WEAPON
 

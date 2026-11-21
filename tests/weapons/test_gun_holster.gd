@@ -27,3 +27,14 @@ func test_pistol_goes_down_and_long_gun_goes_up() -> void:
 	holster.amount = 1.0
 	assert_true(holster.position_offset(false).y < 0.0, "pistola desce ao coldre")
 	assert_true(holster.position_offset(true).y > 0.0, "arma longa sobe para as costas")
+
+
+func test_scroll_is_ignored_while_drawing_or_switching() -> void:
+	var holster := GunHolster.new()
+	assert_true(not holster.is_changing_weapon(), "arma na mao, pode trocar")
+	holster.amount = 0.5
+	assert_true(holster.is_changing_weapon(), "sacando, espera terminar")
+	holster.amount = 0.0
+	holster.holstered = true
+	holster.pending_index = 2
+	assert_true(holster.is_changing_weapon(), "trocando, espera terminar")

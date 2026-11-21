@@ -47,13 +47,13 @@ func select(index: int) -> void:
 
 
 func cycle(step: int) -> void:
-	if holster.holstered and not holster.has_pending():
+	if holster.is_changing_weapon():
+		return
+	if holster.holstered:
 		switch_to(_arsenal.current_index)
 		return
-	var from_index := _arsenal.current_index
-	if holster.has_pending():
-		from_index = holster.pending_index
-	switch_to(_arsenal.neighbor_index(from_index, step))
+	var next_index := _arsenal.neighbor_index(_arsenal.current_index, step)
+	switch_to(next_index)
 
 
 func switch_to(index: int) -> void:
