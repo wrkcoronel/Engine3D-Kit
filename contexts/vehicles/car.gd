@@ -29,6 +29,7 @@ var _telemetry := CarTelemetry.new()
 @onready var _cam: CarCamera = $Camera
 @onready var _visual: Node3D = $Visual
 @onready var _tire_fx: CarTireFx = $TireFx
+@onready var _lights: CarLights = $Lights
 @onready var _wheels: CarWheels = $Wheels
 @onready var _suspension: CarSuspension = $Suspension
 @onready var _tires: CarTires = $Tires
@@ -39,6 +40,7 @@ func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = MAX_CONTACTS_REPORTED
 	_tire_fx.setup(self, _visual)
+	_lights.setup(self, $Visual/Model as Node3D)
 	_wheels.setup($Visual/Model as Node3D)
 	_hud.visible = false
 	_hud.set_rpm_scale(_engine.redline_rpm)
@@ -90,12 +92,14 @@ func _try_enter() -> void:
 	_cam.snap()
 	_cam.make_current()
 	_hud.visible = true
+	_lights.set_driver_present(true)
 
 
 func _exit() -> void:
 	var player := _driver
 	_driver = null
 	_hud.visible = false
+	_lights.set_driver_present(false)
 	CarSeat.place_player_beside(player, CarUpright.flat_transform(global_transform))
 
 
@@ -269,6 +273,8 @@ func _update_visuals(delta: float, steer_angle: float, forward_speed: float) -> 
 		linear_velocity,
 		_driver != null
 	)
+	var pressing_brake := CarLights.is_braking(input.throttle, input.handbraking, forward_speed)
+	_lights.update(pressing_brake)
 	if _driver:
 		_cam.follow(delta)
 
