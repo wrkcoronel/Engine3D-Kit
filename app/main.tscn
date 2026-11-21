@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://contexts/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/car.tscn" id="3_car"]
 [ext_resource type="Script" path="res://shared/telemetry/telemetry.gd" id="4_telemetry"]
+[ext_resource type="Script" path="res://shared/performance/performance_overlay.gd" id="99_performance"]
 
 [node name="Main" type="Node3D"]
 
@@ -17,3 +18,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.1, 4)
 
 [node name="Telemetry" type="CanvasLayer" parent="."]
 script = ExtResource("4_telemetry")
+
+[node name="PerformanceOverlay" type="CanvasLayer" parent="."]
+script = ExtResource("99_performance")
