@@ -71,7 +71,7 @@ func _ready() -> void:
 
 
 func _print_event(event_line: String) -> void:
-	print(event_line)
+	print(ConsoleWrap.wrap_event(event_line))
 
 
 func _input(event: InputEvent) -> void:
