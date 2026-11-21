@@ -1,16 +1,18 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="PackedScene" path="res://contexts/world/props/building.tscn" id="1_building"]
 [ext_resource type="PackedScene" path="res://contexts/world/props/ramp.tscn" id="2_ramp"]
+[ext_resource type="Script" path="res://contexts/grassland/grass_field.gd" id="3_grass"]
+[ext_resource type="Material" path="res://contexts/grassland/materials/grass_material.tres" id="4_grass_material"]
+[ext_resource type="Script" path="res://contexts/world/components/sky/world_sky.gd" id="5_sky"]
+[ext_resource type="Material" path="res://contexts/world/materials/ground_material.tres" id="6_ground"]
+[ext_resource type="Shader" path="res://contexts/world/materials/sky.gdshader" id="7_sky_shader"]
 
 [sub_resource type="BoxMesh" id="floor_mesh"]
 size = Vector3(3000, 1, 3000)
 
 [sub_resource type="BoxShape3D" id="floor_shape"]
 size = Vector3(3000, 1, 3000)
-
-[sub_resource type="StandardMaterial3D" id="floor_mat"]
-albedo_color = Color(0.35, 0.35, 0.38, 1)
 
 [sub_resource type="BoxMesh" id="wall_mesh"]
 size = Vector3(10, 4, 0.5)
@@ -21,7 +23,8 @@ size = Vector3(10, 4, 0.5)
 [sub_resource type="StandardMaterial3D" id="wall_mat"]
 albedo_color = Color(0.7, 0.45, 0.35, 1)
 
-[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+[sub_resource type="ShaderMaterial" id="sky_mat"]
+shader = ExtResource("7_sky_shader")
 
 [sub_resource type="Sky" id="sky"]
 sky_material = SubResource("sky_mat")
@@ -29,7 +32,7 @@ sky_material = SubResource("sky_mat")
 [sub_resource type="Environment" id="env"]
 background_mode = 2
 sky = SubResource("sky")
-ambient_light_source = 3
+tonemap_mode = 2
 
 [node name="World" type="Node3D"]
 
@@ -37,18 +40,27 @@ ambient_light_source = 3
 environment = SubResource("env")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.707, 0.707, 0, -0.707, 0.707, 0, 10, 0)
 shadow_enabled = true
+
+[node name="WorldSky" type="Node" parent="." node_paths=PackedStringArray("world_environment", "sun")]
+script = ExtResource("5_sky")
+world_environment = NodePath("../WorldEnvironment")
+sun = NodePath("../Sun")
+ground_material = ExtResource("6_ground")
 
 [node name="Floor" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 
 [node name="Mesh" type="MeshInstance3D" parent="Floor"]
 mesh = SubResource("floor_mesh")
-surface_material_override/0 = SubResource("floor_mat")
+surface_material_override/0 = ExtResource("6_ground")
 
 [node name="Collision" type="CollisionShape3D" parent="Floor"]
 shape = SubResource("floor_shape")
+
+[node name="Grass" type="Node3D" parent="."]
+script = ExtResource("3_grass")
+grass_material = ExtResource("4_grass_material")
 
 [node name="Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -8)
