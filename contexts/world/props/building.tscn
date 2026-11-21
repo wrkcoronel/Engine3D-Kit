@@ -1,22 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://contexts/world/props/building.gd" id="1_building"]
-
-[sub_resource type="BoxMesh" id="building_mesh"]
-resource_local_to_scene = true
-
-[sub_resource type="BoxShape3D" id="building_shape"]
-resource_local_to_scene = true
-
-[sub_resource type="StandardMaterial3D" id="building_mat"]
-resource_local_to_scene = true
+[ext_resource type="Material" path="res://contexts/world/materials/ruin_material.tres" id="2_ruin"]
 
 [node name="Building" type="StaticBody3D"]
 script = ExtResource("1_building")
-
-[node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("building_mesh")
-surface_material_override/0 = SubResource("building_mat")
-
-[node name="Collision" type="CollisionShape3D" parent="."]
-shape = SubResource("building_shape")
+ruin_material = ExtResource("2_ruin")
