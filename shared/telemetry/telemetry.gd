@@ -38,6 +38,13 @@ static func sample(from: Node, source: String, text: String) -> void:
 	telemetry.history.add_sample(telemetry.now(), source, text)
 
 
+static func performance(from: Node, text: String) -> void:
+	var telemetry := _find(from)
+	if telemetry == null:
+		return
+	telemetry.history.add_performance_sample(telemetry.now(), text)
+
+
 static func wants_detail(from: Node) -> bool:
 	if TelemetryDetailWindow.asked_on_command_line():
 		return true
@@ -129,6 +136,7 @@ func _overlay_text() -> String:
 	lines.append("controlando: " + history.current_source)
 	var state_lines := history.latest_sample.split(" | ")
 	lines.append_array(state_lines)
+	lines.append(history.latest_performance)
 	lines.append("")
 	lines.append("ultimos eventos:")
 	lines.append_array(PackedStringArray(history.recent_events(OVERLAY_EVENT_COUNT)))

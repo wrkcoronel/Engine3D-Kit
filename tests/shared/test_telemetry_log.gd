@@ -75,3 +75,25 @@ func test_halfway_values_round_away_from_zero_on_every_system() -> void:
 	assert_eq(
 		text, "(0.13, -0.13, 0.38)", "o meio arredonda para longe do zero em qualquer sistema"
 	)
+
+
+func test_performance_samples_are_stored_once_per_second() -> void:
+	var history := TelemetryLog.new()
+	for frame_index: int in 120:
+		history.add_performance_sample(frame_index / 60.0, "FPS 60  CPU 10%  GPU 40%")
+	assert_eq(history.performance_sample_count(), 2, "dois segundos, duas amostras")
+
+
+func test_report_has_performance_section_and_current_value() -> void:
+	var history := TelemetryLog.new()
+	history.add_performance_sample(0.0, "FPS 60  CPU 10%  GPU 40%")
+	var report := history.build_report(1.0, "teste")
+	assert_true(report.contains("desempenho agora: FPS 60  CPU 10%  GPU 40%"), "valor atual")
+	assert_true(report.contains("== DESEMPENHO"), "secao de desempenho")
+
+
+func test_performance_does_not_change_the_controlled_source() -> void:
+	var history := TelemetryLog.new()
+	history.add_sample(0.0, "carro", "estado")
+	history.add_performance_sample(0.1, "FPS 60  CPU 10%  GPU 40%")
+	assert_eq(history.current_source, "carro", "desempenho nao troca o modo")

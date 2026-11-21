@@ -6,14 +6,20 @@ signal event_added(event_line: String)
 const MAX_EVENTS := 400
 const MAX_SAMPLES := 300
 const SAMPLE_INTERVAL := 0.1
+const MAX_PERFORMANCE_SAMPLES := 300
+const PERFORMANCE_INTERVAL := 1.0
 const MODE_SOURCE := "modo"
+const PERFORMANCE_SOURCE := "desempenho"
 
 var current_source := ""
 var latest_sample := ""
+var latest_performance := ""
 
 var _events: Array[String] = []
 var _samples: Array[String] = []
+var _performance_samples: Array[String] = []
 var _last_sample_time := -INF
+var _last_performance_time := -INF
 
 
 static func format_vector(vector: Vector3) -> String:
@@ -76,6 +82,20 @@ func add_sample(time: float, source: String, text: String) -> void:
 	_push_limited(_samples, sample_line, MAX_SAMPLES)
 
 
+func add_performance_sample(time: float, text: String) -> void:
+	latest_performance = text
+	var time_since_last_sample := time - _last_performance_time
+	if time_since_last_sample < PERFORMANCE_INTERVAL:
+		return
+	_last_performance_time = time
+	var sample_line := format_line(clock_now(), time, PERFORMANCE_SOURCE, text)
+	_push_limited(_performance_samples, sample_line, MAX_PERFORMANCE_SAMPLES)
+
+
+func performance_sample_count() -> int:
+	return _performance_samples.size()
+
+
 func event_count() -> int:
 	return _events.size()
 
@@ -100,12 +120,16 @@ func build_report(time: float, reason: String) -> String:
 	lines.append("tempo de jogo: %.2f s" % time)
 	lines.append("controlando agora: " + current_source)
 	lines.append("estado agora: " + latest_sample)
+	lines.append("desempenho agora: " + latest_performance)
 	lines.append("")
 	lines.append("== EVENTOS (mais antigo primeiro, ate %d) ==" % MAX_EVENTS)
 	lines.append_array(PackedStringArray(_events))
 	lines.append("")
 	lines.append(_samples_title())
 	lines.append_array(PackedStringArray(_samples))
+	lines.append("")
+	lines.append(_performance_title())
+	lines.append_array(PackedStringArray(_performance_samples))
 	return "\n".join(lines)
 
 
@@ -115,6 +139,11 @@ func _samples_title() -> String:
 	return (
 		"== AMOSTRAS (%d por segundo, ultimos %.0f s) ==" % [samples_per_second, seconds_of_samples]
 	)
+
+
+func _performance_title() -> String:
+	var seconds_of_samples := MAX_PERFORMANCE_SAMPLES * PERFORMANCE_INTERVAL
+	return "== DESEMPENHO (FPS, CPU e GPU a cada segundo, ultimos %.0f s) ==" % seconds_of_samples
 
 
 func _push_limited(lines: Array[String], new_line: String, limit: int) -> void:
