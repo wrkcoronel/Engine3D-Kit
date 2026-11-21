@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://contexts/vehicles/ui/speedometer.tscn" id="2_speedo"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_camera.gd" id="3_cam"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_tire_fx.gd" id="4_tires"]
+[ext_resource type="Script" path="res://contexts/vehicles/components/lighting/car_lights.gd" id="99_lights"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/suspension/car_suspension.gd" id="5_suspension"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/driving/car_tires.gd" id="6_tire_grip"]
 [ext_resource type="Script" path="res://contexts/vehicles/components/visual/car_wheels.gd" id="7_wheels"]
@@ -66,6 +67,9 @@ transform = Transform3D(1, 0, 0, 0, 0.98, 0.1987, 0, -0.1987, 0.98, 0, 3.0, 6.5)
 
 [node name="TireFx" type="Node" parent="."]
 script = ExtResource("4_tires")
+
+[node name="Lights" type="Node" parent="."]
+script = ExtResource("99_lights")
 
 [node name="Suspension" type="Node" parent="."]
 script = ExtResource("5_suspension")
