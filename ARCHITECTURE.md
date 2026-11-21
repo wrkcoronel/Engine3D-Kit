@@ -34,7 +34,7 @@ contexts/       um contexto por assunto
     models/         cenas das armas e cartuchos (malhas OBJ, materiais, sons). Os nomes dos nos
                     ficam em portugues porque o codigo os acha pelo nome (ex.: Visual/Corpo)
     ui/             shader da mira da luneta
-    effects/        impact (marca do tiro) e tracer (rastro)
+    effects/        impact (furo de bala, um Decal) e tracer (rastro)
   vehicles/       carro (corpo rigido com suspensao, tracao dianteira)
     car.gd          orquestra: forcas das rodas, entrar/sair, desvirar
     components/     separados por assunto

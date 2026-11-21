@@ -50,9 +50,16 @@ func _apply_hit(hit: Dictionary, direction: Vector3, origin: Vector3, stats: Wea
 	if target.has_method("take_hit"):
 		target.call("take_hit", hit, direction, damage)
 		return
-	var impact := impact_scene.instantiate() as Node3D
-	effects_parent().add_child(impact)
-	impact.global_position = hit_position
+	var surface_normal := hit["normal"] as Vector3
+	var hole := impact_scene.instantiate() as Decal
+	_hole_parent(target).add_child(hole)
+	BulletHole.place(hole, hit_position, surface_normal)
+
+
+func _hole_parent(target: Object) -> Node:
+	if target is RigidBody3D:
+		return target as Node
+	return effects_parent()
 
 
 func _report_shot(hit: Dictionary, from: Vector3) -> void:
