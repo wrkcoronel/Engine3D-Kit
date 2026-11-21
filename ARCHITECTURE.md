@@ -10,11 +10,25 @@ documento explica o resto: onde cada coisa mora e por que.
 
 ```
 app/            monta os contextos em cenas jogaveis
-  main.tscn       mundo + jogador + carro
-  arena.tscn      piso, muro e jogador, para testar tiro (F5 recarrega)
+  main.tscn       mundo + jogador + carro (F5 recarrega)
 
 contexts/       um contexto por assunto
-  world/          mapa: piso, ceu, luz, predios e rampas (props/; a rampa tem transicao de 9 graus na base)
+  world/          mapa: chao de trigal, ceu escuro com estrelas e lua, predios em ruinas,
+                  rampas e o muro
+    props/          building (predio em ruinas montado por codigo), ramp (transicao de 9 graus na base)
+    components/ruin/  ruin_layout (onde ficam paredes, colunas, lajes, ferragem e entulho),
+                      ruin_piece, ruin_mesh_arrays (junta tudo numa malha so por predio)
+    components/sky/   sky_preset(s) (o ceu escuro), sky_applier (aplica na lua, ceu, neblina e chao),
+                      world_sky (aplica ao abrir o mapa)
+    materials/      sky.gdshader (estrelas e lua), ruin_concrete.gdshader (janelas vazadas, fuligem, rachaduras),
+                    field_ground.gdshader (terra perto, palha longe)
+  grassland/      capim alto com espigas, plantado em volta da camera por todo o mapa
+    grass_field.gd  orquestra: planta e apaga pedacos de 16 m (perto mais denso, ate 55 m) e leva o
+                    carro para o shader (limpa o capim sob ele e deixa o rastro)
+    components/grass/ grass_clump_mesh, grass_ribbon_arrays, grass_scatter, grass_streamer (quais
+                      pedacos e em qual nivel), grass_chunk, grass_clearing
+    components/trail/ grass_trail (mapa do rastro: janela de 320 m que acompanha a camera; apaga aos poucos, 30 s)
+    materials/      grass.gdshader (vento, amassado), grass_material
   player/         corpo do jogador: movimento, pulo, correr, agachar, deslizar
     components/     mouse_look, head_lean
   weapons/        as quatro armas que o jogador carrega (1911, Boito Pump, carabina .22, rifle de caca)
@@ -42,7 +56,12 @@ contexts/       um contexto por assunto
                       tires (atrito do pneu), wheel_command, upright (desvirar com R ou A/D),
                       seat (entrar/sair)
       suspension/     suspension (raios e molas das 4 rodas), wheel_ground (o que cada roda ve)
-      visual/         wheels (rodas na altura da mola), tire_fx (fumaca e marcas), camera
+      visual/         wheels (rodas na altura da mola), tire_fx (junta fumaca e marcas), skid_marks
+                      (marcas de pneu no chao), camera
+      smoke/          tire_slip_smoke (quanta fumaca cada situacao faz), smoke_puff_texture (nuvem
+                      procedural), smoke_emitters, car_smoke (pneus e escapamento, com vento)
+      lighting/       car_lights (tecla L), headlights (dois SpotLight3D, baixo e alto), taillights
+                      (lanternas e luz de freio), beam_mode, light_meshes
       telemetry/      telemetry, telemetry_context, telemetry_frame, body_contact
                       (eventos e anomalias)
     ui/             speedometer (HUD), speed_readout (velocidade), gear_badge (caixa da marcha), rpm_bar (barra de rpm), italic_font
@@ -50,7 +69,8 @@ contexts/       um contexto por assunto
 shared/         usado por mais de um contexto
   physics/ray_util.gd   distancia de um raio ate o primeiro obstaculo
   physics/box_edges.gd  cantos e arestas de uma caixa (usado pela telemetria)
-  telemetry/            grava o que o carro e o jogador fazem (F3 mostra, F2 salva relatorio)
+  telemetry/            console_wrap quebra evento longo em linhas curtas (um campo por linha) no output
+                        do Godot; grava o que o carro e o jogador fazem (F3 mostra, F2 salva relatorio)
                         e imprime os eventos ao vivo na saida do Godot
 
 tests/          testes que rodam sem abrir o jogo, uma pasta por contexto
@@ -58,7 +78,8 @@ tests/          testes que rodam sem abrir o jogo, uma pasta por contexto
   run_scenarios.gd    roda so os cenarios (pastas scenarios/), com --fixed-fps 60
   support/            base dos testes (TestCase)
   vehicles/           testes do carro; scenarios/ dirige o carro nas rampas e confere a telemetria
-  world/              geometria da rampa (a transicao encosta no chao e na rampa)
+  grassland/          tufos, fitas, pedacos plantados e o rastro
+  world/              rampa, predios em ruinas, climas e o ceu
   shared/             testes do ray_util e do TelemetryLog
   player/             testes da telemetria do jogador
   weapons/            municao, dano, gatilho, conferencia, troca e as quatro armas atirando
