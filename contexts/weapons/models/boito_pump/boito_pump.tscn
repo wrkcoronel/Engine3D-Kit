@@ -25,18 +25,11 @@
 [ext_resource type="PackedScene" path="res://contexts/weapons/models/ammo/cartridge_12.tscn" id="Cartucho_12"]
 [ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/plastico_vermelho.tres" id="Mun_plastico_vermelho"]
 [ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/furo_vazio.tres" id="Mun_furo_vazio"]
+[ext_resource type="Script" path="res://contexts/weapons/effects/muzzle_flash_visual.gd" id="99_flash"]
 
 [sub_resource type="SphereMesh" id="MiraFrontalMesh"]
 radius = 0.0015
 height = 0.003
-[sub_resource type="StandardMaterial3D" id="ClaraoMaterial"]
-shading_mode = 0
-albedo_color = Color(1, 0.86, 0.4, 1)
-[sub_resource type="SphereMesh" id="ClaraoMesh"]
-material = SubResource("ClaraoMaterial")
-radius = 0.035
-height = 0.07
-
 [sub_resource type="BoxMesh" id="JanelaCargaMesh"]
 size = Vector3(0.022, 0.0008, 0.075)
 
@@ -198,12 +191,10 @@ material_override = ExtResource("escopeta_metal")
 
 [node name="Efeitos" type="Node3D" parent="."]
 
-[node name="Clarao" type="MeshInstance3D" parent="Efeitos"]
-visible = false
+[node name="Clarao" type="Node3D" parent="Efeitos"]
+script = ExtResource("99_flash")
 position = Vector3(0, 0.012, -0.711)
-scale = Vector3(1, 0.65, 1.8)
-cast_shadow = 0
-mesh = SubResource("ClaraoMesh")
+flash_size = 0.42
 
 [node name="LuzDisparo" type="OmniLight3D" parent="Efeitos"]
 visible = false

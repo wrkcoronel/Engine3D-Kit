@@ -22,19 +22,12 @@
 [ext_resource type="Material" path="res://contexts/weapons/models/ammo/materials/furo_vazio.tres" id="Mun_furo_vazio"]
 [ext_resource type="ArrayMesh" path="res://contexts/weapons/models/carbine_22/meshes/janela_pente.obj" id="Mesh_janela_pente"]
 [ext_resource type="Material" path="res://contexts/weapons/models/carbine_22/materials/carabina_polimero.tres" id="carabina_polimero"]
+[ext_resource type="Script" path="res://contexts/weapons/effects/muzzle_flash_visual.gd" id="99_flash"]
 [sub_resource type="BoxMesh" id="SelaMiraTraseiraMesh"]
 size = Vector3(0.0196, 0.0106, 0.012)
 
 [sub_resource type="BoxMesh" id="MiraFrontalMesh"]
 size = Vector3(0.0025, 0.009, 0.006)
-[sub_resource type="StandardMaterial3D" id="ClaraoMaterial"]
-shading_mode = 0
-albedo_color = Color(1, 0.86, 0.4, 1)
-[sub_resource type="SphereMesh" id="ClaraoMesh"]
-material = SubResource("ClaraoMaterial")
-radius = 0.035
-height = 0.07
-
 [sub_resource type="BoxMesh" id="InteriorMesh"]
 size = Vector3(0.029, 0.0259, 0.15)
 flip_faces = true
@@ -191,12 +184,10 @@ material_override = ExtResource("carabina_metal")
 
 [node name="Efeitos" type="Node3D" parent="."]
 
-[node name="Clarao" type="MeshInstance3D" parent="Efeitos"]
-visible = false
+[node name="Clarao" type="Node3D" parent="Efeitos"]
+script = ExtResource("99_flash")
 position = Vector3(0, 0.009, -0.629)
-scale = Vector3(1, 0.65, 1.8)
-cast_shadow = 0
-mesh = SubResource("ClaraoMesh")
+flash_size = 0.2
 
 [node name="LuzDisparo" type="OmniLight3D" parent="Efeitos"]
 visible = false

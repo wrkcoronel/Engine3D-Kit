@@ -25,7 +25,8 @@ func take_out(new_model: Node3D, flash: GunMuzzleFlash, reloader: GunReloader) -
 	magazine = model.get_node(MAGAZINE_PATH) as Node3D
 	magazine_rest = magazine.position
 	var muzzle_light := model.get_node(MUZZLE_LIGHT_PATH) as OmniLight3D
-	flash.attach(muzzle(), muzzle_light)
+	var flash_visual := model.get_node(MUZZLE_FLASH_PATH) as MuzzleFlashVisual
+	flash.attach(flash_visual, muzzle_light)
 	reloader.attach(model, magazine, magazine_rest)
 
 
