@@ -1,16 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=2 format=3]
 
 [ext_resource type="Script" path="res://contexts/weapons/effects/impact.gd" id="1_impact"]
 
-[sub_resource type="SphereMesh" id="impact_mesh"]
-radius = 0.05
-height = 0.1
-
-[sub_resource type="StandardMaterial3D" id="impact_mat"]
-albedo_color = Color(1, 0.8, 0.1, 1)
-shading_mode = 0
-
-[node name="Impact" type="MeshInstance3D"]
-mesh = SubResource("impact_mesh")
-surface_material_override/0 = SubResource("impact_mat")
+[node name="Impact" type="Decal"]
+size = Vector3(0.14, 0.4, 0.14)
 script = ExtResource("1_impact")
