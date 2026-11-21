@@ -23,14 +23,7 @@
 [ext_resource type="Material" path="res://contexts/weapons/models/hunting_rifle/materials/lente_luneta.tres" id="lente_luneta"]
 [ext_resource type="Script" path="res://contexts/weapons/components/scope/rifle_scope_lens.gd" id="Luneta"]
 [ext_resource type="PackedScene" path="res://contexts/weapons/models/ammo/cartridge_308.tscn" id="Cartucho_308"]
-
-[sub_resource type="StandardMaterial3D" id="ClaraoMaterial"]
-shading_mode = 0
-albedo_color = Color(1, 0.86, 0.4, 1)
-[sub_resource type="SphereMesh" id="ClaraoMesh"]
-material = SubResource("ClaraoMaterial")
-radius = 0.035
-height = 0.07
+[ext_resource type="Script" path="res://contexts/weapons/effects/muzzle_flash_visual.gd" id="99_flash"]
 
 [sub_resource type="BoxMesh" id="TorreAnel"]
 size = Vector3(0.0196, 0.0135, 0.0096)
@@ -192,12 +185,10 @@ material_override = ExtResource("rifle_metal")
 
 [node name="Efeitos" type="Node3D" parent="."]
 
-[node name="Clarao" type="MeshInstance3D" parent="Efeitos"]
-visible = false
+[node name="Clarao" type="Node3D" parent="Efeitos"]
+script = ExtResource("99_flash")
 position = Vector3(0, 0.009, -0.785)
-scale = Vector3(1, 0.65, 1.8)
-cast_shadow = 0
-mesh = SubResource("ClaraoMesh")
+flash_size = 0.34
 
 [node name="LuzDisparo" type="OmniLight3D" parent="Efeitos"]
 visible = false
