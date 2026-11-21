@@ -260,9 +260,14 @@ func _update_visuals(delta: float, steer_angle: float, forward_speed: float) -> 
 		center_heights
 	)
 	var sideways_speed := linear_velocity.dot(global_basis.x)
-	var speed := linear_velocity.length()
 	_tire_fx.update(
-		is_on_ground(), input.throttle, input.handbraking, sideways_speed, forward_speed, speed
+		is_on_ground(),
+		input.throttle,
+		input.handbraking,
+		sideways_speed,
+		forward_speed,
+		linear_velocity,
+		_driver != null
 	)
 	if _driver:
 		_cam.follow(delta)
