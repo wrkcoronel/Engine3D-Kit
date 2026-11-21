@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
+[ext_resource type="Script" path="res://app/main.gd" id="0_main"]
 [ext_resource type="PackedScene" path="res://contexts/world/world.tscn" id="1_world"]
 [ext_resource type="PackedScene" path="res://contexts/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/car.tscn" id="3_car"]
@@ -7,6 +8,7 @@
 [ext_resource type="Script" path="res://shared/performance/performance_overlay.gd" id="99_performance"]
 
 [node name="Main" type="Node3D"]
+script = ExtResource("0_main")
 
 [node name="World" parent="." instance=ExtResource("1_world")]
 
