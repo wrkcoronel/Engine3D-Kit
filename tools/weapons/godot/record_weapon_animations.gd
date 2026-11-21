@@ -1,6 +1,6 @@
 extends SceneTree
 
-const ARENA_SCENE := "res://app/arena.tscn"
+const GAME_SCENE := "res://app/main.tscn"
 const GUN_PATH := "Player/Head/Camera/Gun"
 const OUTPUT_FOLDER := "res://tools/weapons/animations/"
 const WEAPON_FILES: Array[String] = ["pistol_1911", "boito_pump", "carbine_22", "hunting_rifle"]
@@ -28,14 +28,14 @@ func _initialize() -> void:
 
 
 func _record_all() -> void:
-	var arena := (load(ARENA_SCENE) as PackedScene).instantiate() as Node3D
-	root.add_child(arena)
+	var game := (load(GAME_SCENE) as PackedScene).instantiate() as Node3D
+	root.add_child(game)
 	await _wait(SETTLE_SECONDS)
-	var gun := arena.get_node(GUN_PATH) as Node3D
+	var gun := game.get_node(GUN_PATH) as Node3D
 	for weapon_index: int in WEAPON_FILES.size():
 		var recording: Dictionary = await _record_weapon(gun, weapon_index)
 		_save(recording, WEAPON_FILES[weapon_index])
-	arena.queue_free()
+	game.queue_free()
 	await process_frame
 	quit()
 

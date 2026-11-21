@@ -1,16 +1,16 @@
 extends TestCase
 
-const ARENA_SCENE := "res://app/arena.tscn"
+const GAME_SCENE := "res://app/main.tscn"
 const GUN_PATH := "Player/Head/Camera/Gun"
 const WEAPON_COUNT := 4
 
 
 func _spawn_gun() -> Node3D:
-	var arena := (load(ARENA_SCENE) as PackedScene).instantiate() as Node3D
-	spawn(arena)
+	var game := (load(GAME_SCENE) as PackedScene).instantiate() as Node3D
+	spawn(game)
 	await tree.process_frame
 	await tree.process_frame
-	return arena.get_node(GUN_PATH) as Node3D
+	return game.get_node(GUN_PATH) as Node3D
 
 
 func _wait(seconds: float) -> void:
