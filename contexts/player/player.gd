@@ -1,10 +1,10 @@
 extends CharacterBody3D
 
-const WALK_SPEED := 6.0
-const SPRINT_SPEED := 10.0
-const CROUCH_SPEED := 3.0
-const SLIDE_SPEED := 13.0
-const SLIDE_DECEL := 8.0
+const WALK_SPEED := 3.2
+const SPRINT_SPEED := 6
+const CROUCH_SPEED := 1.7
+const SLIDE_SPEED := 8.5
+const SLIDE_DECEL := 6.5
 
 const JUMP_VELOCITY := 6.0
 const GRAVITY_MULT := 2.2

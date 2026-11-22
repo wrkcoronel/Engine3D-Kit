@@ -107,6 +107,18 @@ func is_on_ground() -> bool:
 	return _suspension.touching_count() > 0
 
 
+func has_driver() -> bool:
+	return _driver != null
+
+
+func teleport_to(target_transform: Transform3D) -> void:
+	global_transform = target_transform
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+	reset_physics_interpolation()
+	_cam.snap()
+
+
 func telemetry_frame() -> CarTelemetryFrame:
 	return CarTelemetryFrame.from_car(self, input, _suspension, _body_contacts)
 

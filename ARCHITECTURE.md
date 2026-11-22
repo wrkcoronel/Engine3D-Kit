@@ -10,7 +10,7 @@ documento explica o resto: onde cada coisa mora e por que.
 
 ```
 app/            monta os contextos em cenas jogaveis
-  main.tscn       mundo + jogador + carro (F5 recarrega)
+  main.tscn       mundo + motel + entidade + jogador + carro (F5 recarrega)
 
 contexts/       um contexto por assunto
   world/          mapa: chao de trigal, ceu escuro com estrelas e lua, predios em ruinas,
@@ -22,6 +22,15 @@ contexts/       um contexto por assunto
                       world_sky (aplica ao abrir o mapa)
     materials/      sky.gdshader (estrelas e lua), ruin_concrete.gdshader (janelas vazadas, fuligem, rachaduras),
                     field_ground.gdshader (terra perto, palha longe)
+  motel/          prototipo simples de motel americano em L (2 andares, estacionamento, piscina,
+                  recepcao aberta com marquise, letreiro, 4 quartos mobiliados e arvores ao redor)
+    motel_environment.tscn  instancia o no Motel (posicionado no main.tscn)
+    motel.gd        orquestra as pecas, malhas, colisoes, luzes internas/externas e placas
+    components/     separados por assunto
+      building/       motel_structure, motel_walkways, motel_facade, motel_reception, motel_signs
+      interiors/      motel_room_interior, motel_west_room_interior, motel_reception_interior
+      grounds/        motel_lot, motel_road, motel_foliage, motel_boundary
+      geometry/       motel_constants, motel_piece, motel_materials, motel_mesh_builder
   grassland/      capim alto com espigas, plantado em volta da camera por todo o mapa
     grass_field.gd  orquestra: planta e apaga pedacos de 16 m (perto mais denso, ate 55 m) e leva o
                     carro para o shader (limpa o capim sob ele e deixa o rastro)
@@ -56,6 +65,20 @@ contexts/       um contexto por assunto
     components/     flashlight_pose (onde fica em cada situacao), flashlight_sway (balanco ao andar e
                     correr), flashlight_beam_texture (feixe amarelado com bola branca no centro)
     models/         flashlight_visual (corpo, cabeca e lente)
+  entity/         entidade espectral humanoide, borrada e distorcida (observa, persegue, ataca e some)
+    entity.tscn     cena independente da entidade (instanciada no main.tscn)
+    entity.gd       orquestra cerebro, corpo espectral, efeitos de tela, audio 3D e reacao a tiros
+    materials/      entity_spectral.gdshader (refracao borrada + glitch), entity_screen_fx.gdshader
+    components/     separados por assunto
+      behavior/       entity_state, entity_brain, entity_relocator
+      visual/         entity_body (silhueta humanoide + eco fantasma + brilho sutil dos olhos)
+      effects/        entity_screen_fx (vinheta/estatica), entity_audio (zumbido/chiado 3D procedural)
+  pause_menu/     menu de pausa (tecla Esc) e configuracoes salvas em user://settings.cfg
+    pause_menu.tscn cena independente do menu de pausa (instanciada no main.tscn)
+    pause_menu.gd   orquestra abertura no Esc, pausa do SceneTree, abas, teleporte e salvamento
+    materials/      pause_backdrop.gdshader (gradiente escuro e desfoque sutil sobre a cena pausada)
+    components/     pause_menu_view, pause_settings_page, pause_settings_row, pause_menu_style,
+                    window_mode_settings, entity_toggle, world_teleporter, pause_settings_store
   vehicles/       carro (corpo rigido com suspensao, tracao dianteira)
     car.gd          orquestra: forcas das rodas, entrar/sair, desvirar
     components/     separados por assunto
@@ -90,7 +113,10 @@ tests/          testes que rodam sem abrir o jogo, uma pasta por contexto
   vehicles/           testes do carro; scenarios/ dirige o carro nas rampas e confere a telemetria
   grassland/          tufos, fitas, pedacos plantados e o rastro
   world/              rampa, predios em ruinas, climas e o ceu
+  motel/              layout, materiais, colisoes, quarto aberto e carregamento da cena Ambiente
   flashlight/         pose, balanco, feixe e remocao da lanterna
+  entity/             cerebro da entidade, reposicionamento, reacao a tiros e cena Ambiente
+  pause_menu/         abertura no Esc, abas de configuracoes, modo de janela, teleporte e salvamento
   shared/             testes do ray_util, do TelemetryLog, do PlayerRig e do HeldItemAnchor
   player/             testes da telemetria do jogador
   weapons/            municao, dano, gatilho, conferencia, troca e as quatro armas atirando

@@ -57,6 +57,20 @@ func test_different_seed_gives_different_field() -> void:
 	assert_true(first != second, "semente diferente, campo diferente")
 
 
+func test_cleared_area_keeps_clumps_outside() -> void:
+	var random := RandomNumberGenerator.new()
+	random.seed = 5
+	var height_noise := GrassScatter.create_height_noise(5, 0.07)
+	var cleared := Rect2(CHUNK_CORNER, Vector2(5.0, 10.0))
+	var transforms := GrassScatter.chunk_transforms(
+		CHUNK_CORNER, CHUNK_SIZE, 200, height_noise, HEIGHT_RANGE, random, cleared
+	)
+	assert_true(transforms.size() > 0, "ainda nasce mato fora da area limpa")
+	for clump_transform: Transform3D in transforms:
+		var point := Vector2(clump_transform.origin.x, clump_transform.origin.z)
+		assert_true(not cleared.has_point(point), "nenhum tufo nasce dentro da area limpa")
+
+
 func _scatter_chunk(clump_count: int, random_seed: int) -> Array[Transform3D]:
 	var random := RandomNumberGenerator.new()
 	random.seed = random_seed

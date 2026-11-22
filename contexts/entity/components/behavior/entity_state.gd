@@ -1,0 +1,22 @@
+class_name EntityState
+extends RefCounted
+
+enum Mode {
+	VANISHED,
+	STARE,
+	STALK,
+	ATTACK,
+}
+
+const MIN_VANISH_SECONDS := 4.5
+const MAX_VANISH_SECONDS := 9.0
+const MIN_STARE_SECONDS := 4.0
+const MAX_STARE_SECONDS := 8.5
+const LOOKED_AT_TRIGGER_SECONDS := 2.4
+const ATTACK_TRIGGER_DISTANCE := 16.0
+const ATTACK_STRIKE_DISTANCE := 2.1
+const STALK_SPEED := 3.1
+const ATTACK_SPEED := 8.6
+const LOOK_DOT_THRESHOLD := 0.86
+const ATTACK_CHANCE_WHEN_SPOTTED := 0.42
+const STALK_CHANCE_ON_REAPPEAR := 0.35

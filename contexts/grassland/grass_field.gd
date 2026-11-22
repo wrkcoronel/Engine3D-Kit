@@ -23,6 +23,8 @@ const REFRESH_SECONDS := 0.2
 @export var trail_window_size := 320.0
 @export var trail_resolution := 1280
 @export var trail_padding := 0.25
+@export var cleared_area := Rect2()
+@export var extra_cleared_areas: Array[Rect2] = []
 
 var _clump_meshes: Array[ArrayMesh] = []
 var _trail_origin := Vector2.ZERO
@@ -181,7 +183,14 @@ func _build_chunk(cell: Vector2i, level: int) -> GrassChunk:
 	var clumps_per_variant := roundi(chunk_size * chunk_size * density / float(CLUMP_VARIANT_COUNT))
 	for clump_mesh: ArrayMesh in _clump_meshes:
 		var transforms := GrassScatter.chunk_transforms(
-			chunk_corner, chunk_size, clumps_per_variant, _height_noise, height_range, random
+			chunk_corner,
+			chunk_size,
+			clumps_per_variant,
+			_height_noise,
+			height_range,
+			random,
+			cleared_area,
+			extra_cleared_areas
 		)
 		chunk.plant(clump_mesh, transforms, grass_material)
 	return chunk

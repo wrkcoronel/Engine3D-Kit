@@ -61,6 +61,8 @@ shape = SubResource("floor_shape")
 [node name="Grass" type="Node3D" parent="."]
 script = ExtResource("3_grass")
 grass_material = ExtResource("4_grass_material")
+cleared_area = Rect2(-19.5, 157.5, 46, 36.5)
+extra_cleared_areas = Array[Rect2]([Rect2(-120, 194, 240, 14)])
 
 [node name="Wall" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -8)

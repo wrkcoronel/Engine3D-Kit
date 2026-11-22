@@ -1,28 +1,40 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://y3g573a0lup0"]
 
-[ext_resource type="Script" path="res://app/main.gd" id="0_main"]
+[ext_resource type="Script" uid="uid://cdfe2lsmwto0n" path="res://app/main.gd" id="0_main"]
 [ext_resource type="PackedScene" path="res://contexts/world/world.tscn" id="1_world"]
 [ext_resource type="PackedScene" path="res://contexts/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/car.tscn" id="3_car"]
+[ext_resource type="Script" uid="uid://3y8571qcdyjl" path="res://shared/telemetry/telemetry.gd" id="4_telemetry"]
 [ext_resource type="PackedScene" path="res://contexts/flashlight/flashlight.tscn" id="5_flashlight"]
-[ext_resource type="Script" path="res://shared/telemetry/telemetry.gd" id="4_telemetry"]
-[ext_resource type="Script" path="res://shared/performance/performance_overlay.gd" id="99_performance"]
+[ext_resource type="PackedScene" path="res://contexts/motel/motel_environment.tscn" id="6_motel"]
+[ext_resource type="PackedScene" path="res://contexts/entity/entity.tscn" id="7_entity"]
+[ext_resource type="PackedScene" path="res://contexts/pause_menu/pause_menu.tscn" id="8_pause_menu"]
+[ext_resource type="Script" uid="uid://ljlfmiqwgcuf" path="res://shared/performance/performance_overlay.gd" id="99_performance"]
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=1879549894]
 script = ExtResource("0_main")
 
-[node name="World" parent="." instance=ExtResource("1_world")]
+[node name="World" parent="." unique_id=2028766506 instance=ExtResource("1_world")]
 
-[node name="Player" parent="." instance=ExtResource("2_player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4)
+[node name="MotelEnvironment" parent="." unique_id=1122272642 instance=ExtResource("6_motel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 175)
 
-[node name="Car" parent="." instance=ExtResource("3_car")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.1, 4)
+[node name="Entity" parent="." unique_id=1325119132 instance=ExtResource("7_entity")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, 188)
+roam_bounds = Rect2(-38, 149, 80, 58)
 
-[node name="Flashlight" parent="." instance=ExtResource("5_flashlight")]
+[node name="Player" parent="." unique_id=1819243636 instance=ExtResource("2_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 179.5)
 
-[node name="Telemetry" type="CanvasLayer" parent="."]
+[node name="Car" parent="." unique_id=2138510177 instance=ExtResource("3_car")]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 4.5, 0.1, 182)
+
+[node name="Flashlight" parent="." unique_id=472498629 instance=ExtResource("5_flashlight")]
+
+[node name="Telemetry" type="CanvasLayer" parent="." unique_id=1270722552]
 script = ExtResource("4_telemetry")
 
-[node name="PerformanceOverlay" type="CanvasLayer" parent="."]
+[node name="PerformanceOverlay" type="CanvasLayer" parent="." unique_id=736860719]
 script = ExtResource("99_performance")
+
+[node name="PauseMenu" parent="." unique_id=283869666 instance=ExtResource("8_pause_menu")]
