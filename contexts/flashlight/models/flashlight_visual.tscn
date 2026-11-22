@@ -1,0 +1,57 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="FlashlightMetal"]
+albedo_color = Color(0.2, 0.2, 0.22, 1)
+metallic = 0.6
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="FlashlightLensLit"]
+shading_mode = 0
+albedo_color = Color(1, 0.97, 0.85, 1)
+
+[sub_resource type="StandardMaterial3D" id="FlashlightLensOff"]
+albedo_color = Color(0.12, 0.12, 0.11, 1)
+metallic = 0.3
+roughness = 0.15
+
+[sub_resource type="CylinderMesh" id="FlashlightBodyMesh"]
+material = SubResource("FlashlightMetal")
+top_radius = 0.017
+bottom_radius = 0.017
+height = 0.15
+radial_segments = 12
+
+[sub_resource type="CylinderMesh" id="FlashlightHeadMesh"]
+material = SubResource("FlashlightMetal")
+top_radius = 0.027
+bottom_radius = 0.019
+height = 0.045
+radial_segments = 12
+
+[sub_resource type="CylinderMesh" id="FlashlightLensMesh"]
+material = SubResource("FlashlightLensLit")
+top_radius = 0.023
+bottom_radius = 0.023
+height = 0.004
+radial_segments = 12
+
+[node name="FlashlightVisual" type="Node3D"]
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0.075)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FlashlightBodyMesh")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.022)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FlashlightHeadMesh")
+
+[node name="Lens" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.0465)
+layers = 2
+cast_shadow = 0
+mesh = SubResource("FlashlightLensMesh")
+metadata/lens_off = SubResource("FlashlightLensOff")
