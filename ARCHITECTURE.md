@@ -38,7 +38,8 @@ contexts/       um contexto por assunto
       pose/           wall_avoid, cover_peek, aim, sway, recoil, sprint, holster (coldre/costas),
                       sight (mira pelas miras da arma), pose_builder
       firing/         gatilho (semi e automatico), dispersao, dano por distancia, tiro (raio),
-                      clarao, rastro, estojo ejetado, sons
+                      clarao, rastro, estojo ejetado, sons, e gun_firing (o disparo: quando pode atirar,
+                      gatilho seco, interromper recarga ou conferencia para atirar)
       reload/         recarga de pente e da Boito cartucho por cartucho
       check/          conferencia da municao (V segurado: pente na mao, tubo ou acao; R com a arma
                       cheia: camara), furos do pente
@@ -49,6 +50,12 @@ contexts/       um contexto por assunto
                     ficam em portugues porque o codigo os acha pelo nome (ex.: Visual/Corpo)
     ui/             shader da mira da luneta
     effects/        impact (furo de bala, um Decal) e tracer (rastro)
+  flashlight/     a lanterna (tecla F), independente: apagar o no Flashlight do main.tscn tira ela do jogo
+    flashlight.gd   orquestra: sobe de baixo como o saque da pistola, fica na mao esquerda; ao mirar vai
+                    para baixo do cano; na luneta vai para o centro da mira; some com o jogador no carro
+    components/     flashlight_pose (onde fica em cada situacao), flashlight_sway (balanco ao andar e
+                    correr), flashlight_beam_texture (feixe amarelado com bola branca no centro)
+    models/         flashlight_visual (corpo, cabeca e lente)
   vehicles/       carro (corpo rigido com suspensao, tracao dianteira)
     car.gd          orquestra: forcas das rodas, entrar/sair, desvirar
     components/     separados por assunto
@@ -69,6 +76,9 @@ contexts/       um contexto por assunto
 shared/         usado por mais de um contexto
   physics/ray_util.gd   distancia de um raio ate o primeiro obstaculo
   physics/box_edges.gd  cantos e arestas de uma caixa (usado pela telemetria)
+  player/player_rig.gd  o que os outros contextos podem saber do jogador (corpo, camera, colisao, se
+                        corre, inclinacao da cabeca, lentidao do mouse); o player preenche, quem usa le
+  held_item/held_item_anchor.gd  o item na mao (mira, luneta, boca do cano); a arma publica, a lanterna le
   telemetry/            console_wrap quebra evento longo em linhas curtas (um campo por linha) no output
                         do Godot; grava o que o carro e o jogador fazem (F3 mostra, F2 salva relatorio)
                         e imprime os eventos ao vivo na saida do Godot
@@ -80,7 +90,8 @@ tests/          testes que rodam sem abrir o jogo, uma pasta por contexto
   vehicles/           testes do carro; scenarios/ dirige o carro nas rampas e confere a telemetria
   grassland/          tufos, fitas, pedacos plantados e o rastro
   world/              rampa, predios em ruinas, climas e o ceu
-  shared/             testes do ray_util e do TelemetryLog
+  flashlight/         pose, balanco, feixe e remocao da lanterna
+  shared/             testes do ray_util, do TelemetryLog, do PlayerRig e do HeldItemAnchor
   player/             testes da telemetria do jogador
   weapons/            municao, dano, gatilho, conferencia, troca e as quatro armas atirando
 
@@ -130,11 +141,18 @@ jogo.
   nao conhece ninguem.
 - **Um contexto nao mexe nos detalhes de outro.** As ligacoes que existem hoje:
   - `weapons` chama `take_hit(hit, dir, damage)` em quem tiver esse metodo. Hoje nada tem.
-  - `weapons` usa o `HeadLean` do jogador (inclinar a cabeca no cover), le `is_sprinting` e muda
-    `MouseLook.sensitivity_scale` (mira e luneta deixam o mouse mais lento).
-  - `vehicles` acha o jogador pelo grupo `player` ao entrar no carro.
+  - `weapons` e `vehicles` falam com o jogador so pelo `PlayerRig` (`shared/player/`): inclinar a
+    cabeca no cover, ler `is_sprinting`, deixar o mouse mais lento, entrar e sair do carro. Nenhum
+    dos dois conhece `HeadLean`, `MouseLook` ou os nos do jogador.
+  - `weapons` publica o item na mao no `HeldItemAnchor` e `flashlight` le de la. Sem arma, a
+    lanterna fica na mao; sem lanterna, a arma nem percebe.
+  - `grassland` acha o carro pelo grupo `vehicles` (sem carro, o capim nao amassa).
   - `vehicles`, `player` e `weapons` mandam eventos e amostras para `Telemetry.record` e
     `Telemetry.sample` (em `shared/telemetry/`). Sem o no `Telemetry` na cena, nada acontece.
+- **Tirar uma coisa nao quebra o resto.** Cada contexto se acha pelos outros por grupo ou por um
+  objeto de `shared/`, nunca por caminho de no (`get_node("../..")`) nem por classe de outro
+  contexto. Os testes de `tests/flashlight/test_flashlight_removal.gd` apagam o carro, a arma e a
+  lanterna do `main.tscn` um de cada vez e conferem que o jogo continua.
 - **Orquestrador e componente.** O `.gd` principal (`gun.gd`, `car.gd`) decide a ordem e chama cada
   parte. Cada componente faz uma coisa so e **nao le o estado do dono**: recebe tudo por argumento
   tipado em `update(...)`.
