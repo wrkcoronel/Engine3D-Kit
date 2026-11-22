@@ -40,8 +40,8 @@ func add_box(
 			vertices.append(box_center + box_basis * local_corner)
 			normals.append(box_basis * face_normal)
 			colors.append(vertex_color)
-		indices.append_array(PackedInt32Array([first_vertex, first_vertex + 1, first_vertex + 2]))
-		indices.append_array(PackedInt32Array([first_vertex, first_vertex + 2, first_vertex + 3]))
+		indices.append_array(PackedInt32Array([first_vertex, first_vertex + 2, first_vertex + 1]))
+		indices.append_array(PackedInt32Array([first_vertex, first_vertex + 3, first_vertex + 2]))
 
 
 func to_mesh() -> ArrayMesh:

@@ -34,6 +34,18 @@ func test_face_normals_are_unit_and_point_away_from_the_center() -> void:
 		assert_true(normal.dot(arrays.vertices[vertex_index]) > 0.0, "normal aponta para fora")
 
 
+func test_triangles_are_clockwise_seen_from_outside() -> void:
+	var arrays := RuinMeshArrays.new()
+	arrays.add_box(Vector3.ZERO, Vector3(2.0, 4.0, 6.0), Vector3(0.4, 0.9, 0.2), true)
+	for triangle_start: int in range(0, arrays.indices.size(), 3):
+		var first := arrays.vertices[arrays.indices[triangle_start]]
+		var second := arrays.vertices[arrays.indices[triangle_start + 1]]
+		var third := arrays.vertices[arrays.indices[triangle_start + 2]]
+		var counter_clockwise_normal := (second - first).cross(third - second)
+		var stored_normal := arrays.normals[arrays.indices[triangle_start]]
+		assert_true(counter_clockwise_normal.dot(stored_normal) < 0.0, "sentido horario por fora")
+
+
 func test_rebar_is_marked_as_metal_by_vertex_alpha() -> void:
 	var arrays := RuinMeshArrays.new()
 	arrays.add_box(Vector3.ZERO, Vector3.ONE, Vector3.ZERO, true)

@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://app/main.gd" id="0_main"]
 [ext_resource type="PackedScene" path="res://contexts/world/world.tscn" id="1_world"]
 [ext_resource type="PackedScene" path="res://contexts/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://contexts/vehicles/car.tscn" id="3_car"]
+[ext_resource type="PackedScene" path="res://contexts/flashlight/flashlight.tscn" id="5_flashlight"]
 [ext_resource type="Script" path="res://shared/telemetry/telemetry.gd" id="4_telemetry"]
 [ext_resource type="Script" path="res://shared/performance/performance_overlay.gd" id="99_performance"]
 
@@ -17,6 +18,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4)
 
 [node name="Car" parent="." instance=ExtResource("3_car")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.1, 4)
+
+[node name="Flashlight" parent="." instance=ExtResource("5_flashlight")]
 
 [node name="Telemetry" type="CanvasLayer" parent="."]
 script = ExtResource("4_telemetry")

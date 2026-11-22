@@ -1,15 +1,10 @@
 extends Node3D
 
 const SCOPE_FOV := 20.0
-const DRY_FIRE_COOLDOWN := 0.3
 const AFTER_RELOAD_COOLDOWN := 0.12
-const INTERRUPT_SHOT_DELAY := 0.12
 const AIM_BLOCKED_BY_WALL := 0.3
-const SPRINT_BLOCKS := 0.5
 const SCOPED_LOOK_SCALE := 0.26
 const AIMED_LOOK_SCALE := 0.6
-
-@export var block_fire_above := 0.5
 
 var _arsenal := GunArsenal.new()
 var _input_reader := GunInput.new()
@@ -22,12 +17,11 @@ var _actions: Array[GunAction] = [
 	PistolSlideAction.new(), PumpAction.new(), CarbineBoltAction.new(), RifleBoltAction.new()
 ]
 var _switch: GunWeaponSwitch
+var _firing: GunFiring
 var _aiming := false
 var _scoped := false
 var _wall_amount := 0.0
-var _body: CharacterBody3D
-var _head: HeadLean
-var _mouse_look: MouseLook
+var _rig: PlayerRig
 
 @onready var wall: GunWallAvoid = $WallAvoid
 @onready var cover: GunCoverPeek = $CoverPeek
@@ -38,17 +32,20 @@ var _mouse_look: MouseLook
 @onready var shooter: GunShooter = $Shooter
 @onready var sounds: GunSounds = $Sounds
 @onready var scope_overlay: CanvasItem = $ScopeOverlay/Lens
+@onready var _held_item: HeldItemAnchor = $HeldItemAnchor
 
 
 func _ready() -> void:
-	_body = owner as CharacterBody3D
-	_head = _body.get_node("Head")
-	_mouse_look = _body.get_node("MouseLook")
+	_rig = PlayerRig.find_or_create(get_tree(), self)
 	_action_state.casing_parent = shooter.effects_parent()
 	_switch = GunWeaponSwitch.new(
 		_arsenal, _trigger, _check, _reloader, _flash, _action_state, _actions, sounds
 	)
 	_switch.on_equipped = _on_equipped
+	_firing = GunFiring.new(
+		_arsenal, _trigger, _check, _reloader, _flash, _action_state, _actions, _switch
+	)
+	_firing.bind_effects(recoil, sounds, shooter, self, _start_reload)
 	for stats: WeaponStats in _arsenal.weapons:
 		var model := get_node(stats.model_name) as Node3D
 		model.visible = false
@@ -86,15 +83,16 @@ func _process(delta: float) -> void:
 	_flash.update(delta)
 	_place_model()
 	_place_magazine(cam)
-	_update_fire(cam, captured)
+	_publish_held_item()
+	_firing.update(cam, captured, _aiming, _wall_amount, sprint.amount)
 
 
 func _update_pose_components(delta: float, cam: Camera3D, captured: bool) -> void:
 	var wants_aim := captured and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
 	var stats := _arsenal.current_stats()
 	wall.update(delta, cam)
-	cover.update(delta, _body, _head, wants_aim, wall.check_distance)
-	sprint.update(delta, bool(_body.get("is_sprinting")))
+	cover.update(delta, _rig, wants_aim, wall.check_distance)
+	sprint.update(delta, _rig.is_sprinting)
 	_wall_amount = wall.amount * (1.0 - absf(cover.amount)) * (1.0 - sprint.amount)
 	var wall_lets_aim := _wall_amount < AIM_BLOCKED_BY_WALL
 	_aiming = wants_aim and wall_lets_aim and _hands_ready()
@@ -102,7 +100,7 @@ func _update_pose_components(delta: float, cam: Camera3D, captured: bool) -> voi
 	aim.update(delta, cam, _aiming and not _scoped)
 	if _scoped:
 		cam.fov = SCOPE_FOV
-	sway.update(delta, _body, aim.steady())
+	sway.update(delta, _rig.body, aim.steady())
 	recoil.update(delta)
 	_switch.holster.update(delta, stats.long_gun)
 	_switch.hand.model.visible = not _scoped and not _switch.holster.hides_model()
@@ -115,15 +113,15 @@ func _hands_ready() -> bool:
 		return false
 	if _switch.holster.holstered:
 		return false
-	return sprint.amount < SPRINT_BLOCKS
+	return sprint.amount < GunFiring.SPRINT_BLOCKS
 
 
 func _update_look_speed() -> void:
-	_mouse_look.sensitivity_scale = 1.0
+	_rig.look_sensitivity_scale = 1.0
 	if _aiming:
-		_mouse_look.sensitivity_scale = AIMED_LOOK_SCALE
+		_rig.look_sensitivity_scale = AIMED_LOOK_SCALE
 	if _scoped:
-		_mouse_look.sensitivity_scale = SCOPED_LOOK_SCALE
+		_rig.look_sensitivity_scale = SCOPED_LOOK_SCALE
 
 
 func _update_ammo_check(delta: float, captured: bool) -> void:
@@ -167,6 +165,15 @@ func _place_model() -> void:
 	_switch.hand.model.rotation = pose.rotation
 
 
+func _publish_held_item() -> void:
+	_held_item.has_item = true
+	_held_item.aim_amount = aim.amount
+	_held_item.scoped = _scoped
+	_held_item.item_transform = _switch.hand.model.global_transform
+	_held_item.muzzle_position = _switch.hand.muzzle().global_position
+	_held_item.sprint_amount = sprint.amount
+
+
 func _place_magazine(cam: Camera3D) -> void:
 	if _reloader.reloading:
 		return
@@ -185,78 +192,6 @@ func _current_check_marker() -> Marker3D:
 
 func _current_action() -> GunAction:
 	return _actions[_arsenal.current_stats().action]
-
-
-func _update_fire(cam: Camera3D, captured: bool) -> void:
-	if not captured:
-		_trigger.remember(false)
-		return
-	var pressed := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
-	var busy := _reloader.reloading or _check.active
-	if _trigger.is_new_press(pressed) and busy:
-		_interrupt_for_shot()
-	var automatic := _arsenal.current_stats().automatic
-	var has_ammo := not _arsenal.current_ammo().is_empty()
-	if _trigger.should_fire(pressed, automatic, has_ammo):
-		_shoot(cam)
-	_trigger.remember(pressed)
-	if _trigger.take_queued_shot():
-		_shoot(cam)
-
-
-func _can_shoot() -> bool:
-	if _reloader.reloading:
-		return false
-	if _check.active:
-		return false
-	if _switch.holster.holstered:
-		return false
-	var sprint_free := sprint.amount < SPRINT_BLOCKS
-	return sprint_free and _wall_amount < block_fire_above
-
-
-func _shoot(cam: Camera3D) -> void:
-	if not _can_shoot():
-		return
-	var stats := _arsenal.current_stats()
-	var ammo := _arsenal.current_ammo()
-	if ammo.is_empty():
-		_dry_fire(ammo)
-		return
-	ammo.consume_round()
-	_action_state.hammer_down = false
-	GunSounds.play_shot(_switch.hand.shot_sound())
-	_trigger.cooldown = stats.fire_interval
-	recoil.fire(stats.kick)
-	_flash.fire()
-	_action_state.start_cycle(_current_action().cycle_time())
-	var barrel_basis := _switch.hand.model.global_basis.orthonormalized()
-	for pellet_number: int in stats.pellets:
-		shooter.fire_pellet(cam, _switch.hand.muzzle(), barrel_basis, _aiming, stats)
-
-
-func _dry_fire(ammo: WeaponAmmo) -> void:
-	_trigger.cooldown = DRY_FIRE_COOLDOWN
-	sounds.empty_click.play()
-	_action_state.hammer_down = true
-	if ammo.reserve > 0:
-		_start_reload()
-		return
-	if not _aiming:
-		_check.start_chamber_check(false)
-
-
-func _interrupt_for_shot() -> void:
-	if _switch.holster.holstered:
-		return
-	if _arsenal.current_ammo().is_empty():
-		return
-	if _reloader.reloading:
-		sounds.reload.stop()
-		_reloader.interrupt(create_tween())
-	else:
-		_check.interrupt()
-	_trigger.queue_after(INTERRUPT_SHOT_DELAY)
 
 
 func _request_reload() -> void:

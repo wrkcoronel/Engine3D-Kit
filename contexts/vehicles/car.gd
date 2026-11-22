@@ -17,7 +17,7 @@ const DRIVEN_WHEEL_COUNT := 2
 @export var enter_distance := 4.0
 
 var input := CarInput.new()
-var _driver: CharacterBody3D
+var _driver: PlayerRig
 var _steering := CarSteering.new()
 var _body_contacts: Array[CarBodyContact] = []
 var _upright_requested := false

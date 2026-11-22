@@ -18,6 +18,8 @@ uniform sampler2D trample_map : hint_default_black, filter_linear;
 uniform vec2 trample_origin = vec2(-20.0, -20.0);
 uniform float trample_size = 40.0;
 uniform float trampled_height = 0.12;
+uniform float fade_start_distance = 29.0;
+uniform float fade_end_distance = 43.0;
 
 varying float clump_tone;
 
@@ -61,7 +63,9 @@ void vertex() {
 	vec3 bent_world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	float under_vehicle_height = mix(1.0, flattened_height, vehicle_flatten(bent_world_position));
 	float trail_height = mix(1.0, trampled_height, trample_amount(bent_world_position));
-	VERTEX.y *= min(under_vehicle_height, trail_height);
+	float camera_distance = length(bent_world_position.xz - CAMERA_POSITION_WORLD.xz);
+	float distance_height = 1.0 - smoothstep(fade_start_distance, fade_end_distance, camera_distance);
+	VERTEX.y *= min(min(under_vehicle_height, trail_height), distance_height);
 }
 
 void fragment() {

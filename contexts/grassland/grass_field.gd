@@ -38,6 +38,7 @@ func _ready() -> void:
 	get_viewport().msaa_3d = Viewport.MSAA_4X
 	_height_noise = GrassScatter.create_height_noise(random_seed, height_noise_frequency)
 	_build_meshes()
+	_setup_distance_fade()
 	_setup_trail()
 
 
@@ -198,3 +199,10 @@ func _move_trail_window(center: Vector2) -> void:
 	var snapped_center := (center / chunk_size).round() * chunk_size
 	_trail_origin = snapped_center - Vector2.ONE * trail_window_size / 2.0
 	grass_material.set_shader_parameter("trample_origin", _trail_origin)
+
+
+func _setup_distance_fade() -> void:
+	var fade_start := GrassStreamer.fade_start_distance(far_radius, chunk_size)
+	var fade_end := GrassStreamer.fade_end_distance(far_radius, chunk_size)
+	grass_material.set_shader_parameter("fade_start_distance", fade_start)
+	grass_material.set_shader_parameter("fade_end_distance", fade_end)

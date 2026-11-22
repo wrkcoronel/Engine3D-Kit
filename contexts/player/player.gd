@@ -29,6 +29,17 @@ var _telemetry := PlayerTelemetry.new()
 @onready var _collision: CollisionShape3D = $Collision
 @onready var _shape: CapsuleShape3D = _collision.shape
 @onready var _head: HeadLean = $Head
+@onready var _camera: Camera3D = $Head/Camera
+@onready var _mouse_look: MouseLook = $MouseLook
+@onready var _rig: PlayerRig = $Rig
+
+
+func _ready() -> void:
+	_rig.body = self
+	_rig.camera = _camera
+	_rig.collision = _collision
+	_head.bind(_rig)
+	_mouse_look.bind(self, _head, _rig)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -82,6 +93,7 @@ func _physics_process(delta: float) -> void:
 		and not _crouching
 		and not aiming
 	)
+	_rig.is_sprinting = is_sprinting
 
 	if not is_on_floor():
 		var mult := GRAVITY_MULT * (FALL_MULT if velocity.y < 0.0 else 1.0)

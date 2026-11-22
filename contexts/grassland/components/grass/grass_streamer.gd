@@ -5,6 +5,8 @@ const NO_LEVEL := -1
 const NEAR_LEVEL := 0
 const FAR_LEVEL := 1
 const SWITCH_MARGIN := 6.0
+const FADE_CHUNK_FRACTION := 0.75
+const FADE_LENGTH := 14.0
 
 
 static func cell_of(point: Vector2, chunk_size: float) -> Vector2i:
@@ -62,3 +64,11 @@ static func wanted_levels(
 			if level != NO_LEVEL:
 				wanted[cell] = level
 	return wanted
+
+
+static func fade_end_distance(far_radius: float, chunk_size: float) -> float:
+	return far_radius - chunk_size * FADE_CHUNK_FRACTION
+
+
+static func fade_start_distance(far_radius: float, chunk_size: float) -> float:
+	return fade_end_distance(far_radius, chunk_size) - FADE_LENGTH

@@ -1,7 +1,7 @@
 class_name CarTireFx
 extends Node
 
-const NOT_SEEN_BY_DECALS_LAYER := 2
+const NOT_SEEN_BY_DECALS_LAYER := 4
 
 @export var wind_velocity := Vector3(1.0, 0.0, 0.4)
 
