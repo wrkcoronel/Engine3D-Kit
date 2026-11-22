@@ -1,0 +1,42 @@
+{
+	"gdscript-quality": {
+		"PreToolUse": [
+			{
+				"matcher": "edit_file|write_file|replace_file_content|multi_replace_file_content|write_to_file",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "node hooks/check_protected.js",
+						"timeout": 10
+					}
+				]
+			}
+		],
+		"PostToolUse": [
+			{
+				"matcher": "edit_file|write_file|replace_file_content|multi_replace_file_content|write_to_file",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "node hooks/check_edit.js",
+						"timeout": 30
+					}
+				]
+			}
+		],
+		"PostInvocation": [
+			{
+				"type": "command",
+				"command": "node hooks/report_edit_issues.js",
+				"timeout": 10
+			}
+		],
+		"Stop": [
+			{
+				"type": "command",
+				"command": "node hooks/check_all.js",
+				"timeout": 240
+			}
+		]
+	}
+}

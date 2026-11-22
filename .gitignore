@@ -2,6 +2,8 @@
 .godot/
 /android/
 .claude/.last_check
+.agents/.last_check
+.agents/.pending_lint.txt
 *.blend1
 __pycache__/
 .vscode/
