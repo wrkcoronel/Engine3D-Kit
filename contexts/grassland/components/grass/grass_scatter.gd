@@ -31,12 +31,20 @@ static func chunk_transforms(
 	clump_count: int,
 	height_noise: FastNoiseLite,
 	height_range: Vector2,
-	random: RandomNumberGenerator
+	random: RandomNumberGenerator,
+	cleared_area: Rect2 = Rect2(),
+	extra_cleared_areas: Array[Rect2] = []
 ) -> Array[Transform3D]:
 	var transforms: Array[Transform3D] = []
+	var has_clearing := cleared_area.has_area()
 	for clump_index: int in clump_count:
 		var ground_x := chunk_corner.x + random.randf() * chunk_size
 		var ground_z := chunk_corner.y + random.randf() * chunk_size
+		var ground_point := Vector2(ground_x, ground_z)
+		if has_clearing and cleared_area.has_point(ground_point):
+			continue
+		if _is_in_any_area(ground_point, extra_cleared_areas):
+			continue
 		var noise_value := height_noise.get_noise_2d(ground_x, ground_z)
 		var random_jitter := random.randf_range(-HEIGHT_JITTER, HEIGHT_JITTER)
 		var height_scale := height_scale_at(noise_value, height_range, random_jitter)
@@ -47,3 +55,10 @@ static func chunk_transforms(
 		var clump_position := Vector3(ground_x, 0.0, ground_z)
 		transforms.append(Transform3D(clump_basis, clump_position))
 	return transforms
+
+
+static func _is_in_any_area(point: Vector2, areas: Array[Rect2]) -> bool:
+	for area: Rect2 in areas:
+		if area.has_area() and area.has_point(point):
+			return true
+	return false
