@@ -52,3 +52,12 @@ func test_wanted_levels_never_leave_the_field() -> void:
 	)
 	for cell: Vector2i in wanted:
 		assert_true(GrassStreamer.cell_in_field(cell, CHUNK_SIZE, FIELD_SIZE), "celula no campo")
+
+
+func test_grass_fades_out_before_the_nearest_edge_of_a_new_chunk() -> void:
+	var fade_end := GrassStreamer.fade_end_distance(FAR_RADIUS, CHUNK_SIZE)
+	var half_diagonal := CHUNK_SIZE * sqrt(2.0) / 2.0
+	var nearest_edge := FAR_RADIUS - half_diagonal
+	assert_true(fade_end <= nearest_edge, "capim some antes de o pedaco novo aparecer")
+	var fade_start := GrassStreamer.fade_start_distance(FAR_RADIUS, CHUNK_SIZE)
+	assert_true(fade_start < fade_end, "comeca a encolher antes do fim")
