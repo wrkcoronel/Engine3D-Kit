@@ -2,6 +2,7 @@ extends TestCase
 
 const GAME_SCENE := "res://app/main.tscn"
 const GUN_PATH := "Player/Head/Camera/Gun"
+const GUN_SCENE := "res://contexts/weapons/gun.tscn"
 const WEAPON_COUNT := 4
 
 
@@ -21,13 +22,14 @@ func test_every_weapon_shoots_and_reloads() -> void:
 	var gun: Node3D = await _spawn_gun()
 	var arsenal: GunArsenal = gun.get("_arsenal")
 	var weapon_switch: GunWeaponSwitch = gun.get("_switch")
+	var firing: GunFiring = gun.get("_firing")
 	var cam := gun.get_viewport().get_camera_3d()
 	for weapon_index: int in WEAPON_COUNT:
 		weapon_switch.equip(weapon_index)
 		await _wait(0.3)
 		var ammo := arsenal.current_ammo()
 		var before := ammo.loaded
-		gun.call("_shoot", cam)
+		firing.shoot(cam, false, 0.0, 0.0)
 		assert_eq(ammo.loaded, before - 1, "arma %d gastou uma bala" % weapon_index)
 		await _wait(1.3)
 		gun.call("_request_reload")
@@ -59,3 +61,17 @@ func test_chamber_check_opens_the_pistol_slide() -> void:
 	assert_true(slide.position.z > 0.02, "a corredica recua para mostrar a camara")
 	await _wait(AmmoCheck.CHAMBER_CHECK_TIME + 0.5)
 	assert_near(slide.position.z, 0.0, 0.002, "depois ela fecha")
+
+
+func test_gun_works_alone_without_a_player() -> void:
+	var scene := Node3D.new()
+	var camera := Camera3D.new()
+	scene.add_child(camera)
+	var gun := (load(GUN_SCENE) as PackedScene).instantiate() as Node3D
+	scene.add_child(gun)
+	spawn(scene)
+	camera.make_current()
+	await tree.process_frame
+	await tree.process_frame
+	var arsenal: GunArsenal = gun.get("_arsenal")
+	assert_true(arsenal.current_stats() != null, "arma segue de pe sem jogador")

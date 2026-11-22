@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://contexts/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://contexts/player/components/head_lean.gd" id="2_lean"]
 [ext_resource type="Script" path="res://contexts/player/components/mouse_look.gd" id="3_look"]
 [ext_resource type="PackedScene" path="res://contexts/weapons/gun.tscn" id="4_gun"]
+[ext_resource type="Script" path="res://shared/player/player_rig.gd" id="5_rig"]
 
 [sub_resource type="CapsuleShape3D" id="player_shape"]
 radius = 0.4
@@ -13,6 +14,9 @@ height = 1.8
 collision_layer = 2
 collision_mask = 1
 script = ExtResource("1_player")
+
+[node name="Rig" type="Node" parent="."]
+script = ExtResource("5_rig")
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 shape = SubResource("player_shape")

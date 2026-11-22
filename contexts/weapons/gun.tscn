@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://contexts/weapons/gun.gd" id="1_gun"]
+[ext_resource type="Script" path="res://shared/held_item/held_item_anchor.gd" id="30_anchor"]
 [ext_resource type="PackedScene" path="res://contexts/weapons/effects/impact.tscn" id="2_impact"]
 [ext_resource type="Script" path="res://contexts/weapons/components/pose/gun_wall_avoid.gd" id="3_wall"]
 [ext_resource type="Script" path="res://contexts/weapons/components/pose/gun_cover_peek.gd" id="4_cover"]
@@ -30,6 +31,9 @@ shader = ExtResource("24_scope_shader")
 
 [node name="Gun" type="Node3D"]
 script = ExtResource("1_gun")
+
+[node name="HeldItemAnchor" type="Node" parent="."]
+script = ExtResource("30_anchor")
 
 [node name="WallAvoid" type="Node" parent="."]
 script = ExtResource("3_wall")
