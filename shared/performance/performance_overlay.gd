@@ -12,6 +12,7 @@ const UNKNOWN_TEXT := "--"
 
 var _label := Label.new()
 var _reader := SystemLoadReader.new()
+var _render_time := RenderTimeReader.new()
 var _events := PerformanceEvents.new()
 var _seconds_until_refresh := 0.0
 var _seconds_alive := 0.0
@@ -22,14 +23,17 @@ func _ready() -> void:
 	_setup_label()
 	add_child(_label)
 	_reader.start()
+	_render_time.start(get_viewport())
 
 
 func _exit_tree() -> void:
 	_reader.stop()
+	_render_time.stop()
 
 
 func _process(delta: float) -> void:
 	_seconds_alive += delta
+	_render_time.update()
 	_seconds_until_refresh -= delta
 	if _seconds_until_refresh > 0.0:
 		return
@@ -37,7 +41,13 @@ func _process(delta: float) -> void:
 	var frames_per_second := int(Engine.get_frames_per_second())
 	var cpu_percent := _reader.cpu_percent()
 	var gpu_percent := _reader.gpu_percent()
-	var text := build_text(frames_per_second, cpu_percent, gpu_percent)
+	var text := build_text(
+		frames_per_second,
+		cpu_percent,
+		_reader.gpu_3d_percent(),
+		_reader.gpu_graphics_percent(),
+		_render_time.gpu_milliseconds
+	)
 	_label.text = text
 	Telemetry.performance(self, text)
 	if _seconds_alive < STARTUP_GRACE_SECONDS:
@@ -46,10 +56,20 @@ func _process(delta: float) -> void:
 		Telemetry.record(self, SOURCE, event)
 
 
-static func build_text(frames_per_second: int, cpu_percent: int, gpu_percent: int) -> String:
+static func build_text(
+	frames_per_second: int,
+	cpu_percent: int,
+	gpu_3d_percent: int,
+	gpu_graphics_percent: int,
+	gpu_milliseconds: float
+) -> String:
 	var cpu_text := _percent_text(cpu_percent)
-	var gpu_text := _percent_text(gpu_percent)
-	return "FPS %d  CPU %s  GPU %s" % [frames_per_second, cpu_text, gpu_text]
+	var gpu_3d_text := _percent_text(gpu_3d_percent)
+	var gpu_graphics_text := _percent_text(gpu_graphics_percent)
+	var template := "FPS %d  CPU %s  3D %s  G1 %s  GPU %.1f ms"
+	return (
+		template % [frames_per_second, cpu_text, gpu_3d_text, gpu_graphics_text, gpu_milliseconds]
+	)
 
 
 static func _percent_text(percent: int) -> String:
