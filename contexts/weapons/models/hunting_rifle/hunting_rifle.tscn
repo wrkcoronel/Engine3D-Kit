@@ -128,7 +128,7 @@ size = Vector2i(256, 256)
 render_target_update_mode = 0
 
 [node name="Camera" type="Camera3D" parent="Visual/Luneta/Imagem"]
-cull_mask = 1
+cull_mask = 5
 fov = 20.0
 near = 0.3
 far = 300.0
