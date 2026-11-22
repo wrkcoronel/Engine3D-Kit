@@ -21,7 +21,7 @@ albedo_color = Color(0.9, 0.75, 0.2, 1)
 ; TRANSICAO de 9 graus na base: comeca no chao em z = +2.0 e encontra a rampa em z = -1.902
 ; (altura 0.618). Divide a dobra de 0 para 18 graus em duas de 9, para o carro rapido nao dar
 ; solavanco ao entrar.
-[node name="Ramp" type="StaticBody3D"]
+[node name="Ramp" type="StaticBody3D" groups=["ramps"]]
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.951, -0.309, 0, 0.309, 0.951, 0, 3.2325, -11.5665)
