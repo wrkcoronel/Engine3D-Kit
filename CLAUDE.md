@@ -1,9 +1,9 @@
 # Regras do projeto (Godot 4.8, GDScript)
 
-O dono do projeto esta aprendendo e precisa LER e ENTENDER o codigo. Legibilidade vale mais que
-brevidade. Isto vale para qualquer codigo que a IA escrever ou alterar.
+Laboratorio de mecanicas para jogos 3D. Clareza vale mais que brevidade: o codigo deve ser
+entendido na primeira leitura. Estas regras valem para qualquer codigo que a IA escrever ou alterar.
 
-## Legibilidade
+## Estilo de codigo
 - Uma coisa por linha. Nada de expressao comprimida: evitar `a if c else b` aninhado, `and`/`or`
   encadeados em uma linha, e varias chamadas dentro de uma so linha.
 - Quebrar conta longa em variaveis com nome que diz o que o valor e

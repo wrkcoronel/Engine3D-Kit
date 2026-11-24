@@ -3,9 +3,6 @@
 Jogo 3D em primeira pessoa feito no **Godot 4.8** com GDScript. Tem um jogador a pe, quatro armas e um
 carro (Gol GTI) com fisica propria, para andar num trigal com predios em ruinas e rampas.
 
-O projeto tambem e um jeito de aprender: o codigo e escrito para ser lido. Nomes completos, uma
-coisa por linha e nenhum comentario.
-
 ## Como jogar
 
 Abra a pasta no Godot 4.8 e rode. A cena principal e `app/main.tscn` (mundo, jogador e carro): um trigal escuro, de noite, com predios em ruinas.
